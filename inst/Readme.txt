@@ -18,13 +18,13 @@
 # Plot symbols (not required)
   ShowSymbols(file.symbs)
 
-# Graphics device
-  gr.type <- "pdf" # gr.type <- "postscript"
-
 # Plot trend data
 
+  # Graphics device ("pdf", "postscript", "png", "windows")
+    gr.type <- "pdf"
+
   # Period of record
-    sdate <- "01/01/1950" # sdate <- "01/01/1990"
+    sdate <- "01/01/1950" # or sdate <- "01/01/1990"
     edate <- "01/01/2010"
 
   PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type,
@@ -33,8 +33,11 @@
 
 # Run statistics
 
-  # Time interval which constituent will be averaged
-    avg.time <- "year" # ave.time <- "6 month"
+  # Graphics device
+    gr.type <- "pdf"
+
+  # Time interval which constituent will be averaged ("year", "6 month")
+    avg.time <- "year"
 
   # Uncensored data
     stats.tbl.uncens <- RunStats(d, is.censored=FALSE, initial.dir=dir.path,
