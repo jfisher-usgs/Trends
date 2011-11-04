@@ -1,0 +1,8 @@
+importFrom(openair, TheilSen)
+importFrom(Kendall, MannKendall)
+
+export(OpenGraphicsDevice,
+       PlotTrendData,
+       ReadTrendData,
+       RunStats,
+       ShowSymbols)

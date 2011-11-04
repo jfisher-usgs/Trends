@@ -1,0 +1,34 @@
+Constituent	Name	pch	col	bg
+pH	pH	21	NA	#A6CEE3
+Spec. Cond.	Specific Conductance	22	NA	#1F78B4
+Temp	Temperature	23	NA	#B2DF8A
+TOC	Total Organic Carbon	24	NA	#33A02C
+NO3+NO2	Nitrate plus Nitrite as N	25	NA	#FB9A99
+O-PO4 as P	Orthophosphate as P	21	NA	#E31A1C
+ZN	Zinc	22	NA	#FDBF6F
+U	Uranium	23	NA	#1F78B4
+SE	Selenium	24	NA	#6A3D9A
+NI	Nickel	25	NA	#B15928
+MO	Molybdenum	0	#1B9E77	NA
+MN	Manganese	1	#D95F02	NA
+PB	Lead	2	#7570B3	NA
+CU	Copper	3	#E7298A	NA
+CO	Cobalt	4	#66A61E	NA
+BA	Barium	5	#E6AB02	NA
+AS	Arsenic	6	#A6761D	NA
+CR	Chromium	7	#666666	NA
+CL	Chloride	8	#A6CEE3	NA
+SO4	Sulfate	9	#000000	NA
+F	Fluoride	10	#000000	NA
+BR	Bromide	11	#000000	NA
+Na	Sodium	12	#E31A1C	NA
+CA	Calcium	13	#000000	NA
+MG	Magnesium	14	#000000	NA
+K	Potassium	0	#A6CEE3	NA
+SI	Silica	1	#1F78B4	NA
+NH3	Ammonia	2	#B2DF8A	NA
+SB	Antimony	3	#33A02C	NA
+AG	Silver	4	#FB9A99	NA
+HG	Mercury	5	#E31A1C	NA
+CD	Cadmium	6	#FDBF6F	NA
+TL	Thallium	7	#CAB2D6	NA
