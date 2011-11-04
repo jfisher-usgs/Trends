@@ -26,9 +26,10 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
   # Main program:
 
   require(tcltk)
-  require(NADA)
-  require(openair)
-  require(Kendall)
+  if (is.censored)
+    require(NADA)
+  else
+    require(Kendall)
 
   # Statistics configuration file
   if (is.null(file.stats)) {
@@ -139,8 +140,8 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
         below.rl <- 0
 
       # Text to append to error messages
-      err.msg.extra <- paste("Row index: ", idx, ", Constituent:, ", const,
-                             "\n", sep="")
+      err.extra <- paste("Row index: ", idx, ", Constituent:, ", const,
+                         "\n", sep="")
 
       # Start statistical analysis
 
@@ -163,7 +164,7 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
         # Determine date cuts based on time interval
         ans <- try(cut(d.id$datetime, avg.time), silent=TRUE)
         if (inherits(ans, "try-error")) {
-          warning(paste("Time cut error:", ans, err.msg.extra, sep="\n"))
+          warning(paste("Time cut error:", ans, err.extra, sep="\n"))
           next
         } else {
           d.id.cuts <- as.POSIXct(ans, "%Y-%m-%d", tz="MST", origin=origin)
@@ -173,27 +174,53 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
         ans <- try(aggregate(d.id, list(date=d.id.cuts),
                              function(i) mean(i, na.rm=TRUE)), silent=TRUE)
         if (inherits(ans, "try-error")) {
-          warning(paste("Time average error:", ans, err.msg.extra, sep="\n"))
+          warning(paste("Time average error:", ans, err.extra, sep="\n"))
           next
         } else {
-          d.id.time <- ans[, c("date", const)]
+          d.id.time <- na.omit(ans[, c("date", const)])
         }
 
-        # Package openair
-        # timePlot(d.id.time, pollutant=const)
-        # smoothTrend(d.id.time, pollutant=const)
-        ans <- try(TheilSen(d.id.time, const, avg.time="year",
-                   slope.percent=TRUE), silent=TRUE)
-        if (inherits(ans, "try-error") | is.null(ans)) {
-          warning(paste("TheilSen error:", err.msg.extra, sep="\n"))
+        # Theil Sen
+
+     ## require(openair)
+     ## ans <- try(TheilSen(d.id.time, const, avg.time="year",
+     ##            slope.percent=TRUE), silent=TRUE)
+     ## if (inherits(ans, "try-error") | is.null(ans)) {
+     ##   warning(paste("TheilSen error:", err.extra, sep="\n"))
+     ##   next
+     ## }
+     ## ts.cols <- c("p", "slope", "lower", "upper",
+     ##              "intercept", "intercept.lower", "intercept.upper",
+     ##              "slope.percent", "lower.percent", "upper.percent")
+     ## rec <- cbind(rec, ans$data$res2[1, ts.cols])
+
+        est <- try(regci(as.numeric(d.id.time$date), d.id.time[, const],
+                         alpha=0.5, pr=FALSE)$regci, silent=TRUE)
+        if (inherits(est, "try-error") | is.null(est)) {
+          warning(paste("regci error:", err.extra, sep="\n"))
           next
         }
-        ts.cols <- c("p", "slope", "lower", "upper",
-                     "intercept", "intercept.lower", "intercept.upper",
-                     "slope.percent", "lower.percent", "upper.percent")
-        rec <- cbind(rec, ans$data$res2[1, ts.cols])
+        est <- list(p=est[2, 5],
+                    slope=est[2, 3] * 365,
+                    lower=est[2, 1] * 365, upper=est[2, 2] * 365,
+                    intercept=est[1, 3],
+                    intercept.lower=est[1, 2], intercept.upper=est[1, 1])
 
-        # Package: Kendall
+        tlim <- as.numeric(range(d.id.time$date))
+        percent <- function(m, b, xlim) {
+          x1 <- xlim[1]
+          x2 <- xlim[2]
+          ((m * x2 / 365 + b) / (m * x1 / 365 + b) - 1) / (x2 - x1) * 365 * 100
+        }
+
+        est$slope.percent <- percent(est$slope, est$intercept, tlim)
+        est$lower.percent <- percent(est$lower, est$intercept.lower, tlim)
+        est$upper.percent <- percent(est$upper, est$intercept.upper, tlim)
+
+        rec <- cbind(rec, as.data.frame(est))
+
+        # Mann Kendall
+
         ans <- MannKendall(d.id.time[, const])
         lst <- list(tau=ans$tau[1], sl=ans$sl[1], S=ans$S[1])
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
