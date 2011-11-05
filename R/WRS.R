@@ -1,14 +1,16 @@
-# These functions are from Rand Wilcox, the format has been slightly modified
-# for readability purposes; see http://www-rcf.usc.edu/~rwilcox/
+# These functions are from the WRS package, R.R. Wilcox' robust statistics
+# functions.
+# > install.packages("WRS", repos="http://R-Forge.R-project.org")
+# Code format has been slightly altered for readability purposes.
+# see http://www-rcf.usc.edu/~rwilcox/
 
-###
 
 regci <- function(x, y, regfun=tsreg, nboot=599, alpha=.05, SEED=TRUE, pr=TRUE,
                   xout=FALSE, outfun=out, ...) {
 # Compute a .95 confidence interval for each of the parameters of
 # a linear regression equation. The default regression method is
 # the Theil-Sen estimator.
-# When using the least squares estimator, and when n<250, use
+# When using the least squares estimator, and when n < 250, use
 # lsfitci instead.
 # The predictor values are assumed to be in the n by p matrix x.
 # The default number of bootstrap samples is nboot=599
@@ -39,7 +41,7 @@ regci <- function(x, y, regfun=tsreg, nboot=599, alpha=.05, SEED=TRUE, pr=TRUE,
   data <- matrix(sample(length(y), size=length(y) * nboot, replace=TRUE),
                  nrow=nboot)
   bvec <- apply(data, 1, regboot, x, y, regfun, ...)
-  # bvec is a p+1 by nboot matrix. The first row contains the bootstrap
+  # bvec is a p + 1 by nboot matrix. The first row contains the bootstrap
   # intercepts, the second row contains the bootstrap values for first
   # predictor, etc.
   regci <- matrix(0, p1, 5)
@@ -72,7 +74,6 @@ regci <- function(x, y, regfun=tsreg, nboot=599, alpha=.05, SEED=TRUE, pr=TRUE,
   list(regci=regci)
 }
 
-###
 
 elimna <- function(m) {
 # Remove any rows of data having missing values
@@ -87,7 +88,6 @@ elimna <- function(m) {
   elimna
 }
 
-###
 
 regboot <- function(isub, x, y, regfun, ...) {
 # Perform regression using x[isub] to predict y[isub]
@@ -95,8 +95,8 @@ regboot <- function(isub, x, y, regfun, ...) {
 # 1, 2, 3, ..., n
 # This function is used by other functions when computing bootstrap estimates.
 # regfun is some regression method already stored in R
-# It is assumed that regfun$coef contains the  intercept and slope estimates
-# produced by regfun.  The regression methods written for this  book, plus
+# It is assumed that regfun$coef contains the intercept and slope estimates
+# produced by regfun.  The regression methods written for this book, plus
 # regression functions in R, have this property.
 # x is assumed to be a matrix containing values of the predictors.
   xmat <- matrix(x[isub, ], nrow(x), ncol(x))
@@ -104,7 +104,6 @@ regboot <- function(isub, x, y, regfun, ...) {
   vals
 }
 
-###
 
 pbvar <- function(x, beta=.2) {
 # Compute the percentage bend midvariance. beta is the bending constant for
@@ -123,7 +122,6 @@ pbvar <- function(x, beta=.2) {
   pbvar
 }
 
-###
 
 pbcor <- function(x, y, beta=.2) {
 # Compute the percentage bend correlation between x and y.
@@ -152,7 +150,6 @@ pbcor <- function(x, y, beta=.2) {
   list(cor=pbcor, test=test, siglevel=sig)
 }
 
-###
 
 tsreg <- function(x, y, xout=FALSE, outfun=out, iter=10, varfun=pbvar,
                   corfun=pbcor, plotit=FALSE, ...) {
@@ -208,7 +205,6 @@ tsreg <- function(x, y, xout=FALSE, outfun=out, iter=10, varfun=pbvar,
   list(coef=coef, residuals=res, Strength.Assoc=stre, Explanatory.Power=e.pow)
 }
 
-###
 
 tsp1reg <- function(x, y, plotit=FALSE) {
 # Compute the Theil-Sen regression estimator. Only a single predictor is
@@ -236,7 +232,6 @@ tsp1reg <- function(x, y, plotit=FALSE) {
   list(coef=coef, residuals=res)
 }
 
-###
 
 out <- function(x, cov.fun=cov.mve, plotit=TRUE, SEED=TRUE, xlab="X", ylab="Y",
                 qval=.975, crit=NULL, ...) {
@@ -304,7 +299,6 @@ out <- function(x, cov.fun=cov.mve, plotit=TRUE, SEED=TRUE, xlab="X", ylab="Y",
   list(out.val=outval, out.id=id, keep=keep, dis=dis, crit=crit)
 }
 
-###
 
 pbos <- function(x, beta=.2) {
 # Compute the one-step percentage bend measure of location

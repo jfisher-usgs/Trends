@@ -1,8 +1,14 @@
-importFrom(openair, TheilSen)
-importFrom(Kendall, MannKendall)
-
 export(OpenGraphicsDevice,
        PlotTrendData,
        ReadTrendData,
        RunStats,
-       ShowSymbols)
+       ShowSymbols,
+       regci,
+       elimna,
+       regboot,
+       pbvar,
+       pbcor,
+       tsreg,
+       tsp1reg,
+       out,
+       pbos)

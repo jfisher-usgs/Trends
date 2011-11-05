@@ -36,10 +36,6 @@ Something
 
 \author{Fisher, J.C., Davis, L.C.}
 
-\seealso{
-\code{\link{TheilSen}}, \code{\link{MannKendall}}
-}
-
 \examples{
 \donttest{RunStats()}
 }

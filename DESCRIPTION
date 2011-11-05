@@ -1,10 +1,10 @@
 Package: Trends
 Version: 0.1-0
-Date: 2011-11-02
+Date: 2011-11-05
 Title: Analysis of Data Collected from a Monitoring Network
 Author: Jason C. Fisher <jfisher@usgs.gov>, Linda C. Davis <lcdavis@usgs.gov>
 Maintainer: Jason C. Fisher <jfisher@usgs.gov>
-Depends: R (>= 2.12.0), tcltk, NADA, openair, Kendall
+Depends: R (>= 2.14.0), tcltk, MASS, NADA, Kendall
 SystemRequirements: Tcl/Tk (>= 8.5)
 Description: This package is for identifying trends in temporal observational
   data.
