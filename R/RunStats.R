@@ -22,14 +22,24 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
     sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", s, perl=TRUE)
   }
 
+  # Calculate percentage change in slope and uncertainties, time limits in days
+  # Need start and end times (t) in days to work out concentrations at those
+  # points. Slope is given in concentration per year. Returns percent change in
+  # percent per year.
+  PercentChange <- function(slope, intercept, tlim) {
+    t1 <- tlim[1]
+    t2 <- tlim[2]
+    c1 <- slope * (t1 / 365) + intercept
+    c2 <- slope * (t2 / 365) + intercept
+    (((c2 / c1) - 1) / (t2 - t1)) * 365 * 100
+  }
+
 
   # Main program:
 
   require(tcltk)
-  if (is.censored)
-    require(NADA)
-  else
-    require(Kendall)
+  require(NADA)
+  require(Kendall)
 
   # Statistics configuration file
   if (is.null(file.stats)) {
@@ -200,22 +210,18 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
           warning(paste("regci error:", err.extra, sep="\n"))
           next
         }
+        # Slopes in concentration per year
         est <- list(p=est[2, 5],
                     slope=est[2, 3] * 365,
                     lower=est[2, 1] * 365, upper=est[2, 2] * 365,
                     intercept=est[1, 3],
                     intercept.lower=est[1, 2], intercept.upper=est[1, 1])
 
-        tlim <- as.numeric(range(d.id.time$date))
-        percent <- function(m, b, xlim) {
-          x1 <- xlim[1]
-          x2 <- xlim[2]
-          ((m * x2 / 365 + b) / (m * x1 / 365 + b) - 1) / (x2 - x1) * 365 * 100
-        }
+        tlim <- as.numeric(range(d.id.time$date)) # time in days
 
-        est$slope.percent <- percent(est$slope, est$intercept, tlim)
-        est$lower.percent <- percent(est$lower, est$intercept.lower, tlim)
-        est$upper.percent <- percent(est$upper, est$intercept.upper, tlim)
+        est$slope.percent <- PercentChange(est$slope, est$intercept, tlim)
+        est$lower.percent <- PercentChange(est$lower, est$intercept.lower, tlim)
+        est$upper.percent <- PercentChange(est$upper, est$intercept.upper, tlim)
 
         rec <- cbind(rec, as.data.frame(est))
 
