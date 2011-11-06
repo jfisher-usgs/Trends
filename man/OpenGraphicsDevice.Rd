@@ -5,7 +5,7 @@
 \title{Open Graphics Device}
 
 \description{
-Starts the graphics device driver for producing graphics.
+Starts the device driver for producing graphics.
 }
 
 \usage{
@@ -14,21 +14,26 @@ OpenGraphicsDevice(gr.type, file.name, figs.dir,
 }
 
 \arguments{
-\item{gr.type}{character; something.}
-\item{file.name}{character; something.}
-\item{figs.dir}{character; something.}
-\item{w}{numeric; something.}
-\item{h}{numeric; something.}
-\item{p}{numeric; something.}
-\item{png.res}{numeric; something.}
+\item{gr.type}{character; the name of graphics driver, either
+  \code{"pdf"}, \code{"postscript"}, \code{"png"}, or \code{"windows"}.}
+\item{file.name}{character; the name of the graphics file without an extension.}
+\item{figs.dir}{character; the directory where graphic files are saved.}
+\item{w, h}{numeric; the (nominal) width and height of the canvas of the
+  plotting window in inches. Default is \code{8.5} and \code{11}, respectively.}
+\item{p}{numeric; the default pointsize of plotted text, its default is
+  \code{12}.}
+\item{png.res}{numeric; The nominal resolution in ppi which will be recorded
+  in the PNG file. Default is \code{300} ppi to set the size of text and line
+  widths.}
 }
 
 \details{
-Something
+A \code{"postscript"} graphics device is recommended for figures of
+publication quality.
 }
 
 \value{
-Something
+A plot device is opened.
 }
 
 \author{Fisher, J.C.}
@@ -39,7 +44,7 @@ Something
 }
 
 \examples{
-\donttest{OpenGraphicsDevice()}
+\donttest{OpenGraphicsDevice("pdf", "fig01", getwd())}
 }
 
 \keyword{misc}
