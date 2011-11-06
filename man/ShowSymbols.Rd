@@ -2,7 +2,7 @@
 
 \alias{ShowSymbols}
 
-\title{Open Graphics Device}
+\title{Draw All Possible Point Symbols}
 
 \description{
 Draw all possible point symbols within a legend.

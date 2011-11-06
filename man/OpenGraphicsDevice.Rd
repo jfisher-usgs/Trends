@@ -22,14 +22,14 @@ OpenGraphicsDevice(figs.dir, file.name, gr.type,
   plotting window in inches. Default is \code{8.5} and \code{11}, respectively.}
 \item{p}{numeric; the default pointsize of plotted text, its default is
   \code{12}.}
-\item{png.res}{numeric; The nominal resolution in ppi which will be recorded
-  in the PNG file. Default is \code{300} ppi to set the size of text and line
-  widths.}
+\item{png.res}{numeric; the nominal resolution in points per inch (ppi)
+  which will be recorded in the PNG file, its default is \code{300} ppi
+  to set the size of text and line widths.}
 }
 
 \details{
-A \code{"postscript"} graphics device is recommended for figures of
-publication quality.
+A \code{"postscript"} graphics device produces an EPS file and
+is recommended for figures of publication quality.
 }
 
 \value{

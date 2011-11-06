@@ -34,12 +34,12 @@ data frame and populated with integer codes representing their respective
 character code. The variable name for this new component is based on a
 concatenation of the parameter name and \code{"_code"}.
 Codes are identified using the following criteria:
-\tabular{cll}{"0-9" \tab No character code \tab 0\cr
-"." \tab No character code \tab 0\cr
+\tabular{cll}{"0-9", "." \tab No character code \tab 0\cr
 "<" \tab Less than \tab 1\cr
 "E" \tab Estimated value \tab 2\cr
 "V" \tab Sample contaminated \tab 3\cr
-"U" \tab Undetectable \tab 4} A warning is given if the character code
+"U" \tab Undetectable \tab 4}
+A warning is given if the character code
 is not recognized and its value set to \code{NA}. Values with character
 codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
 }
@@ -47,7 +47,7 @@ codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
 \value{
 Returns a data frame with components:
 \item{Site_ID}{numeric; a unique numerical identifier used to access site data.}
-\item{Site_name}{numeric; local site identifier.}
+\item{Site_name}{numeric; a local site identifier.}
 \item{Dates}{character; date sample was collected M/D/YYYY (\%m/\%d/\%Y).}
 \item{Times}{character; time sample was collected in HM (\%H\%M).}
 \item{...}{numeric; parameter fields and integer codes.}
