@@ -1,4 +1,4 @@
-OpenGraphicsDevice <- function(gr.type, file.name, figs.dir,
+OpenGraphicsDevice <- function(figs.dir, file.name, gr.type,
                                w=8.5, h=11, p=12, png.res=300) {
 # This function opens a graphics device of type:
 # "windows", "pdf", "png", or "postscript"

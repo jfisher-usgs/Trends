@@ -9,14 +9,14 @@ This function performs a statistical analysis on uncensored and censored data.
 }
 
 \usage{
-RunStats(d, well.names, is.censored = FALSE, initial.dir = getwd(),
+RunStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
          file.stats = NULL, file.out = NULL, figs.dir = NULL,
          avg.time = "year", gr.type = "pdf")
 }
 
 \arguments{
 \item{d}{data.frame; something.}
-\item{well.names}{character; something.}
+\item{site.names}{character; something.}
 \item{is.censored}{logical; something.}
 \item{initial.dir}{character; something.}
 \item{file.stats}{character; something.}

@@ -1,8 +1,8 @@
-PlotTrendData <- function(d, well.names, sdate=NA, edate=NA,
+PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
                           initial.dir=getwd(), file.symbs=NULL, file.plots=NULL,
                           figs.dir=NULL, gr.type="pdf") {
 # This function draws plots on the desired device type
-# PlotTrendData(d, well.names=c("ANP 6", "ARBOR TEST"), gr.type="windows")
+# PlotTrendData(d, site.names=c("ANP 6", "ARBOR TEST"), gr.type="windows")
 
   # Additional functions (subroutines):
 
@@ -47,18 +47,18 @@ PlotTrendData <- function(d, well.names, sdate=NA, edate=NA,
   }
 
   # Obtain site id(s) to plot
-  if (missing(well.names)) {
-    key <- unique(d[, c("Site_ID", "Well_name")])
+  if (missing(site.names)) {
+    key <- unique(d[, c("Site_ID", "Site_name")])
   } else {
-    is.well <- well.names %in% levels(d$Well_name)
-    if (!all(is.well))
-      stop(paste("Well name(s) not in data table: ",
-                 paste(well.names[!is.well], collapse=", ")))
-    key <- unique(d[which(d$Well_name %in% well.names),
-                    c("Site_ID", "Well_name")])
+    is.site <- site.names %in% levels(d$Site_name)
+    if (!all(is.site))
+      stop(paste("Site name(s) not in data table: ",
+                 paste(site.names[!is.site], collapse=", ")))
+    key <- unique(d[which(d$Site_name %in% site.names),
+                    c("Site_ID", "Site_name")])
   }
   site.ids <- key$Site_ID
-  well.nms <- key$Well_name
+  site.nms <- key$Site_name
 
   # Convert date-time arguments into POSIXt class
   origin <- as.POSIXct("1920-01-01 00:00:00.0")
@@ -127,7 +127,7 @@ PlotTrendData <- function(d, well.names, sdate=NA, edate=NA,
       leg.box.col <- "#FFFFFFBB"
 
     # Open graphics device
-    OpenGraphicsDevice(gr.type, well.nms[site.ids == id], figs.dir)
+    OpenGraphicsDevice(figs.dir, site.nms[site.ids == id], gr.type)
     par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
 
     # Loop through plots, corresponds to rows in the configure plot table
@@ -135,7 +135,7 @@ PlotTrendData <- function(d, well.names, sdate=NA, edate=NA,
     for (i in seq(along=tbl.plt.rows)) {
 
       idx <- tbl.plt.rows[i]
-      well.name <- tbl.plt[idx, "Well_name"]
+      site.name <- tbl.plt[idx, "Site_name"]
       consts <- make.names(trim(unlist(strsplit(tbl.plt$Constituents[idx],
                                                 ","))))
 
@@ -145,7 +145,7 @@ PlotTrendData <- function(d, well.names, sdate=NA, edate=NA,
       ylim.default <- tryCatch(extendrange(d0[, consts]), warning=function(w) w)
       if (inherits(ylim.default, "simpleWarning")) {
         txt <- paste("No data found for plot:\nSite id: ", id,
-                     "; Well name: ", well.name, "; Constituents: ",
+                     "; Site name: ", site.name, "; Constituents: ",
                      paste(consts, collapse=", "), "\n", sep="")
         cat(txt)
         next
@@ -210,7 +210,7 @@ PlotTrendData <- function(d, well.names, sdate=NA, edate=NA,
       title(ylab=tbl.plt[idx, "Axis_title"], cex.lab=1, line=3)
 
       if (i == 1) {
-        txt <- paste(well.name, " (", id, ")", sep="")
+        txt <- paste(site.name, " (", id, ")", sep="")
         mtext(txt, side=3, line=1, col="black")
       }
 

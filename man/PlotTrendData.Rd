@@ -9,14 +9,14 @@ This function draws plots on the desired device type.
 }
 
 \usage{
-PlotTrendData(d, well.names, sdate = NA, edate = NA, initial.dir = getwd(),
+PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
               file.symbs = NULL, file.plots = NULL, figs.dir = NULL,
               gr.type = "pdf")
 }
 
 \arguments{
 \item{d}{data.frame; something.}
-\item{well.names}{character; something.}
+\item{site.names}{character; something.}
 \item{sdate}{character; something.}
 \item{edate}{character; something.}
 \item{initial.dir}{character; something.}

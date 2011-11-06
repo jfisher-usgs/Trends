@@ -9,15 +9,15 @@ Starts the device driver for producing graphics.
 }
 
 \usage{
-OpenGraphicsDevice(gr.type, file.name, figs.dir,
+OpenGraphicsDevice(figs.dir, file.name, gr.type,
                    w = 8.5, h = 11, p = 12, png.res = 300)
 }
 
 \arguments{
+\item{figs.dir}{character; the directory where graphic files are saved.}
+\item{file.name}{character; the name of the graphics file without an extension.}
 \item{gr.type}{character; the name of graphics driver, either
   \code{"pdf"}, \code{"postscript"}, \code{"png"}, or \code{"windows"}.}
-\item{file.name}{character; the name of the graphics file without an extension.}
-\item{figs.dir}{character; the directory where graphic files are saved.}
 \item{w, h}{numeric; the (nominal) width and height of the canvas of the
   plotting window in inches. Default is \code{8.5} and \code{11}, respectively.}
 \item{p}{numeric; the default pointsize of plotted text, its default is
@@ -44,7 +44,7 @@ A plot device is opened.
 }
 
 \examples{
-\donttest{OpenGraphicsDevice("pdf", "fig01", getwd())}
+\donttest{OpenGraphicsDevice(getwd(), "fig01", "pdf")}
 }
 
 \keyword{misc}

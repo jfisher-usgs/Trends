@@ -30,9 +30,9 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
 
   # For character class data columns (variables):
   #   - Covert to numeric after accounting for character codes
-  #   - Exclude first four variables: Site_ID, Well_name, Dates, Times
+  #   - Exclude first four variables: Site_ID, Site_name, Dates, Times
 
-  col.idxs <- which(!names(d) %in% c("Site_ID", "Well_name", "Dates", "Times"))
+  col.idxs <- which(!names(d) %in% c("Site_ID", "Site_name", "Dates", "Times"))
   for (j in col.idxs) {
 
     if (!is.character(d[, j]))
@@ -88,7 +88,7 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
   }
 
   # Convert names to factor class
-  d$Well_name <- as.factor(d$Well_name)
+  d$Site_name <- as.factor(d$Site_name)
 
   # Add "datetime" variable, calendar date and time of class POSIXct
   # Missing time values are replaced with 12:00 pm or 1200

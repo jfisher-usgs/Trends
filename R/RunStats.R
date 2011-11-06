@@ -1,4 +1,4 @@
-RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
+RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                      file.stats=NULL, file.out=NULL, figs.dir=NULL,
                      avg.time="year", gr.type="pdf") {
 # This function performs a statistical analysis on uncensored and censored data
@@ -90,10 +90,10 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
   tbl.out <- NULL
 
   # Identify row index numbers of table
-  if (missing(well.names))
+  if (missing(site.names))
     idxs <- 1:nrow(tbl)
   else
-    idxs <- which(tbl$Well_name %in% well.names)
+    idxs <- which(tbl$Site_name %in% site.names)
 
   # Loop though records in statistic table
 
@@ -101,7 +101,7 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
     idx <- idxs[i]
 
     id     <- tbl[idx, "Site_ID"]
-    well   <- tbl[idx, "Well_name"]
+    site   <- tbl[idx, "Site_name"]
     sdate  <- tbl[idx, "Start_date"]
     edate  <- tbl[idx, "End_date"]
     remark <- tbl[idx, "Remark"]
@@ -124,7 +124,7 @@ RunStats <- function(d, well.names, is.censored=FALSE, initial.dir=getwd(),
       }
 
       # Start record that will be added to output table
-      lst <- list("Well_name"=well, "Constituent"=const.names[j],
+      lst <- list("Site_name"=site, "Constituent"=const.names[j],
                   "Start_date"=sdate, "End_date"=edate)
       rec <- as.data.frame(lst, optional=TRUE)
 

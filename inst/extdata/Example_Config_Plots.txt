@@ -1,4 +1,4 @@
-Site_ID	Well_name	Constituents	Min	Max	Axis_title
+Site_ID	Site_name	Constituents	Min	Max	Axis_title
 435152112443101	ANP 6	CL, Na, SO4	NA	NA	Concentration, in milligrams per liter
 435152112443101	ANP 6	NO3+NO2, O-PO4 as P	NA	NA	Concentration, in milligrams per liter
 434856112400001	ANP 9	CL, Na	NA	NA	Concentration, in milligrams per liter
