@@ -1,7 +1,4 @@
-Example Workflow
-================
-
-# Trend package example workflow
+# Example workflow
   require(Trends)
 
 # This workflow requires input files to be located in:
