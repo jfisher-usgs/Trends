@@ -20,7 +20,7 @@ ReadTrendData(file.data = NULL, initial.dir = getwd())
 
 \format{
 The imported data table requires the following field names:
-\code{"Site_ID"}, \code{"Site_name"}, \code{"Dates"}, and \code{"Times"}.
+\code{"Site_id"}, \code{"Site_name"}, \code{"Dates"}, and \code{"Times"}.
 Parameter field names are arbitrary; however, they must be consistent among
 input tables. See \sQuote{Value} for information on field content.
 }
@@ -46,7 +46,7 @@ codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
 
 \value{
 Returns a data frame with components:
-\item{Site_ID}{numeric; a unique numerical identifier used to access site data.}
+\item{Site_id}{numeric; a unique numerical identifier used to access site data.}
 \item{Site_name}{numeric; a local site identifier.}
 \item{Dates}{character; date sample was collected M/D/YYYY (\%m/\%d/\%Y).}
 \item{Times}{character; time sample was collected in HM (\%H\%M).}

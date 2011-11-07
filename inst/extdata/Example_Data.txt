@@ -1,4 +1,4 @@
-Site_ID	Site_name	Dates 	Times	pH	Spec. Cond.	Temp	SB	AG	HG	CD	TL	CA	MG	K	SI	TOC	NH3	NO3+NO2	O-PO4 as P	ZN	U	SE	NI	MO	MN	PB	CU	CO	BA	AS	CR	CL	SO4	F	BR	Na
+Site_id	Site_name	Dates 	Times	pH	Spec. Cond.	Temp	SB	AG	HG	CD	TL	CA	MG	K	SI	TOC	NH3	NO3+NO2	O-PO4 as P	ZN	U	SE	NI	MO	MN	PB	CU	CO	BA	AS	CR	CL	SO4	F	BR	Na
 435152112443101	ANP 6	9/6/1956		8.04	392	13																										14.04	35.04			10.04
 435152112443101	ANP 6	9/7/1977	920			13.5																										14	32			10
 435152112443101	ANP 6	4/25/1986	1815		300	13.5																										12

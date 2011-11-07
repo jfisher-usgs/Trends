@@ -1,3 +1,6 @@
+Example Workflow
+================
+
 # Trend package example workflow
   require(Trends)
 

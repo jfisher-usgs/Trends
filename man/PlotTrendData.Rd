@@ -15,7 +15,7 @@ PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
 }
 
 \arguments{
-\item{d}{data.frame; something.}
+\item{d}{data.frame; trend data, see \code{\link{ReadTrendData}}.}
 \item{site.names}{character; an array of local site identifiers; if missing,
   all sites in the plots configuration file are used.}
 \item{sdate, edate}{character; start and end date corresponding to the
@@ -35,7 +35,7 @@ PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
 
 \format{
 The imported plot configuration table requires the following fields:
-\code{"Site_ID"}, a unique numerical identifier used to access site data;
+\code{"Site_id"}, a unique numerical identifier used to access site data;
 \code{"Site_name"}, a local site identifier;
 \code{"Constituents"}, comma seperated parameter names corresponding to
   header fields in the data table, see \code{\link{ReadTrendData}};
@@ -57,7 +57,18 @@ Something
 }
 
 \examples{
-\donttest{PlotTrendData()}
+f <- system.file("extdata/Example_Data.txt", package = "Trends")
+d <- ReadTrendData(f)
+
+file.symbs <- system.file("extdata/Example_Config_Symbols.txt",
+                          package = "Trends")
+file.plots <- system.file("extdata/Example_Config_Plots.txt",
+                          package = "Trends")
+
+PlotTrendData(d, site.names = c("ANP 6", "ARBOR TEST"),
+              sdate = "01/01/1990", edate = "01/01/2010",
+              file.symbs = file.symbs, file.plots = file.plots,
+              gr.type = "windows")
 }
 
 \keyword{hplot}

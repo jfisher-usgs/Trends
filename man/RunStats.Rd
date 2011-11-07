@@ -15,15 +15,35 @@ RunStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 }
 
 \arguments{
-\item{d}{data.frame; something.}
-\item{site.names}{character; something.}
-\item{is.censored}{logical; something.}
-\item{initial.dir}{character; something.}
-\item{file.stats}{character; something.}
-\item{file.out}{character; something.}
-\item{figs.dir}{character; something.}
-\item{avg.time}{character; something.}
-\item{gr.type}{character; something.}
+\item{d}{data.frame; trend data, see \code{\link{ReadTrendData}}.}
+\item{site.names}{character; an array of local site identifiers; if missing,
+  all sites in the statistics configuration file are used.}
+\item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
+  censorsed, its default is \code{FALSE}, see \sQuote{Details}.}
+\item{initial.dir}{character; specifies the initial directory in the open files
+  pop-up box.}
+\item{file.stats}{character; file path for the statistics configuration table,
+  see \sQuote{Format}.}
+\item{file.out}{character; file path for the statistics summary table,
+  see \sQuote{Value}.}
+\item{figs.dir}{character; if \code{gr.type} not equal to \code{"windows"},
+  the directory where statistic plots are saved.}
+\item{avg.time}{character; the time interval into which the period of record
+  is to be cut.}
+\item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
+  is \code{"pdf"}.}
+}
+
+
+\format{
+The imported statistics configuration table requires the following fields:
+\code{"Site_id"}, a unique numerical identifier used to access site data;
+\code{"Site_name"}, a local site identifier;
+\code{"Constituents"}, comma seperated parameter names corresponding to
+  header fields in the data table, see \code{\link{ReadTrendData}};
+\code{"Start_date"}, something;
+\code{"End_date"}, something; and
+\code{"Remark"}, something.
 }
 
 \details{
@@ -37,6 +57,12 @@ Something
 \author{Fisher, J.C., Davis, L.C.}
 
 \examples{
+f <- system.file("extdata/Example_Data.txt", package = "Trends")
+d <- ReadTrendData(f)
+
+file.stats <- system.file("extdata/Example_Stats_Uncensored.txt",
+                          package = "Trends")
+
 \donttest{RunStats()}
 }
 

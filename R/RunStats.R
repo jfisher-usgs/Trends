@@ -100,7 +100,7 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   for (i in seq(along=idxs)) {
     idx <- idxs[i]
 
-    id     <- tbl[idx, "Site_ID"]
+    id     <- tbl[idx, "Site_id"]
     site   <- tbl[idx, "Site_name"]
     sdate  <- tbl[idx, "Start_date"]
     edate  <- tbl[idx, "End_date"]
@@ -136,7 +136,7 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         col.names <- c(col.names, col.code.name)
 
       # Reduce size of data table
-      is.id <- d$Site_ID == id
+      is.id <- d$Site_id == id
       is.dt <- d$datetime >= sdate & d$datetime <= edate
       d.id <- d[is.id & is.dt, col.names]
 

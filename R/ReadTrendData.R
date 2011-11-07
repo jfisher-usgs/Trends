@@ -30,9 +30,9 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
 
   # For character class data columns (variables):
   #   - Covert to numeric after accounting for character codes
-  #   - Exclude first four variables: Site_ID, Site_name, Dates, Times
+  #   - Exclude first four variables: Site_id, Site_name, Dates, Times
 
-  col.idxs <- which(!names(d) %in% c("Site_ID", "Site_name", "Dates", "Times"))
+  col.idxs <- which(!names(d) %in% c("Site_id", "Site_name", "Dates", "Times"))
   for (j in col.idxs) {
 
     if (!is.character(d[, j]))

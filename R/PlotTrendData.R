@@ -48,16 +48,16 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
   # Obtain site id(s) to plot
   if (missing(site.names)) {
-    key <- unique(d[, c("Site_ID", "Site_name")])
+    key <- unique(d[, c("Site_id", "Site_name")])
   } else {
     is.site <- site.names %in% levels(d$Site_name)
     if (!all(is.site))
       stop(paste("Site name(s) not in data table: ",
                  paste(site.names[!is.site], collapse=", ")))
     key <- unique(d[which(d$Site_name %in% site.names),
-                    c("Site_ID", "Site_name")])
+                    c("Site_id", "Site_name")])
   }
-  site.ids <- key$Site_ID
+  site.ids <- key$Site_id
   site.nms <- key$Site_name
 
   # Convert date-time arguments into POSIXt class
@@ -73,7 +73,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   # Read plot configuration table
   tbl.plt <- read.table(file=file.plots, header=TRUE, sep="\t",
                         stringsAsFactors=FALSE)
-  tbl.plt <- tbl.plt[tbl.plt[, "Site_ID"] %in% site.ids, ]
+  tbl.plt <- tbl.plt[tbl.plt[, "Site_id"] %in% site.ids, ]
 
   # Determine constituents
   constituents <- NULL
@@ -94,7 +94,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
   # Reduce size of data table using site id(s) and date-time limits
 
-  d <- d[d[, "Site_ID"] %in% site.ids, ]
+  d <- d[d[, "Site_id"] %in% site.ids, ]
   if (!is.na(sdate))
     d <- d[d[, "datetime"] >= sdate, ]
   if (!is.na(edate))
@@ -105,12 +105,12 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   for (id in site.ids) {
 
     # Determine plots to draw
-    tbl.plt.rows <- which(tbl.plt$Site_ID == id)
+    tbl.plt.rows <- which(tbl.plt$Site_id == id)
     if (length(tbl.plt.rows) == 0)
       next
 
     # Create a smaller data table that is temporary
-    d0 <- d[d[, "Site_ID"] == id, c("datetime", constituents)]
+    d0 <- d[d[, "Site_id"] == id, c("datetime", constituents)]
 
     # Determine x-axis limits
     xlim <- c(sdate, edate)

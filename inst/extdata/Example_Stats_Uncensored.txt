@@ -1,4 +1,4 @@
-Site_ID	Site_name	Constituents	Start_date	End_date	Remark
+Site_id	Site_name	Constituents	Start_date	End_date	Remark
 435152112443101	ANP 6	CL, Na, SO4, NO3+NO2, O-PO4 as P	1/1/1986	12/31/2009
 434856112400001	ANP 9	CL, Na, NO3+NO2, AS, BA, CR, MO, U, ZN	1/1/1994	12/31/2009
 433509112384801	ARBOR TEST	CL	1/1/1989	12/31/2009
