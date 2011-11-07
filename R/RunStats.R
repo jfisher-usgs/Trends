@@ -22,16 +22,16 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", s, perl=TRUE)
   }
 
-  # Calculate percentage change in slope and uncertainties, time limits in days
-  # Need start and end times (t) in days to work out concentrations at those
+  # Calculate percentage change in slope and uncertainties.
+  # Need start and end times (t) in seconds to work out concentrations at those
   # points. Slope is given in concentration per year. Returns percent change in
   # percent per year.
   PercentChange <- function(slope, intercept, tlim) {
     t1 <- tlim[1]
     t2 <- tlim[2]
-    c1 <- slope * (t1 / 365) + intercept
-    c2 <- slope * (t2 / 365) + intercept
-    (((c2 / c1) - 1) / (t2 - t1)) * 365 * 100
+    c1 <- slope * (t1 / 31536000) + intercept
+    c2 <- slope * (t2 / 31536000) + intercept
+    (((c2 / c1) - 1) / (t2 - t1)) * 31536000 * 100
   }
 
 
@@ -124,7 +124,8 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       }
 
       # Start record that will be added to output table
-      lst <- list("Site_name"=site, "Constituent"=const.names[j],
+      lst <- list("Site_id"=format(id, scientific=FALSE),
+                  "Site_name"=site, "Constituent"=const.names[j],
                   "Start_date"=sdate, "End_date"=edate)
       rec <- as.data.frame(lst, optional=TRUE)
 
@@ -150,25 +151,79 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         below.rl <- 0
 
       # Text to append to error messages
-      err.extra <- paste("Row index: ", idx, ", Constituent:, ", const,
+      err.extra <- paste("Row index: ", idx, ", Constituent: ", const,
                          "\n", sep="")
 
       # Start statistical analysis
 
       if (is.censored) {
 
-        print("notyet")
+        # Remove any row with NA values
+        d.id <- na.omit(d.id)
+        n <- nrow(d.id)
+
+        # Identify censored data
+        if (is.code)
+          is.cen <- d.id[[col.code.name]] %in% 1
+        else
+          is.cen <- rep(FALSE, nrow(d.id))
+        n.cen <- sum(as.integer(is.cen))
+
+        # Basic summary statistics
+        ans <- try(cenfit(d.id[[const]], is.cen), silent=TRUE)
+        if (inherits(ans, "try-error")) {
+          warning(paste("Cenfit error:", err.extra, sep="\n"))
+          next
+        }
+        lst <- list("n"=n, "n.cen"=n.cen,
+                    "mean"=as.numeric(mean(ans)[1]), "median"=median(ans),
+                    "min"=min(d.id[[const]]), "max"=max(d.id[[const]]),
+                    "std.dev"=sd(ans), "len_record"=diff(range(d.id$datetime)))
+        rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
+
+        # Kendall's tau correlation coefficient
+        ans <- try(suppressWarnings(cenken(d.id[[const]], is.cen,
+                                           as.numeric(d.id$datetime))),
+                   silent=TRUE)
+        if (inherits(ans, "try-error")) {
+          warning(paste("Cenken error:", err.extra, sep="\n"))
+          next
+        }
+        lst <- list("slope"=ans$slope * 31536000, "intercept"=ans$intercept,
+                    "tau"=ans$tau, "p"=ans$p)
+        rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
+
+
+
+
+
+
+        cenxyplot(d.id$datetime, FALSE, d.id[[const]], is.cen, main=err.extra)
+
+        if (!is.na(ans$slope) && !is.na(ans$intercept))
+          lines(ans, col="red")
+
+##      if (ans$p < 0.05)
+##        browser()
+
+
+
 
       } else {
+
+
+
+        ### NA values with code 1, less than, censored data
+
+
+
 
         # Basic summary statistics
         dat <- na.omit(d.id[[const]])
         n <- length(dat)
         lst <- list("n"=n, "n.above.rl"=n - below.rl,
                     "mean"=mean(dat), "median"=median(dat),
-                    "min"=min(dat), "max"=max(dat),
-                    "std.dev"=sd(dat), "len_record"=edate - sdate,
-                    "remark"=remark)
+                    "min"=min(dat), "max"=max(dat), "std.dev"=sd(dat))
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
         # Determine date cuts based on time interval
@@ -189,6 +244,8 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         } else {
           d.id.time <- na.omit(ans[, c("date", const)])
         }
+        lst <- list("len_record"=diff(range(d.id.time$date)))
+        rec <- cbind(rec, as.data.frame(lst))
 
         # Theil Sen
 
@@ -210,14 +267,15 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           warning(paste("regci error:", err.extra, sep="\n"))
           next
         }
-        # Slopes in concentration per year
+        # Convert slopes from conc. per second to conc. per year;
+        # 31,536,000 seconds in one year
         est <- list(p=est[2, 5],
-                    slope=est[2, 3] * 365,
-                    lower=est[2, 1] * 365, upper=est[2, 2] * 365,
+                    slope=est[2, 3] * 31536000,
+                    lower=est[2, 1] * 31536000, upper=est[2, 2] * 31536000,
                     intercept=est[1, 3],
-                    intercept.lower=est[1, 2], intercept.upper=est[1, 1])
+                    intercept.lower=est[1, 1], intercept.upper=est[1, 2])
 
-        tlim <- as.numeric(range(d.id.time$date)) # time in days
+        tlim <- as.numeric(range(d.id.time$date)) # time in seconds
 
         est$slope.percent <- PercentChange(est$slope, est$intercept, tlim)
         est$lower.percent <- PercentChange(est$lower, est$intercept.lower, tlim)
@@ -247,12 +305,17 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         }
         lst <- list(signif.trend=signif.trend)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
-
-        # Add record to table
-        tbl.out <- rbind(tbl.out, rec)
       }
+
+      # Remark
+      lst <- list("Remark"=remark)
+      rec <- cbind(rec, as.data.frame(lst))
+
+      # Add record to table
+      tbl.out <- rbind(tbl.out, rec)
     }
   }
+
 
 tbl.out <- format(tbl.out)
 
