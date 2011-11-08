@@ -1,24 +1,24 @@
-\name{ShowSymbols}
+\name{ShowParameters}
 
-\alias{ShowSymbols}
+\alias{ShowParameters}
 
-\title{Draw All Possible Point Symbols}
+\title{Draw All Parameters in a Legend}
 
 \description{
-Draw all possible point symbols within a legend.
+Draw all possible parameters within a legend.
 }
 
 \usage{
-ShowSymbols(file.symbs)
+ShowParameters(file.parameters)
 }
 
 \arguments{
-\item{file.symbs}{character; file path for the point symbol configuration
+\item{file.parameters}{character; file path for the parameter configuration
    table, see \sQuote{Format}}
 }
 
 \format{
-The imported point symbol configuration table requires the following fields:
+The imported parameter configuration table requires the following fields:
 \code{"Constituent"}, a unique parameter name corresponding to header fields
   in the data table;
 \code{"Name"}, the parameter name, used for legend text and axis labels;
@@ -36,8 +36,9 @@ Each line of the table represents a single unique parameter.
 }
 
 \examples{
-f <- system.file("extdata/Example_Config_Symbols.txt", package = "Trends")
-ShowSymbols(f)
+f <- system.file("extdata/Example_Config_Parameters.txt",
+                 package = "Trends")
+ShowParameters(f)
 }
 
 \keyword{hplot}

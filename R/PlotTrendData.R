@@ -1,6 +1,6 @@
 PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
-                          initial.dir=getwd(), file.symbs=NULL, file.plots=NULL,
-                          figs.dir=NULL, gr.type="pdf") {
+                          initial.dir=getwd(), file.parameters=NULL,
+                          file.plots=NULL, figs.dir=NULL, gr.type="pdf") {
 # This function draws plots on the desired device type
 # PlotTrendData(d, site.names=c("ANP 6", "ARBOR TEST"), gr.type="windows")
 
@@ -17,14 +17,15 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   require(tcltk)
 
   # Symbol configuration file
-  if (is.null(file.symbs)) {
-    txt <- "Open configuration file for symbols"
-    file.symbs <- paste(tcl("tk_getOpenFile", initialdir=initial.dir, title=txt,
-                            filetypes="{{Text files} {.txt}} {{All files} {*}}",
-                            multiple=FALSE), collapse=" ")
+  if (is.null(file.parameters)) {
+    txt <- "Open configuration file for parameters"
+    file.types <- "{{Text files} {.txt}} {{All files} {*}}"
+    file.parameters <- paste(tcl("tk_getOpenFile", initialdir=initial.dir,
+                                 title=txt, filetypes=file.types,
+                                 multiple=FALSE), collapse=" ")
   }
-  if (!file.exists(file.symbs))
-    stop("Symbol file does not exist")
+  if (!file.exists(file.parameters))
+    stop("Parameters file does not exist")
 
   # Plot configuration file
   if (is.null(file.plots)) {
@@ -65,10 +66,10 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   sdate  <- as.POSIXct(sdate, "%m/%d/%Y", tz="MST", origin=origin)
   edate  <- as.POSIXct(edate, "%m/%d/%Y", tz="MST", origin=origin)
 
-  # Read symbol configuration table
-  tbl.sym <- read.table(file=file.symbs, header=TRUE, sep="\t",
+  # Read parameter configuration table
+  tbl.par <- read.table(file=file.parameters, header=TRUE, sep="\t",
                         stringsAsFactors=FALSE, comment.char="", row.names=1)
-  row.names(tbl.sym) <- make.names(row.names(tbl.sym))
+  row.names(tbl.par) <- make.names(row.names(tbl.par))
 
   # Read plot configuration table
   tbl.plt <- read.table(file=file.plots, header=TRUE, sep="\t",
@@ -82,10 +83,10 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
                       unlist(strsplit(tbl.plt$Constituents[i], ",")))
   constituents <- make.names(trim(unique(constituents)))
 
-  is.in.sym <- constituents %in% row.names(tbl.sym)
+  is.in.par <- constituents %in% row.names(tbl.par)
   is.in.dat <- constituents %in% names(d)
-  if (!all(is.in.sym) | !all(is.in.dat)) {
-    idxs <- which(!is.in.sym | !is.in.dat)
+  if (!all(is.in.par) | !all(is.in.dat)) {
+    idxs <- which(!is.in.par | !is.in.dat)
     txt <- paste("Inconsistent constituent names among tables:",
                  "table Config_Plots\nProblem is with converted string(s):",
                  paste(constituents[idxs], collapse="; "))
@@ -221,7 +222,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       leg <- leg.pch <- leg.col <- leg.bg <- NULL
 
       for (j in seq(along=consts)) {
-        config <- tbl.sym[consts[j], ]
+        config <- tbl.par[consts[j], ]
         pch  <- config[, "pch"]
         col  <- config[, "col"]
         bg   <- config[, "bg"]

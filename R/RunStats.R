@@ -29,9 +29,24 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   PercentChange <- function(slope, intercept, tlim) {
     t1 <- tlim[1]
     t2 <- tlim[2]
-    c1 <- slope * (t1 / 31536000) + intercept
-    c2 <- slope * (t2 / 31536000) + intercept
-    (((c2 / c1) - 1) / (t2 - t1)) * 31536000 * 100
+    c1 <- slope * (t1 / secs.in.year) + intercept
+    c2 <- slope * (t2 / secs.in.year) + intercept
+    (((c2 / c1) - 1) / (t2 - t1)) * secs.in.year * 100
+  }
+
+  # Classify trend using p-value and slope
+  ClassifyTrend <- function(p, slope, tol=0.05) {
+    is.sig.trend <- p <= tol
+    is.pos.slope <- slope > 0
+    if (is.sig.trend) {
+      if (is.pos.slope)
+        trend <- "+"
+      else
+        trend <- "-"
+    } else {
+      trend <- "no trend"
+    }
+    trend
   }
 
 
@@ -95,6 +110,9 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   else
     idxs <- which(tbl$Site_name %in% site.names)
 
+  # Number of seconds in year, used for time conversions
+  secs.in.year <- 31536000
+
   # Loop though records in statistic table
 
   for (i in seq(along=idxs)) {
@@ -104,9 +122,6 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     site   <- tbl[idx, "Site_name"]
     sdate  <- tbl[idx, "Start_date"]
     edate  <- tbl[idx, "End_date"]
-    remark <- tbl[idx, "Remark"]
-    if (is.na(remark))
-      remark <- ""
 
     const.names <- trim(unique(unlist(strsplit(tbl[idx, "Constituents"], ","))))
     consts <- make.names(const.names)
@@ -151,11 +166,12 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         below.rl <- 0
 
       # Text to append to error messages
-      err.extra <- paste("Row index: ", idx, ", Constituent: ", const,
-                         "\n", sep="")
+      err.extra <- paste("Row index: ", idx, ", Site name: ", site,
+                         ", Constituent: ", const, "\n", sep="")
 
       # Start statistical analysis
 
+      # Censored data
       if (is.censored) {
 
         # Remove any row with NA values
@@ -170,27 +186,34 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         n.cen <- sum(as.integer(is.cen))
 
         # Basic summary statistics
-        ans <- try(cenfit(d.id[[const]], is.cen), silent=TRUE)
+        dat <- d.id[[const]]
+        ans <- try(suppressWarnings(cenfit(dat, is.cen)), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("Cenfit error:", err.extra, sep="\n"))
           next
         }
-        lst <- list("n"=n, "n.cen"=n.cen,
+        len.record <- diff(range(d.id$datetime))
+        lst <- list("n"=n, "n_cen"=n.cen,
                     "mean"=as.numeric(mean(ans)[1]), "median"=median(ans),
-                    "min"=min(d.id[[const]]), "max"=max(d.id[[const]]),
-                    "std.dev"=sd(ans), "len_record"=diff(range(d.id$datetime)))
+                    "min"=min(dat), "max"=max(dat),
+                    "std_dev"=sd(ans), "len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-        # Kendall's tau correlation coefficient
-        ans <- try(suppressWarnings(cenken(d.id[[const]], is.cen,
+        # Kendall's tau correlation coefficient and trend line
+        ans <- try(suppressWarnings(cenken(dat, is.cen,
                                            as.numeric(d.id$datetime))),
-                   silent=TRUE)
+                                           silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("Cenken error:", err.extra, sep="\n"))
           next
         }
-        lst <- list("slope"=ans$slope * 31536000, "intercept"=ans$intercept,
+        lst <- list("slope"=ans$slope * secs.in.year, "intercept"=ans$intercept,
                     "tau"=ans$tau, "p"=ans$p)
+        rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
+
+        # Classify trend
+        ans <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
+        lst <- list(trend=ans)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
 
@@ -198,10 +221,15 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
 
 
-        cenxyplot(d.id$datetime, FALSE, d.id[[const]], is.cen, main=err.extra)
 
-        if (!is.na(ans$slope) && !is.na(ans$intercept))
-          lines(ans, col="red")
+
+
+        # Draw plot
+
+#       cenxyplot(d.id$datetime, FALSE, dat, is.cen, main=err.extra)
+
+#       if (!is.na(rec[1, "slope"]) && !is.na(rec[1, "intercept"]))
+#         lines(ans, col="red")
 
 ##      if (ans$p < 0.05)
 ##        browser()
@@ -209,24 +237,31 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
 
 
+
+
+
+
+
+      # Uncensored data
       } else {
 
-
-
-        ### NA values with code 1, less than, censored data
-
-
-
+        # Warn if censored data found
+        is.cen <- any(d.id[[col.code.name]] %in% 1)
+        if (is.cen) {
+          txt <- "Censored data found in uncensored statistical analysis:"
+          warning(paste(txt, err.extra, sep="\n"))
+          next
+        }
 
         # Basic summary statistics
         dat <- na.omit(d.id[[const]])
         n <- length(dat)
-        lst <- list("n"=n, "n.above.rl"=n - below.rl,
+        lst <- list("n"=n, "n_above_rl"=n - below.rl,
                     "mean"=mean(dat), "median"=median(dat),
-                    "min"=min(dat), "max"=max(dat), "std.dev"=sd(dat))
+                    "min"=min(dat), "max"=max(dat), "std_dev"=sd(dat))
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-        # Determine date cuts based on time interval
+        # Find date cuts based on time interval
         ans <- try(cut(d.id$datetime, avg.time), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("Time cut error:", ans, err.extra, sep="\n"))
@@ -244,72 +279,51 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         } else {
           d.id.time <- na.omit(ans[, c("date", const)])
         }
-        lst <- list("len_record"=diff(range(d.id.time$date)))
+        len.record <- diff(range(d.id.time$date))
+        lst <- list("len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst))
 
-        # Theil Sen
+        # Calculate Theil-Sen estimator and trend line using R.R. Wilcox'
+        # functions
 
-     ## require(openair)
-     ## ans <- try(TheilSen(d.id.time, const, avg.time="year",
-     ##            slope.percent=TRUE), silent=TRUE)
-     ## if (inherits(ans, "try-error") | is.null(ans)) {
-     ##   warning(paste("TheilSen error:", err.extra, sep="\n"))
-     ##   next
-     ## }
-     ## ts.cols <- c("p", "slope", "lower", "upper",
-     ##              "intercept", "intercept.lower", "intercept.upper",
-     ##              "slope.percent", "lower.percent", "upper.percent")
-     ## rec <- cbind(rec, ans$data$res2[1, ts.cols])
-
-        est <- try(regci(as.numeric(d.id.time$date), d.id.time[, const],
-                         alpha=0.5, pr=FALSE)$regci, silent=TRUE)
+        est <- try(suppressWarnings(regci(as.numeric(d.id.time$date),
+                                          d.id.time[, const], alpha=0.5,
+                                          pr=FALSE)$regci), silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
           warning(paste("regci error:", err.extra, sep="\n"))
           next
         }
-        # Convert slopes from conc. per second to conc. per year;
-        # 31,536,000 seconds in one year
-        est <- list(p=est[2, 5],
-                    slope=est[2, 3] * 31536000,
-                    lower=est[2, 1] * 31536000, upper=est[2, 2] * 31536000,
-                    intercept=est[1, 3],
-                    intercept.lower=est[1, 1], intercept.upper=est[1, 2])
 
-        tlim <- as.numeric(range(d.id.time$date)) # time in seconds
+        # Convert slopes from unit per second to unit per year;
+        est <- list("p"=est[2, 5],
+                    "slope"=est[2, 3] * secs.in.year,
+                    "lower"=est[2, 1] * secs.in.year,
+                    "upper"=est[2, 2] * secs.in.year,
+                    "intercept"=est[1, 3],
+                    "intercept_lower"=est[1, 1],
+                    "intercept_upper"=est[1, 2])
 
-        est$slope.percent <- PercentChange(est$slope, est$intercept, tlim)
-        est$lower.percent <- PercentChange(est$lower, est$intercept.lower, tlim)
-        est$upper.percent <- PercentChange(est$upper, est$intercept.upper, tlim)
+        # Time limit in seconds
+        tlim <- as.numeric(range(d.id.time$date))
+
+        est$slope_percent <- PercentChange(est$slope, est$intercept, tlim)
+        est$lower_percent <- PercentChange(est$lower, est$intercept_lower, tlim)
+        est$upper_percent <- PercentChange(est$upper, est$intercept_upper, tlim)
 
         rec <- cbind(rec, as.data.frame(est))
 
-        # Mann Kendall
-
+        # Calculate Kendall estimates using the Kendall package
         ans <- MannKendall(d.id.time[, const])
-        lst <- list(tau=ans$tau[1], sl=ans$sl[1], S=ans$S[1])
+        lst <- list("Kendall_tau"=ans$tau[1],
+                    "Kendall_sl"=ans$sl[1],
+                    "Kendall_S"=ans$S[1])
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-        # Significant trend
-
-        p <- rec[1, "p"]
-        slope <- rec[1, "slope"]
-        is.sig.trend <- p < 0.05
-        is.pos.slope <- slope > 0
-        if (is.sig.trend) {
-          if (is.pos.slope)
-            signif.trend <- "+"
-          else
-            signif.trend <- "-"
-        } else {
-          signif.trend <- "no trend"
-        }
-        lst <- list(signif.trend=signif.trend)
+        # Classify trend
+        trend <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
+        lst <- list("trend"=trend)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
       }
-
-      # Remark
-      lst <- list("Remark"=remark)
-      rec <- cbind(rec, as.data.frame(lst))
 
       # Add record to table
       tbl.out <- rbind(tbl.out, rec)

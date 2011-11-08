@@ -7,16 +7,16 @@
 # Input file paths
 
   file.data         <- file.path(dir.path, "Data_20111101.txt")
-  file.symbs        <- file.path(dir.path, "Config_Symbols_20111102.txt")
-  file.plots        <- file.path(dir.path, "Config_Plots_20111101.txt")
-  file.stats.uncens <- file.path(dir.path, "Stats_Uncensored_20111027.txt")
-  file.stats.cens   <- file.path(dir.path, "Stats_Censored_20111027.txt")
+  file.parameters   <- file.path(dir.path, "Config_Parameters_20111102.txt")
+  file.plots        <- file.path(dir.path, "Config_Plots_20111107.txt")
+  file.stats.uncens <- file.path(dir.path, "Config_Uncensored_20111027.txt")
+  file.stats.cens   <- file.path(dir.path, "Config_Censored_20111027.txt")
 
 # Read trend data
   d <- ReadTrendData(file.data)
 
-# Plot symbols (not required)
-  ShowSymbols(file.symbs)
+# Plot parameters (not required)
+  ShowParameters(file.parameters)
 
 # Plot trend data
 
@@ -28,7 +28,7 @@
     edate <- "01/01/2010"
 
   PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type,
-                initial.dir=dir.path, file.symbs=file.symbs,
+                initial.dir=dir.path, file.parameters=file.parameters,
                 file.plots=file.plots)
 
 # Run statistics

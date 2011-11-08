@@ -10,7 +10,7 @@ This function draws plots on the desired device type.
 
 \usage{
 PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
-              file.symbs = NULL, file.plots = NULL, figs.dir = NULL,
+              file.parameters = NULL, file.plots = NULL, figs.dir = NULL,
               gr.type = "pdf")
 }
 
@@ -21,10 +21,10 @@ PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
 \item{sdate, edate}{character; start and end date corresponding to the
   period of record, in M/D/YYYY (\%m/\%d/\%Y).}
 \item{initial.dir}{character; specifies the initial directory in the open files
-  pop-up box; only used when \code{file.symbs} or \code{file.plots} is
+  pop-up box; only used when \code{file.parameters} or \code{file.plots} is
   \code{NULL}.}
-\item{file.symbs}{character; file path for the point symbol configuration
-   table, see \code{\link{ShowSymbols}}.}
+\item{file.parameters}{character; file path for the parameters
+  configuration table, see \code{\link{ShowParameters}}.}
 \item{file.plots}{character; file path for the plot configuration table,
   see \sQuote{Format}.}
 \item{figs.dir}{character; if \code{gr.type} not equal to \code{"windows"},
@@ -60,14 +60,14 @@ Something
 f <- system.file("extdata/Example_Data.txt", package = "Trends")
 d <- ReadTrendData(f)
 
-file.symbs <- system.file("extdata/Example_Config_Symbols.txt",
-                          package = "Trends")
+file.parameters <- system.file("extdata/Example_Config_Parameters.txt",
+                               package = "Trends")
 file.plots <- system.file("extdata/Example_Config_Plots.txt",
                           package = "Trends")
 
 PlotTrendData(d, site.names = c("ANP 6", "ARBOR TEST"),
               sdate = "01/01/1990", edate = "01/01/2010",
-              file.symbs = file.symbs, file.plots = file.plots,
+              file.parameters = file.parameters, file.plots = file.plots,
               gr.type = "windows")
 }
 
