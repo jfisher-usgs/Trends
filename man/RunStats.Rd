@@ -39,7 +39,7 @@ RunStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 The imported statistics configuration table requires the following fields:
 \code{"Site_id"}, a unique numerical identifier used to access site data;
 \code{"Site_name"}, a local site identifier;
-\code{"Constituents"}, comma seperated parameter names corresponding to
+\code{"Parameters"}, comma seperated parameter names corresponding to
   header fields in the data table, see \code{\link{ReadTrendData}};
 \code{"Start_date"}, something;
 \code{"End_date"}, something; and

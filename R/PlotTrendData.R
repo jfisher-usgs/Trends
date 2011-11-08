@@ -25,7 +25,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
                                  multiple=FALSE), collapse=" ")
   }
   if (!file.exists(file.parameters))
-    stop("Parameters file does not exist")
+    stop("Parameter file does not exist")
 
   # Plot configuration file
   if (is.null(file.plots)) {
@@ -76,20 +76,20 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
                         stringsAsFactors=FALSE)
   tbl.plt <- tbl.plt[tbl.plt[, "Site_id"] %in% site.ids, ]
 
-  # Determine constituents
-  constituents <- NULL
+  # Determine parameters
+  parameters <- NULL
   for (i in 1:nrow(tbl.plt))
-    constituents <- c(constituents,
-                      unlist(strsplit(tbl.plt$Constituents[i], ",")))
-  constituents <- make.names(trim(unique(constituents)))
+    parameters <- c(parameters,
+                    unlist(strsplit(tbl.plt$Parameters[i], ",")))
+  parameters <- make.names(trim(unique(parameters)))
 
-  is.in.par <- constituents %in% row.names(tbl.par)
-  is.in.dat <- constituents %in% names(d)
+  is.in.par <- parameters %in% row.names(tbl.par)
+  is.in.dat <- parameters %in% names(d)
   if (!all(is.in.par) | !all(is.in.dat)) {
     idxs <- which(!is.in.par | !is.in.dat)
-    txt <- paste("Inconsistent constituent names among tables:",
+    txt <- paste("Inconsistent parameter names among tables:",
                  "table Config_Plots\nProblem is with converted string(s):",
-                 paste(constituents[idxs], collapse="; "))
+                 paste(parameters[idxs], collapse="; "))
     stop(txt)
   }
 
@@ -111,15 +111,10 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       next
 
     # Create a smaller data table that is temporary
-    d0 <- d[d[, "Site_id"] == id, c("datetime", constituents)]
+    d0 <- d[d[, "Site_id"] == id, c("datetime", parameters)]
 
-    # Determine x-axis limits
+    # Set x-axis limits
     xlim <- c(sdate, edate)
-    xlim.default <- extendrange(d0$datetime)
-    if (is.na(xlim[1]))
-      xlim[1] <- xlim.default[1]
-    if (is.na(xlim[2]))
-      xlim[2] <- xlim.default[2]
 
     # Determine background color for lengend box
     if (gr.type == "postscript")
@@ -137,107 +132,40 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
       idx <- tbl.plt.rows[i]
       site.name <- tbl.plt[idx, "Site_name"]
-      consts <- make.names(trim(unlist(strsplit(tbl.plt$Constituents[idx],
-                                                ","))))
 
-      # Determine y-axis limits
+      # Create a smaller data table that is temporary
+      p.names <- make.names(trim(unlist(strsplit(tbl.plt$Parameters[idx],
+                                                 ","))))
+      d1 <- d0[, c("datetime", p.names)]
 
-      ylim <- c(NA, NA)
-      ylim.default <- tryCatch(extendrange(d0[, consts]), warning=function(w) w)
-      if (inherits(ylim.default, "simpleWarning")) {
-        txt <- paste("No data found for plot:\nSite id: ", id,
-                     "; Site name: ", site.name, "; Constituents: ",
-                     paste(consts, collapse=", "), "\n", sep="")
-        cat(txt)
-        next
-      }
-      ylim[1] <- as.numeric(tbl.plt[idx, "Min"])
-      ylim[2] <- as.numeric(tbl.plt[idx, "Max"])
-      if (is.na(ylim[1]))
-        ylim[1] <- ylim.default[1]
-      if (is.na(ylim[2]))
-        ylim[2] <- ylim.default[2]
-
-      # Remove constituents with no data
+      # Remove parameters with no data
       rm.idxs <- NULL
-      for (index in seq(along=consts)) {
-        is.no.lim <- all(is.na(d0[, consts[index]]))
+      for (index in 1:ncol(d1)) {
+        is.no.lim <- all(is.na(d1[, index]))
         if (is.no.lim)
           rm.idxs <- c(rm.idxs, index)
       }
       if (!is.null(rm.idxs))
-        consts <- consts[-rm.idxs]
+        d1 <- d1[, -rm.idxs]
+      if (ncol(d1) < 2) {
+        cat(paste("No data found for plot:\nSite id: ", id,
+                  "; Site name: ", site.name, "; Parameters: ",
+                  paste(p.names, collapse=", "), "\n", sep=""))
+        next
+      }
+
+      # Set y-axis limits
+      ylim <- as.numeric(tbl.plt[idx, c("Min", "Max")])
+
+      # Main plot title
+      if (i == 1)
+        main <- paste(site.name, " (", id, ")", sep="")
+      else
+        main <- NULL
 
       # Draw plot
-
-      plot.new()
-      plot.window(xlim=xlim, ylim=ylim, xaxs="i", yaxs="i")
-
-      h <- seq(par("yaxp")[1], par("yaxp")[2], length.out=par("yaxp")[3] + 1)
-      v <- pretty(xlim)
-      abline(h=h, v=v, col="lightgray")
-
-      lwd <- 0.5 * (96 / (6 * 12))
-      tcl.major <- 0.50 / (6 * par("csi"))
-      tcl.minor <- 0.25 / (6 * par("csi"))
-
-      axis(2, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
-      axis(4, tcl=tcl.major, lwd=-1, lwd.ticks=lwd, labels=FALSE)
-
-      at.major <- pretty(xlim)
-      mult <- 12
-      num.at.major <- length(at.major) - 1
-      no.match <- TRUE
-      while (no.match) {
-        at.minor <- pretty(xlim, n=num.at.major * mult)
-        if (all(at.major %in% at.minor)) {
-          at.minor <- at.minor[!at.minor %in% at.major]
-          no.match <- FALSE
-        } else if (mult > 100) {
-          stop("Problem with minor-tick marks on x-axis")
-        } else {
-          mult <- mult + 1
-        }
-      }
-
-      axis.POSIXct(1, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
-      axis.POSIXct(3, at=at.major, tcl=tcl.major, lwd=-1, labels=FALSE,
-                   lwd.ticks=lwd)
-      axis.POSIXct(1, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
-                   labels=FALSE)
-      axis.POSIXct(3, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
-                   labels=FALSE)
-
-      title(ylab=tbl.plt[idx, "Axis_title"], cex.lab=1, line=3)
-
-      if (i == 1) {
-        txt <- paste(site.name, " (", id, ")", sep="")
-        mtext(txt, side=3, line=1, col="black")
-      }
-
-      box(lwd=lwd)
-
-      # Draw points and legend
-
-      leg <- leg.pch <- leg.col <- leg.bg <- NULL
-
-      for (j in seq(along=consts)) {
-        config <- tbl.par[consts[j], ]
-        pch  <- config[, "pch"]
-        col  <- config[, "col"]
-        bg   <- config[, "bg"]
-        name <- config[, "Name"]
-        points(d0[, c("datetime", consts[j])], pch=pch, col=col, bg=bg, lwd=lwd)
-
-        leg <- c(leg, name)
-        leg.pch <- c(leg.pch, pch)
-        leg.col <- c(leg.col, col)
-        leg.bg <- c(leg.bg, bg)
-      }
-
-      legend(x=grconvertX(0.01, 'npc'), y=grconvertY(0.95, 'npc'),
-             leg, pch=leg.pch, col=leg.col, pt.bg=leg.bg,
-             xpd=NA, bg=leg.box.col, bty="o", box.lwd=lwd, pt.lwd=lwd)
+      DrawPlot(d1, tbl.par, xlim=xlim, ylim=ylim, main=main,
+               ylab=tbl.plt[idx, "Axis_title"], leg.box.col=leg.box.col)
     }
 
     # Close graphics device

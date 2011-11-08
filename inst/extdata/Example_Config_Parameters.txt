@@ -1,4 +1,4 @@
-Constituent	Name	pch	col	bg
+Parameter	Name	pch	col	bg
 pH	pH	21	NA	#A6CEE3
 Spec. Cond.	Specific Conductance	22	NA	#1F78B4
 Temp	Temperature	23	NA	#B2DF8A

@@ -5,7 +5,7 @@
 \title{Plot Trend Data}
 
 \description{
-This function draws plots on the desired device type.
+This function plots trend data based on user defined configuration files.
 }
 
 \usage{
@@ -37,13 +37,13 @@ PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
 The imported plot configuration table requires the following fields:
 \code{"Site_id"}, a unique numerical identifier used to access site data;
 \code{"Site_name"}, a local site identifier;
-\code{"Constituents"}, comma seperated parameter names corresponding to
+\code{"Parameters"}, comma seperated parameter names corresponding to
   header fields in the data table, see \code{\link{ReadTrendData}};
 \code{"Min"}, the minimum y-axis plot limit;
 \code{"Max"}, the maximum y-axis plot limit; and
 \code{"Axis_title"}, the y-axis title.
 Each line of the table represents a single plot, with its point-plotted
-data sets based on parameters in \code{"Constituents"}.
+data sets based on parameters in \code{"Parameters"}.
 }
 
 \details{
@@ -53,7 +53,7 @@ Something
 \author{Fisher, J.C., Davis, L.C.}
 
 \seealso{
-\code{\link{plot.window}}, \code{\link{axis.POSIXct}}, \code{\link{legend}}
+\code{\link{DrawPlot}}
 }
 
 \examples{

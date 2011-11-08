@@ -19,7 +19,7 @@ ShowParameters(file.parameters)
 
 \format{
 The imported parameter configuration table requires the following fields:
-\code{"Constituent"}, a unique parameter name corresponding to header fields
+\code{"Parameter"}, a unique parameter name corresponding to header fields
   in the data table;
 \code{"Name"}, the parameter name, used for legend text and axis labels;
 \code{"pch"}, an integer specifying the symbol to use in plotting points;

@@ -35,7 +35,7 @@ character code. The variable name for this new component is based on a
 concatenation of the parameter name and \code{"_code"}.
 Codes are identified using the following criteria:
 \tabular{cll}{"0-9", "." \tab No character code \tab 0\cr
-"<" \tab Less than \tab 1\cr
+"<" \tab Less than, censored data \tab 1\cr
 "E" \tab Estimated value \tab 2\cr
 "V" \tab Sample contaminated \tab 3\cr
 "U" \tab Undetectable \tab 4}

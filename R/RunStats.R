@@ -123,30 +123,30 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     sdate  <- tbl[idx, "Start_date"]
     edate  <- tbl[idx, "End_date"]
 
-    const.names <- trim(unique(unlist(strsplit(tbl[idx, "Constituents"], ","))))
-    consts <- make.names(const.names)
+    p.names <- trim(unique(unlist(strsplit(tbl[idx, "Parameters"], ","))))
+    parameters <- make.names(p.names)
 
-    # Loop through constituents in record
+    # Loop through parameters in record
 
-    for (j in seq(along=consts)) {
-      const <- consts[j]
-      if (!const %in% d.names) {
-        txt <- paste("Constituent is not recognized and will be skipped:\n",
-                     "Row index: ", idx, ", Column name: Constituents, ",
-                     "String: ", const, "\n", sep="")
+    for (j in seq(along=parameters)) {
+      parameter <- parameters[j]
+      if (!parameter %in% d.names) {
+        txt <- paste("Parameter is not recognized and will be skipped:\n",
+                     "Row index: ", idx, ", Column name: Parameters, ",
+                     "String: ", parameter, "\n", sep="")
         warning(txt)
         next
       }
 
       # Start record that will be added to output table
       lst <- list("Site_id"=format(id, scientific=FALSE),
-                  "Site_name"=site, "Constituent"=const.names[j],
+                  "Site_name"=site, "Parameter"=p.names[j],
                   "Start_date"=sdate, "End_date"=edate)
       rec <- as.data.frame(lst, optional=TRUE)
 
       # Determine pertinent column names in data table
-      col.names <- c("datetime", const)
-      col.code.name <- paste(const, "_code", sep="")
+      col.names <- c("datetime", parameter)
+      col.code.name <- paste(parameter, "_code", sep="")
       is.code <- col.code.name %in% d.names
       if (is.code)
         col.names <- c(col.names, col.code.name)
@@ -167,7 +167,7 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
       # Text to append to error messages
       err.extra <- paste("Row index: ", idx, ", Site name: ", site,
-                         ", Constituent: ", const, "\n", sep="")
+                         ", Parameter: ", parameter, "\n", sep="")
 
       # Start statistical analysis
 
@@ -186,7 +186,7 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         n.cen <- sum(as.integer(is.cen))
 
         # Basic summary statistics
-        dat <- d.id[[const]]
+        dat <- d.id[[parameter]]
         ans <- try(suppressWarnings(cenfit(dat, is.cen)), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("Cenfit error:", err.extra, sep="\n"))
@@ -254,7 +254,7 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         }
 
         # Basic summary statistics
-        dat <- na.omit(d.id[[const]])
+        dat <- na.omit(d.id[[parameter]])
         n <- length(dat)
         lst <- list("n"=n, "n_above_rl"=n - below.rl,
                     "mean"=mean(dat), "median"=median(dat),
@@ -270,14 +270,14 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           d.id.cuts <- as.POSIXct(ans, "%Y-%m-%d", tz="MST", origin=origin)
         }
 
-        # Time average constituent based on date cuts
+        # Time average parameter based on date cuts
         ans <- try(aggregate(d.id, list(date=d.id.cuts),
                              function(i) mean(i, na.rm=TRUE)), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("Time average error:", ans, err.extra, sep="\n"))
           next
         } else {
-          d.id.time <- na.omit(ans[, c("date", const)])
+          d.id.time <- na.omit(ans[, c("date", parameter)])
         }
         len.record <- diff(range(d.id.time$date))
         lst <- list("len_record"=len.record)
@@ -287,7 +287,7 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         # functions
 
         est <- try(suppressWarnings(regci(as.numeric(d.id.time$date),
-                                          d.id.time[, const], alpha=0.5,
+                                          d.id.time[, parameter], alpha=0.5,
                                           pr=FALSE)$regci), silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
           warning(paste("regci error:", err.extra, sep="\n"))
@@ -313,7 +313,7 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         rec <- cbind(rec, as.data.frame(est))
 
         # Calculate Kendall estimates using the Kendall package
-        ans <- MannKendall(d.id.time[, const])
+        ans <- MannKendall(d.id.time[, parameter])
         lst <- list("Kendall_tau"=ans$tau[1],
                     "Kendall_sl"=ans$sl[1],
                     "Kendall_S"=ans$S[1])
