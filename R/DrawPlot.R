@@ -1,0 +1,100 @@
+DrawPlot <- function(d, tbl.par, xlim=c(NA, NA), ylim=c(NA, NA),
+                     main=NULL, xlab=NULL, ylab=NULL, leg.box.col="#FFFFFF") {
+
+  # Data and time
+  dt.name <- names(d)[1]
+  if (!inherits(d[[dt.name]], "POSIXct"))
+    stop("Date-time values must be of class POSIXct")
+
+  # Parameters
+  p.names <- names(d)[-1]
+
+  # Set x-axis limits
+  xlim.default <- extendrange(d[[dt.name]])
+  if (is.na(xlim[1]))
+    xlim[1] <- xlim.default[1]
+  if (is.na(xlim[2]))
+    xlim[2] <- xlim.default[2]
+
+  # Set y-axis limits
+  ylim.default <- extendrange(d[, p.names])
+  if (is.na(ylim[1]))
+    ylim[1] <- ylim.default[1]
+  if (is.na(ylim[2]))
+    ylim[2] <- ylim.default[2]
+
+  # Initialize plot
+  plot.new()
+  plot.window(xlim=xlim, ylim=ylim, xaxs="i", yaxs="i")
+
+  # Line width and length of tick marks
+  lwd <- 0.5 * (96 / (6 * 12))
+  tcl.major <- 0.50 / (6 * par("csi"))
+  tcl.minor <- 0.25 / (6 * par("csi"))
+
+  # Draw horizontal and vertical lines at major tick marks
+  h <- seq(par("yaxp")[1], par("yaxp")[2], length.out=par("yaxp")[3] + 1)
+  v <- pretty(xlim)
+  abline(h=h, v=v, col="lightgray", lwd=lwd)
+
+  # Draw y-axis
+  axis(2, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
+  axis(4, tcl=tcl.major, lwd=-1, lwd.ticks=lwd, labels=FALSE)
+
+  # Draw x-axis
+  at.major <- pretty(xlim)
+  mult <- 12
+  num.at.major <- length(at.major) - 1
+  no.match <- TRUE
+  while (no.match) {
+    at.minor <- pretty(xlim, n=num.at.major * mult)
+    if (all(at.major %in% at.minor)) {
+      at.minor <- at.minor[!at.minor %in% at.major]
+      no.match <- FALSE
+    } else if (mult > 100) {
+      stop("Problem with minor-tick marks on x-axis")
+    } else {
+      mult <- mult + 1
+    }
+  }
+  axis.POSIXct(1, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
+  axis.POSIXct(3, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd,
+               labels=FALSE)
+  axis.POSIXct(1, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
+               labels=FALSE)
+  axis.POSIXct(3, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
+               labels=FALSE)
+
+  # Draw y-axis label
+  if (!is.null(ylab))
+    title(ylab=ylab, cex.lab=1, line=3)
+
+  # Draw main title
+  if (!is.null(main))
+    mtext(main, side=3, line=1, col="black")
+
+  # Draw box around plot
+  box(lwd=lwd)
+
+  # Draw data points for each parameter and build legend
+
+  leg.name <- leg.pch <- leg.col <- leg.bg <- NULL
+  for (p in p.names) {
+    pch  <- tbl.par[p, "pch"]
+    col  <- tbl.par[p, "col"]
+    bg   <- tbl.par[p, "bg"]
+    name <- tbl.par[p, "Name"]
+
+    points(d[, c(dt.name, p)], pch=pch, col=col, bg=bg, lwd=lwd)
+
+    leg.name <- c(leg.name, name)
+    leg.pch  <- c(leg.pch, pch)
+    leg.col  <- c(leg.col, col)
+    leg.bg   <- c(leg.bg, bg)
+  }
+
+  # Draw legend
+  legend(x=grconvertX(0.01, 'npc'), y=grconvertY(0.95, 'npc'),
+         leg.name, pch=leg.pch, col=leg.col, pt.bg=leg.bg,
+         xpd=NA, bg=leg.box.col, bty="o", box.lwd=lwd, pt.lwd=lwd)
+}
