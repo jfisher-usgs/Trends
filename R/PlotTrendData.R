@@ -14,38 +14,11 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
   # Main program:
 
-  require(tcltk)
-
-  # Symbol configuration file
-  if (is.null(file.parameters)) {
-    txt <- "Open configuration file for parameters"
-    file.types <- "{{Text files} {.txt}} {{All files} {*}}"
-    file.parameters <- paste(tcl("tk_getOpenFile", initialdir=initial.dir,
-                                 title=txt, filetypes=file.types,
-                                 multiple=FALSE), collapse=" ")
-  }
-  if (!file.exists(file.parameters))
-    stop("Parameter file does not exist")
-
-  # Plot configuration file
-  if (is.null(file.plots)) {
-    txt <- "Open configuration file for plots"
-    file.plots <- paste(tcl("tk_getOpenFile", initialdir=initial.dir, title=txt,
-                            filetypes="{{Text files} {.txt}} {{All files} {*}}",
-                            multiple=FALSE), collapse=" ")
-  }
-  if (!file.exists(file.plots))
-    stop("Plot file does not exist")
-
-  # Output folder for figure files
-  if (gr.type != "windows" & is.null(figs.dir)) {
-    require(tcltk)
-    txt <- paste("Please choose a directory to store", gr.type, "files")
-    figs.dir <- paste(tcl("tk_chooseDirectory", initialdir=initial.dir,
-                          title=txt), collapse=" ")
-    if (length(figs.dir) == 0)
-      stop("Output folder is required to continue")
-  }
+  # Paths
+  file.parameters <- GetPath("config_para", file.parameters, initial.dir)
+  file.plots <- GetPath("config_plot", file.plots, initial.dir)
+  if (gr.type != "windows")
+    figs.dir <- GetPath("output_figs", figs.dir, initial.dir)
 
   # Obtain site id(s) to plot
   if (missing(site.names)) {
@@ -124,7 +97,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
     # Open graphics device
     OpenGraphicsDevice(figs.dir, site.nms[site.ids == id], gr.type)
-    par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
+    op <- par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
 
     # Loop through plots, corresponds to rows in the configure plot table
 
@@ -171,5 +144,6 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
     # Close graphics device
     if (gr.type != "windows")
       dev.off()
+    par(op)
   }
 }

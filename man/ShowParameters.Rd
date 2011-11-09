@@ -9,7 +9,7 @@ Draw all possible parameters within a legend.
 }
 
 \usage{
-ShowParameters(file.parameters)
+ShowParameters(file.parameters = NULL)
 }
 
 \arguments{

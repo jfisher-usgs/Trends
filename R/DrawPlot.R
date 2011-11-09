@@ -1,4 +1,5 @@
-DrawPlot <- function(d, tbl.par, xlim=c(NA, NA), ylim=c(NA, NA),
+DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
+                     regr=NULL, regr.lower=NULL, regr.upper=NULL,
                      main=NULL, xlab=NULL, ylab=NULL, leg.box.col="#FFFFFF") {
 
   # Data and time
@@ -6,8 +7,22 @@ DrawPlot <- function(d, tbl.par, xlim=c(NA, NA), ylim=c(NA, NA),
   if (!inherits(d[[dt.name]], "POSIXct"))
     stop("Date-time values must be of class POSIXct")
 
+  # Determine code variable for censored data
+  cen.code <- NULL
+  if (!is.null(cen.var)) {
+    if (inherits(cen.var, "character"))
+      cen.var <- which(names(d) == cen.var)
+    if (!inherits(cen.var, "integer") || length(cen.var) != 1) {
+      stop("Censor code variable index is not valid")
+    } else {
+      cen.code <- d[, cen.var]
+      if (!inherits(cen.code, "logical"))
+        stop("Censor code variable is not of class logical")
+    }
+  }
+
   # Parameters
-  p.names <- names(d)[-1]
+  p.names <- names(d)[-c(1, cen.var)]
 
   # Set x-axis limits
   xlim.default <- extendrange(d[[dt.name]])
@@ -15,6 +30,10 @@ DrawPlot <- function(d, tbl.par, xlim=c(NA, NA), ylim=c(NA, NA),
     xlim[1] <- xlim.default[1]
   if (is.na(xlim[2]))
     xlim[2] <- xlim.default[2]
+
+
+## determine range of uncertainty trend lines, adjust ylim
+
 
   # Set y-axis limits
   ylim.default <- extendrange(d[, p.names])
@@ -73,8 +92,13 @@ DrawPlot <- function(d, tbl.par, xlim=c(NA, NA), ylim=c(NA, NA),
   if (!is.null(main))
     mtext(main, side=3, line=1, col="black")
 
-  # Draw box around plot
-  box(lwd=lwd)
+  # Draw regression lines
+  if (inherits(regr, "function"))
+    lines(xlim, regr(xlim), col="black")
+  if (inherits(regr.lower, "function"))
+    lines(xlim, regr.lower(xlim), col="blue")
+  if (inherits(regr.upper, "function"))
+    lines(xlim, regr.upper(xlim), col="blue")
 
   # Draw data points for each parameter and build legend
 
@@ -97,4 +121,7 @@ DrawPlot <- function(d, tbl.par, xlim=c(NA, NA), ylim=c(NA, NA),
   legend(x=grconvertX(0.01, 'npc'), y=grconvertY(0.95, 'npc'),
          leg.name, pch=leg.pch, col=leg.col, pt.bg=leg.bg,
          xpd=NA, bg=leg.box.col, bty="o", box.lwd=lwd, pt.lwd=lwd)
+
+  # Draw box around plot
+  box(lwd=lwd)
 }

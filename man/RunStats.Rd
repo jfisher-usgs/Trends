@@ -10,8 +10,8 @@ This function performs a statistical analysis on uncensored and censored data.
 
 \usage{
 RunStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
-         file.stats = NULL, file.out = NULL, figs.dir = NULL,
-         avg.time = "year", gr.type = "pdf")
+         file.parameters = NULL, file.stats = NULL, file.out = NULL,
+         figs.dir = NULL, avg.time = "year", gr.type = "pdf")
 }
 
 \arguments{
@@ -22,6 +22,8 @@ RunStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   censorsed, its default is \code{FALSE}, see \sQuote{Details}.}
 \item{initial.dir}{character; specifies the initial directory in the open files
   pop-up box.}
+\item{file.parameters}{character; file path for the parameters
+  configuration table, see \code{\link{ShowParameters}}.}
 \item{file.stats}{character; file path for the statistics configuration table,
   see \sQuote{Format}.}
 \item{file.out}{character; file path for the statistics summary table,
@@ -60,6 +62,8 @@ Something
 f <- system.file("extdata/Example_Data.txt", package = "Trends")
 d <- ReadTrendData(f)
 
+file.parameters <- system.file("extdata/Example_Config_Parameters.txt",
+                               package = "Trends")
 file.stats <- system.file("extdata/Example_Stats_Uncensored.txt",
                           package = "Trends")
 

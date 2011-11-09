@@ -9,15 +9,20 @@ This function draws a single plot on a graphics device.
 }
 
 \usage{
-DrawPlot(d, tbl.par, xlim = c(NA, NA), ylim = c(NA, NA),
+DrawPlot(d, tbl.par, cen.var = NULL, xlim = c(NA, NA), ylim = c(NA, NA),
+         regr = NULL, regr.lower = NULL, regr.upper = NULL,
          main = NULL, xlab = NULL, ylab = NULL, leg.box.col="#FFFFFF")
 }
 
 \arguments{
 \item{d}{data.frame; something.}
 \item{tbl.par}{data.frame; something.}
+\item{cen.var}{character or integer; something.}
 \item{xlim}{POSIXct; something.}
 \item{ylim}{numeric; something.}
+\item{regr}{function; something.}
+\item{regr.lower}{function; something.}
+\item{regr.upper}{function; something.}
 \item{main}{character; something.}
 \item{xlab}{character; something.}
 \item{ylab}{character; something.}

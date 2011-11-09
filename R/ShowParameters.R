@@ -1,4 +1,7 @@
-ShowParameters <- function(file.parameters) {
+ShowParameters <- function(file.parameters=NULL) {
+
+  # Path
+  file.parameters <- GetPath("config_para", file.parameters)
 
   # Read parameters configuration table
   tbl.par <- read.table(file=file.parameters, header=TRUE, sep="\t",

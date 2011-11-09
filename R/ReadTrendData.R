@@ -1,9 +1,9 @@
 ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
 # This function reads trend-report table data
 
-  require(tcltk)
+  # Input data file
+  file.data <- GetPath("input_data", file.data, initial.dir)
 
-  # Input file
   if (is.null(file.data)) {
     txt <- "Please choose a data file to open"
     file.data <- paste(tcl("tk_getOpenFile", initialdir=initial.dir, title=txt,

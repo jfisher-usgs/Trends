@@ -1,6 +1,6 @@
 RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
-                     file.stats=NULL, file.out=NULL, figs.dir=NULL,
-                     avg.time="year", gr.type="pdf") {
+                     file.parameters=NULL, file.stats=NULL, file.out=NULL,
+                     figs.dir=NULL, avg.time="year", gr.type="pdf") {
 # This function performs a statistical analysis on uncensored and censored data
 # tbl <- RunStats(d, c("ANP 6", "ARBOR TEST"))
 
@@ -22,16 +22,14 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", s, perl=TRUE)
   }
 
-  # Calculate percentage change in slope and uncertainties.
-  # Need start and end times (t) in seconds to work out concentrations at those
-  # points. Slope is given in concentration per year. Returns percent change in
-  # percent per year.
+  # Calculate percentage change in slope and uncertainties
+  # Temporal units must be consistant with slope
   PercentChange <- function(slope, intercept, tlim) {
-    t1 <- tlim[1]
-    t2 <- tlim[2]
-    c1 <- slope * (t1 / secs.in.year) + intercept
-    c2 <- slope * (t2 / secs.in.year) + intercept
-    (((c2 / c1) - 1) / (t2 - t1)) * secs.in.year * 100
+    t1 <- as.numeric(tlim[1])
+    t2 <- as.numeric(tlim[2])
+    c1 <- slope * t1 + intercept
+    c2 <- slope * t2 + intercept
+    (((c2 / c1) - 1) / (t2 - t1)) * 100
   }
 
   # Classify trend using p-value and slope
@@ -49,6 +47,15 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     trend
   }
 
+  # Open and close graphics device
+  GrDev <- function(site, plot.count) {
+    if (gr.type != "windows")
+      graphics.off()
+    site <- paste(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L], sep="")
+    OpenGraphicsDevice(figs.dir, site, gr.type)
+    par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
+  }
+
 
   # Main program:
 
@@ -56,36 +63,23 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   require(NADA)
   require(Kendall)
 
-  # Statistics configuration file
-  if (is.null(file.stats)) {
-    txt <- "Open configuration file for statistics"
-    file.stats <- paste(tcl("tk_getOpenFile", initialdir=initial.dir, title=txt,
-                            filetypes="{{Text files} {.txt}} {{All files} {*}}",
-                            multiple=FALSE), collapse=" ")
-  }
-  if (!file.exists(file.stats))
-    stop(paste("Statistics file does not exist:", file.stats))
+  # Paths
+  file.parameters <- GetPath("config_para", file.parameters, initial.dir)
+  file.stats <- GetPath("config_stat", file.stats, initial.dir)
+  file.out <- GetPath("output_stat", file.out, initial.dir)
+  if (gr.type != "windows")
+    figs.dir <- GetPath("output_figs", figs.dir, initial.dir)
 
-  # Output file
-  if (is.null(file.out)) {
-    txt <- paste("Choose file to write output table")
-    file.out <- paste(tcl("tk_getSaveFile", initialdir=initial.dir, title=txt,
-                          filetypes="{{Text files} {.txt}} {{All files} {*}}",
-                          defaultextension="txt"), collapse=" ")
-    if (length(file.out) == 0)
-      stop("Output file is required to continue")
-  }
+  # Read parameter configuration table
+  tbl.par <- read.table(file=file.parameters, header=TRUE, sep="\t",
+                        stringsAsFactors=FALSE, comment.char="", row.names=1)
+  row.names(tbl.par) <- make.names(row.names(tbl.par))
 
-  # Output folder for figure files
-  if (gr.type != "windows" & is.null(figs.dir)) {
-    require(tcltk)
-    txt <- paste("Choose a directory to store", gr.type,
-                 "files, then select OK")
-    figs.dir <- paste(tcl("tk_chooseDirectory", initialdir=initial.dir,
-                             title=txt), collapse=" ")
-    if (length(figs.dir) == 0)
-      stop("Output folder is required to continue")
-  }
+  # Determine background color for lengend box
+  if (gr.type == "postscript")
+    leg.box.col <- "#FFFFFF"
+  else
+    leg.box.col <- "#FFFFFFBB"
 
   # Column names in data table
   d.names <- names(d)
@@ -125,6 +119,8 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
     p.names <- trim(unique(unlist(strsplit(tbl[idx, "Parameters"], ","))))
     parameters <- make.names(p.names)
+
+    plot.count <- 0L
 
     # Loop through parameters in record
 
@@ -279,7 +275,8 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         } else {
           d.id.time <- na.omit(ans[, c("date", parameter)])
         }
-        len.record <- diff(range(d.id.time$date))
+        tlim <- range(d.id.time$date)
+        len.record <- diff(tlim)
         lst <- list("len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst))
 
@@ -296,19 +293,54 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
         # Convert slopes from unit per second to unit per year;
         est <- list("p"=est[2, 5],
-                    "slope"=est[2, 3] * secs.in.year,
-                    "lower"=est[2, 1] * secs.in.year,
-                    "upper"=est[2, 2] * secs.in.year,
+                    "slope"=est[2, 3],
+                    "lower"=est[2, 1],
+                    "upper"=est[2, 2],
                     "intercept"=est[1, 3],
                     "intercept_lower"=est[1, 1],
                     "intercept_upper"=est[1, 2])
 
-        # Time limit in seconds
-        tlim <- as.numeric(range(d.id.time$date))
+        # Regression lines
+        if (is.numeric(est$slope) && is.numeric(est$intercept)) {
+          regr <- function(x) {est$slope * as.numeric(x) + est$intercept}
+          regr.lower <- function(x) {est$lower * as.numeric(x) +
+                                     est$intercept_lower}
+          regr.upper <- function(x) {est$upper * as.numeric(x) +
+                                     est$intercept_upper}
+        } else {
+          regr <- regr.lower <- regr.upper <- NULL
+        }
 
+        # Draw plot
+        plot.count <- plot.count + 1L
+        if (((4L + plot.count) - 1L) %% 4L == 0L) {
+          GrDev(site, plot.count)
+          main <- paste(site, " (", id, ")", sep="")
+        } else {
+          main <- NULL
+        }
+        DrawPlot(d.id.time, tbl.par[parameter, ], xlim=tlim,
+                 regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
+                 main=main, ylab=tbl.par[parameter, "Name"],
+                 leg.box.col=leg.box.col)
+
+
+
+
+
+
+        # Calculate percentage change per year in slopes
         est$slope_percent <- PercentChange(est$slope, est$intercept, tlim)
         est$lower_percent <- PercentChange(est$lower, est$intercept_lower, tlim)
         est$upper_percent <- PercentChange(est$upper, est$intercept_upper, tlim)
+
+        # Convert slopes from units per second to units per year
+        est$slope <- est$slope * secs.in.year
+        est$lower <- est$lower * secs.in.year
+        est$upper <- est$upper * secs.in.year
+        est$slope_percent <- est$slope_percent * secs.in.year
+        est$lower_percent <- est$lower_percent * secs.in.year
+        est$upper_percent <- est$upper_percent * secs.in.year
 
         rec <- cbind(rec, as.data.frame(est))
 
@@ -323,10 +355,30 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         trend <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
         lst <- list("trend"=trend)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       }
 
-      # Add record to table
+      # Add statistics record to table
       tbl.out <- rbind(tbl.out, rec)
+
+
+
+
+
+
     }
   }
 
