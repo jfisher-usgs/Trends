@@ -280,10 +280,9 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
         # Calculate Theil-Sen estimator and trend line using R.R. Wilcox'
         # functions
-
-        est <- try(suppressWarnings(regci(as.numeric(d.id.time$date),
-                                          d.id.time[, parameter], alpha=0.5,
-                                          pr=FALSE)$regci), silent=TRUE)
+        x <- as.numeric(d.id.time$date)
+        y <- d.id.time[, parameter]
+        est <- try(suppressWarnings(RunTheilSen(x=x, y=y)$regci), silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
           warning(paste("regci error:", err.extra, sep="\n"))
           next

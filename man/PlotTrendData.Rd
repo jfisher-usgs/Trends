@@ -5,7 +5,7 @@
 \title{Plot Trend Data}
 
 \description{
-This function plots trend data based on user defined configuration files.
+This function queries and plots trend data.
 }
 
 \usage{
@@ -47,7 +47,8 @@ data sets based on parameters in \code{"Parameters"}.
 }
 
 \details{
-Something
+A new graphics device is opened for each site and after four plots have
+been drawn.
 }
 
 \author{Fisher, J.C., Davis, L.C.}
