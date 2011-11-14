@@ -1,6 +1,7 @@
 DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
                      regr=NULL, regr.lower=NULL, regr.upper=NULL,
-                     main=NULL, xlab=NULL, ylab=NULL, leg.box.col="#FFFFFF") {
+                     main=NULL, xlab=NULL, ylab=NULL, leg.box.col="#FFFFFF",
+                     tick.lines=TRUE, p.value=NULL) {
 
   # Data and time
   dt.name <- names(d)[1]
@@ -31,12 +32,15 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
   if (is.na(xlim[2]))
     xlim[2] <- xlim.default[2]
 
-
-## determine range of uncertainty trend lines, adjust ylim
-
-
   # Set y-axis limits
-  ylim.default <- extendrange(d[, p.names])
+  y <- d[, p.names]
+  if (inherits(regr, "function"))
+    y <- c(y, regr(xlim))
+  if (inherits(regr.lower, "function"))
+    y <- c(y, regr.lower(xlim))
+  if (inherits(regr.upper, "function"))
+    y <- c(y, regr.upper(xlim))
+  ylim.default <- extendrange(y)
   if (is.na(ylim[1]))
     ylim[1] <- ylim.default[1]
   if (is.na(ylim[2]))
@@ -51,10 +55,19 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
   tcl.major <- 0.50 / (6 * par("csi"))
   tcl.minor <- 0.25 / (6 * par("csi"))
 
+  # Draw uncertainty as a polygon
+  if (inherits(regr.lower, "function") & inherits(regr.upper, "function")) {
+    x <- c(xlim, rev(xlim))
+    y <- c(regr.lower(xlim), regr.upper(rev(xlim)))
+    polygon(x, y, border=NA, col="#FFFFDD")
+  }
+
   # Draw horizontal and vertical lines at major tick marks
-  h <- seq(par("yaxp")[1], par("yaxp")[2], length.out=par("yaxp")[3] + 1)
-  v <- pretty(xlim)
-  abline(h=h, v=v, col="lightgray", lwd=lwd)
+  if (tick.lines) {
+    h <- seq(par("yaxp")[1], par("yaxp")[2], length.out=par("yaxp")[3] + 1)
+    v <- pretty(xlim)
+    abline(h=h, v=v, col="lightgray", lwd=lwd)
+  }
 
   # Draw y-axis
   axis(2, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
@@ -90,15 +103,15 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
 
   # Draw main title
   if (!is.null(main))
-    mtext(main, side=3, line=1, col="black")
+    mtext(main, side=3, line=1)
 
   # Draw regression lines
   if (inherits(regr, "function"))
-    lines(xlim, regr(xlim), col="black")
+    lines(xlim, regr(xlim), lty=1, lwd=lwd)
   if (inherits(regr.lower, "function"))
-    lines(xlim, regr.lower(xlim), col="blue")
+    lines(xlim, regr.lower(xlim), lty=2, lwd=lwd)
   if (inherits(regr.upper, "function"))
-    lines(xlim, regr.upper(xlim), col="blue")
+    lines(xlim, regr.upper(xlim), lty=2, lwd=lwd)
 
   # Draw data points for each parameter and build legend
 
@@ -109,13 +122,29 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
     bg   <- tbl.par[p, "bg"]
     name <- tbl.par[p, "Name"]
 
-    points(d[, c(dt.name, p)], pch=pch, col=col, bg=bg, lwd=lwd)
+    x <- d[, dt.name]
+    y <- d[, p]
+
+    if (is.null(cen.code) || all(!cen.code)) {
+      points(x, y, pch=pch, col=col, bg=bg, lwd=lwd)
+    } else {
+      idxs <- which(cen.code)
+      for (i in idxs) {
+        lines(rep(x[i], 2), c(ylim[1], y[i]), lty=3, lwd=1.5)
+      }
+      points(x[-idxs], y[-idxs], pch=pch, col=col, bg=bg, lwd=lwd)
+    }
 
     leg.name <- c(leg.name, name)
     leg.pch  <- c(leg.pch, pch)
     leg.col  <- c(leg.col, col)
     leg.bg   <- c(leg.bg, bg)
   }
+
+  # Add p-value to legend text
+  if (inherits(p.value, "numeric") & inherits(regr, "function"))
+    leg.name <- paste(leg.name, " (p = ", sprintf("%.3f", p.value), ")",
+                      sep="")
 
   # Draw legend
   legend(x=grconvertX(0.01, 'npc'), y=grconvertY(0.95, 'npc'),

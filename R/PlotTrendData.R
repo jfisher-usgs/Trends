@@ -97,7 +97,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
     # Open graphics device
     OpenGraphicsDevice(figs.dir, site.nms[site.ids == id], gr.type)
-    op <- par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
+    par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
 
     # Loop through plots, corresponds to rows in the configure plot table
 
@@ -120,7 +120,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       }
       if (!is.null(rm.idxs))
         d1 <- d1[, -rm.idxs]
-      if (ncol(d1) < 2) {
+      if (!inherits(d1, "data.frame") || ncol(d1) < 2) {
         cat(paste("No data found for plot:\nSite id: ", id,
                   "; Site name: ", site.name, "; Parameters: ",
                   paste(p.names, collapse=", "), "\n", sep=""))
@@ -143,7 +143,6 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
     # Close graphics device
     if (gr.type != "windows")
-      dev.off()
-    par(op)
+      graphics.off()
   }
 }

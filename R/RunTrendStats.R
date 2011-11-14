@@ -1,8 +1,8 @@
-RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
+RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                      file.parameters=NULL, file.stats=NULL, file.out=NULL,
                      figs.dir=NULL, avg.time="year", gr.type="pdf") {
 # This function performs a statistical analysis on uncensored and censored data
-# tbl <- RunStats(d, c("ANP 6", "ARBOR TEST"))
+# tbl <- RunTrendStats(d, c("ANP 6", "ARBOR TEST"))
 
   # Additional functions (subroutines):
 
@@ -146,6 +146,8 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       is.code <- col.code.name %in% d.names
       if (is.code)
         col.names <- c(col.names, col.code.name)
+      else
+        col.code.name <- NULL
 
       # Reduce size of data table
       is.id <- d$Site_id == id
@@ -166,6 +168,8 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                          ", Parameter: ", parameter, "\n", sep="")
 
       # Start statistical analysis
+
+      main <- NULL
 
       # Censored data
       if (is.censored) {
@@ -207,43 +211,37 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                     "tau"=ans$tau, "p"=ans$p)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
+        # Regression line
+        if (is.na(ans$slope) || is.na(ans$intercept))
+          regr <- NULL
+        else
+          regr <- function(x) {ans$slope * as.numeric(x) + ans$intercept}
+
+        # Convert censored data code to logical
+        if (is.code)
+          d.id[[col.code.name]] <- d.id[[col.code.name]] == 1L
+
+        # Draw plot
+        plot.count <- plot.count + 1L
+        if (((4L + plot.count) - 1L) %% 4L == 0L) {
+          GrDev(site, plot.count)
+          main <- paste(site, " (", id, ")", sep="")
+        }
+        DrawPlot(d.id, tbl.par[parameter, ], cen.var=col.code.name,
+                 xlim=range(d.id$datetime), regr=regr, main=main,
+                 ylab=tbl.par[parameter, "Name"], leg.box.col=leg.box.col,
+                 p.value=ans$p)
+
         # Classify trend
         ans <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
         lst <- list(trend=ans)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-
-
-
-
-
-
-
-
-        # Draw plot
-
-#       cenxyplot(d.id$datetime, FALSE, dat, is.cen, main=err.extra)
-
-#       if (!is.na(rec[1, "slope"]) && !is.na(rec[1, "intercept"]))
-#         lines(ans, col="red")
-
-##      if (ans$p < 0.05)
-##        browser()
-
-
-
-
-
-
-
-
-
       # Uncensored data
       } else {
 
         # Warn if censored data found
-        is.cen <- any(d.id[[col.code.name]] %in% 1)
-        if (is.cen) {
+        if (is.code && any(d.id[[col.code.name]] %in% 1)) {
           txt <- "Censored data found in uncensored statistical analysis:"
           warning(paste(txt, err.extra, sep="\n"))
           next
@@ -316,18 +314,11 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         if (((4L + plot.count) - 1L) %% 4L == 0L) {
           GrDev(site, plot.count)
           main <- paste(site, " (", id, ")", sep="")
-        } else {
-          main <- NULL
         }
         DrawPlot(d.id.time, tbl.par[parameter, ], xlim=tlim,
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
                  main=main, ylab=tbl.par[parameter, "Name"],
-                 leg.box.col=leg.box.col)
-
-
-
-
-
+                 leg.box.col=leg.box.col, p.value=est$p)
 
         # Calculate percentage change per year in slopes
         est$slope_percent <- PercentChange(est$slope, est$intercept, tlim)
@@ -355,33 +346,15 @@ RunStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         trend <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
         lst <- list("trend"=trend)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       }
 
       # Add statistics record to table
       tbl.out <- rbind(tbl.out, rec)
-
-
-
-
-
-
     }
   }
 
+if (gr.type != "windows")
+  graphics.off()
 
 tbl.out <- format(tbl.out)
 

@@ -11,7 +11,8 @@ This function draws a single plot on a graphics device.
 \usage{
 DrawPlot(d, tbl.par, cen.var = NULL, xlim = c(NA, NA), ylim = c(NA, NA),
          regr = NULL, regr.lower = NULL, regr.upper = NULL,
-         main = NULL, xlab = NULL, ylab = NULL, leg.box.col="#FFFFFF")
+         main = NULL, xlab = NULL, ylab = NULL, leg.box.col="#FFFFFF",
+         tick.lines = TRUE, p.value = NULL)
 }
 
 \arguments{
@@ -27,6 +28,8 @@ DrawPlot(d, tbl.par, cen.var = NULL, xlim = c(NA, NA), ylim = c(NA, NA),
 \item{xlab}{character; something.}
 \item{ylab}{character; something.}
 \item{leg.box.col}{character; something.}
+\item{tick.lines}{logical; something.}
+\item{p.value}{numeric; something.}
 }
 
 \details{

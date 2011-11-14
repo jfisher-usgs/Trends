@@ -1,6 +1,6 @@
-\name{RunStats}
+\name{RunTrendStats}
 
-\alias{RunStats}
+\alias{RunTrendStats}
 
 \title{Open Graphics Device}
 
@@ -9,9 +9,9 @@ This function performs a statistical analysis on uncensored and censored data.
 }
 
 \usage{
-RunStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
-         file.parameters = NULL, file.stats = NULL, file.out = NULL,
-         figs.dir = NULL, avg.time = "year", gr.type = "pdf")
+RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
+              file.parameters = NULL, file.stats = NULL, file.out = NULL,
+              figs.dir = NULL, avg.time = "year", gr.type = "pdf")
 }
 
 \arguments{
@@ -67,7 +67,7 @@ file.parameters <- system.file("extdata/Example_Config_Parameters.txt",
 file.stats <- system.file("extdata/Example_Stats_Uncensored.txt",
                           package = "Trends")
 
-\donttest{RunStats()}
+\donttest{RunTrendStats()}
 }
 
 \keyword{misc}
