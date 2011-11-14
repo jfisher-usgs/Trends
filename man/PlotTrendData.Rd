@@ -51,7 +51,7 @@ A new graphics device is opened for each site and after four plots have
 been drawn.
 }
 
-\author{Fisher, J.C., Davis, L.C.}
+\author{J.C. Fisher and L.C. Davis}
 
 \seealso{
 \code{\link{DrawPlot}}

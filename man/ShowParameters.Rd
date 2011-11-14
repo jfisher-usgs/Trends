@@ -29,7 +29,7 @@ The imported parameter configuration table requires the following fields:
 Each line of the table represents a single unique parameter.
 }
 
-\author{Fisher, J.C.}
+\author{J.C. Fisher}
 
 \seealso{
 \code{\link{legend}}

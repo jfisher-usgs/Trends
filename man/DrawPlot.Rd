@@ -36,7 +36,7 @@ DrawPlot(d, tbl.par, cen.var = NULL, xlim = c(NA, NA), ylim = c(NA, NA),
 Something
 }
 
-\author{Fisher, J.C.}
+\author{J.C. Fisher}
 
 \seealso{
 \code{\link{plot.window}}, \code{\link{axis.POSIXct}}, \code{\link{legend}}

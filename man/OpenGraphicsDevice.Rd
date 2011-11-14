@@ -36,7 +36,7 @@ is recommended for figures of publication quality.
 A plot device is opened.
 }
 
-\author{Fisher, J.C.}
+\author{J.C. Fisher}
 
 \seealso{
 \code{\link{windows}}, \code{\link{pdf}}, \code{\link{png}},

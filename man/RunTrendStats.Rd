@@ -56,7 +56,7 @@ Something
 Something
 }
 
-\author{Fisher, J.C., Davis, L.C.}
+\author{J.C. Fisher and L.C. Davis}
 
 \examples{
 f <- system.file("extdata/Example_Data.txt", package = "Trends")

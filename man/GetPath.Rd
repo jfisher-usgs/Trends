@@ -22,7 +22,7 @@ GetPath(type, path = NULL, initial.dir = getwd())
 Something
 }
 
-\author{Fisher, J.C.}
+\author{J.C. Fisher}
 
 \examples{
 print("something")

@@ -23,7 +23,7 @@ RunTheilSen(x, y, alpha = 0.5, pr = FALSE)
 Something
 }
 
-\author{R.R. Wilcox}
+\author{R.R. Wilcox and J.C. Fisher}
 
 \examples{
 print("something")

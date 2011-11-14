@@ -53,7 +53,7 @@ Returns a data frame with components:
 \item{...}{numeric; parameter fields and integer codes.}
 }
 
-\author{Fisher, J.C., Davis, L.C.}
+\author{J.C. Fisher and L.C. Davis}
 
 \seealso{
 \code{\link{read.table}}
