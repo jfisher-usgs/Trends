@@ -53,7 +53,6 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       graphics.off()
     site <- paste(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L], sep="")
     OpenGraphicsDevice(figs.dir, site, gr.type)
-    par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
   }
 
 
@@ -120,6 +119,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     p.names <- trim(unique(unlist(strsplit(tbl[idx, "Parameters"], ","))))
     parameters <- make.names(p.names)
 
+    # Initialize plot count
     plot.count <- 0L
 
     # Loop through parameters in record
@@ -168,8 +168,6 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                          ", Parameter: ", parameter, "\n", sep="")
 
       # Start statistical analysis
-
-      main <- NULL
 
       # Censored data
       if (is.censored) {
@@ -226,6 +224,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         if (((4L + plot.count) - 1L) %% 4L == 0L) {
           GrDev(site, plot.count)
           main <- paste(site, " (", id, ")", sep="")
+        } else {
+          main <- NULL
         }
         DrawPlot(d.id, tbl.par[parameter, ], cen.var=col.code.name,
                  xlim=range(d.id$datetime), regr=regr, main=main,
@@ -313,6 +313,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         if (((4L + plot.count) - 1L) %% 4L == 0L) {
           GrDev(site, plot.count)
           main <- paste(site, " (", id, ")", sep="")
+        } else {
+          main <- NULL
         }
         DrawPlot(d.id.time, tbl.par[parameter, ], xlim=tlim,
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
@@ -355,7 +357,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 if (gr.type != "windows")
   graphics.off()
 
-tbl.out <- format(tbl.out)
+tbl.out <- format(tbl.out, scientific=FALSE)
 
 write.table(tbl.out, file=file.out, quote=FALSE, sep="\t", row.names=FALSE)
 

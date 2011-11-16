@@ -11,6 +11,14 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
     sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", s, perl=TRUE)
   }
 
+  # Open and close graphics device
+  GrDev <- function(site, plot.count) {
+    if (gr.type != "windows")
+      graphics.off()
+    site <- paste(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L], sep="")
+    OpenGraphicsDevice(figs.dir, site, gr.type)
+  }
+
 
   # Main program:
 
@@ -67,16 +75,21 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   }
 
   # Reduce size of data table using site id(s) and date-time limits
-
   d <- d[d[, "Site_id"] %in% site.ids, ]
   if (!is.na(sdate))
     d <- d[d[, "datetime"] >= sdate, ]
   if (!is.na(edate))
     d <- d[d[, "datetime"] <= edate, ]
 
-  # Loop through site id(s), one page of plots per id
+  # Loop through site id(s)
 
   for (id in site.ids) {
+
+    # Initialize plot count
+    plot.count <- 0L
+
+    # Site name
+    site <- site.nms[site.ids == id]
 
     # Determine plots to draw
     tbl.plt.rows <- which(tbl.plt$Site_id == id)
@@ -95,16 +108,11 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
     else
       leg.box.col <- "#FFFFFFBB"
 
-    # Open graphics device
-    OpenGraphicsDevice(figs.dir, site.nms[site.ids == id], gr.type)
-    par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
-
-    # Loop through plots, corresponds to rows in the configure plot table
+    # Loop through parameter sets
 
     for (i in seq(along=tbl.plt.rows)) {
 
       idx <- tbl.plt.rows[i]
-      site.name <- tbl.plt[idx, "Site_name"]
 
       # Create a smaller data table that is temporary
       p.names <- make.names(trim(unlist(strsplit(tbl.plt$Parameters[idx],
@@ -122,7 +130,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
         d1 <- d1[, -rm.idxs]
       if (!inherits(d1, "data.frame") || ncol(d1) < 2) {
         cat(paste("No data found for plot:\nSite id: ", id,
-                  "; Site name: ", site.name, "; Parameters: ",
+                  "; Site name: ", site, "; Parameters: ",
                   paste(p.names, collapse=", "), "\n", sep=""))
         next
       }
@@ -130,13 +138,14 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       # Set y-axis limits
       ylim <- as.numeric(tbl.plt[idx, c("Min", "Max")])
 
-      # Main plot title
-      if (i == 1)
-        main <- paste(site.name, " (", id, ")", sep="")
-      else
-        main <- NULL
-
       # Draw plot
+      plot.count <- plot.count + 1L
+      if (((4L + plot.count) - 1L) %% 4L == 0L) {
+        GrDev(site, plot.count)
+        main <- paste(site, " (", id, ")", sep="")
+      } else {
+        main <- NULL
+      }
       DrawPlot(d1, tbl.par, xlim=xlim, ylim=ylim, main=main,
                ylab=tbl.plt[idx, "Axis_title"], leg.box.col=leg.box.col)
     }

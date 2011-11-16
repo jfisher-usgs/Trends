@@ -22,4 +22,5 @@ OpenGraphicsDevice <- function(figs.dir, file.name, gr.type,
       stop(paste("Graphics device", gr.type, "not recognized"))
     }
   }
+  par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
 }
