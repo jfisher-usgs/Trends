@@ -32,13 +32,18 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
   if (is.na(xlim[2]))
     xlim[2] <- xlim.default[2]
 
+  # Regression
+  is.regr    <- inherits(regr, "function")
+  is.regr[2] <- inherits(regr.lower, "function")
+  is.regr[3] <- inherits(regr.upper, "function")
+
   # Set y-axis limits
   y <- d[, p.names]
-  if (inherits(regr, "function"))
+  if (is.regr[1])
     y <- c(y, regr(xlim))
-  if (inherits(regr.lower, "function"))
+  if (is.regr[2])
     y <- c(y, regr.lower(xlim))
-  if (inherits(regr.upper, "function"))
+  if (is.regr[3])
     y <- c(y, regr.upper(xlim))
   ylim.default <- extendrange(y)
   if (is.na(ylim[1]))
@@ -106,16 +111,16 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
     mtext(main, side=3, line=1)
 
   # Draw regression lines
-  if (inherits(regr, "function"))
+  if (is.regr[1])
     lines(xlim, regr(xlim), lty=1, lwd=lwd)
-  if (inherits(regr.lower, "function"))
+  if (is.regr[2])
     lines(xlim, regr.lower(xlim), lty=2, lwd=lwd)
-  if (inherits(regr.upper, "function"))
+  if (is.regr[3])
     lines(xlim, regr.upper(xlim), lty=2, lwd=lwd)
 
   # Draw data points for each parameter and build legend
 
-  leg.name <- leg.pch <- leg.col <- leg.bg <- NULL
+  leg.name <- leg.lty <- leg.pch <- leg.col <- leg.bg <- NULL
   for (p in p.names) {
     pch  <- tbl.par[p, "pch"]
     col  <- tbl.par[p, "col"]
@@ -141,16 +146,30 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
     leg.bg   <- c(leg.bg, bg)
   }
 
-  # Add p-value to legend text
-  if (inherits(p.value, "numeric") & inherits(regr, "function"))
-    leg.name <- paste(leg.name, " (p = ", sprintf("%.3f", p.value), ")",
-                      sep="")
+  # Draw box around plot
+  box(lwd=lwd)
+
+  # Alter legend content if single parameter with regression line
+  if (length(leg.name) == 1) {
+    if (is.regr[1]) {
+      leg.pch <- leg.bg <- NULL
+      leg.col <- "#000000"
+      leg.name <- "Theil-Sen regression"
+      if (inherits(p.value, "numeric"))
+        leg.name <- paste(leg.name, " (p = ", sprintf("%.3f", p.value), ")",
+                          sep="")
+      leg.lty <- 1
+      if (is.regr[2] || is.regr[3]) {
+        leg.name[2] <- "95 percent confidence interval"
+        leg.lty[2] <- 2
+      }
+    } else {
+      return()
+    }
+  }
 
   # Draw legend
   legend(x=grconvertX(0.01, 'npc'), y=grconvertY(0.95, 'npc'),
-         leg.name, pch=leg.pch, col=leg.col, pt.bg=leg.bg,
+         leg.name, lty=leg.lty, pch=leg.pch, col=leg.col, pt.bg=leg.bg,
          xpd=NA, bg=leg.box.col, bty="o", box.lwd=lwd, pt.lwd=lwd)
-
-  # Draw box around plot
-  box(lwd=lwd)
 }
