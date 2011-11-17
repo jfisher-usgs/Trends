@@ -4,7 +4,7 @@ Date: 2011-11-05
 Title: Analysis of Data Collected from a Monitoring Network
 Author: Jason C. Fisher and Linda C. Davis
 Maintainer: Jason C. Fisher <jfisher@usgs.gov>
-Depends: R (>= 2.14.0), tcltk, MASS, NADA, Kendall
+Depends: R (>= 2.14.0), tcltk, MASS, Kendall, NADA
 SystemRequirements: Tcl/Tk (>= 8.5)
 Description: This package is for identifying trends in temporal observational
   data.

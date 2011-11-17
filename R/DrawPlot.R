@@ -46,6 +46,8 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
   if (is.regr[3])
     y <- c(y, regr.upper(xlim))
   ylim.default <- extendrange(y)
+  if (ylim.default[1] < 0)
+    ylim.default[1] <- 0
   if (is.na(ylim[1]))
     ylim[1] <- ylim.default[1]
   if (is.na(ylim[2]))

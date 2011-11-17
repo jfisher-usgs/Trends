@@ -6,11 +6,15 @@
 
 # Input file paths
 
-  file.data         <- file.path(dir.path, "Data_20111101.txt")
-  file.parameters   <- file.path(dir.path, "Config_Parameters_20111102.txt")
+  file.data         <- file.path(dir.path, "Data_20111114.txt")
+  file.parameters   <- file.path(dir.path, "Config_Parameters_20111117.txt")
   file.plots        <- file.path(dir.path, "Config_Plots_20111107.txt")
-  file.stats.uncens <- file.path(dir.path, "Config_Uncensored_20111027.txt")
-  file.stats.cens   <- file.path(dir.path, "Config_Censored_20111027.txt")
+  file.stats.uncens <- file.path(dir.path, "Config_Uncensored_20111117.txt")
+  file.stats.cens   <- file.path(dir.path, "Config_Censored_20111117.txt")
+
+##file.stats.uncens <- file.path(dir.path, "Config_Uncen_Field_20111117.txt")
+##file.stats.uncens <- file.path(dir.path, "Config_Uncen_POR_20111117.txt")
+##file.stats.uncens <- file.path(dir.path, "Config_Uncen_Field_POR_20111117.txt")
 
 # Read trend data
   d <- ReadTrendData(file.data)
