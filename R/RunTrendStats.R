@@ -167,6 +167,11 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       err.extra <- paste("Row index: ", idx, ", Site name: ", site,
                          ", Parameter: ", parameter, "\n", sep="")
 
+      # y-axis label
+      ylab <- tbl.par[parameter, "Name"]
+      if (!is.na(tbl.par[parameter, "Units"]))
+        ylab <- paste(ylab, tbl.par[parameter, "Units"], sep=", in ")
+
       # Start statistical analysis
 
       # Censored data
@@ -181,20 +186,27 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           is.cen <- d.id[[col.code.name]] %in% 1
         else
           is.cen <- rep(FALSE, nrow(d.id))
-        n.cen <- sum(as.integer(is.cen))
 
         # Basic summary statistics
         dat <- d.id[[parameter]]
+        len.record <- diff(range(d.id$datetime))
         ans <- try(suppressWarnings(cenfit(dat, is.cen)), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("Cenfit error:", err.extra, sep="\n"))
           next
         }
-        len.record <- diff(range(d.id$datetime))
-        lst <- list("n"=n, "n_cen"=n.cen,
-                    "mean"=as.numeric(mean(ans)[1]), "median"=median(ans),
+###browser()
+        cen <- show(ans) # objects of type S4 are nothing but trouble
+        cen.n      <- as.integer(cen["n"])
+        cen.n.cen  <- as.integer(cen["n.cen"])
+        cen.median <- as.numeric(cen["median"])
+        cen.mean   <- as.numeric(cen["mean"])
+        cen.sd     <- as.numeric(cen["sd"])
+
+        lst <- list("n"=cen.n, "n_cen"=cen.n.cen,
+                    "mean"=cen.mean, "median"=cen.median,
                     "min"=min(dat), "max"=max(dat),
-                    "std_dev"=sd(ans), "len_record"=len.record)
+                    "std_dev"=cen.sd, "len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
         # Kendall's tau correlation coefficient and trend line
@@ -229,8 +241,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         }
         DrawPlot(d.id, tbl.par[parameter, ], cen.var=col.code.name,
                  xlim=range(d.id$datetime), regr=regr, main=main,
-                 ylab=tbl.par[parameter, "Name"], leg.box.col=leg.box.col,
-                 p.value=ans$p)
+                 ylab=ylab, leg.box.col=leg.box.col, p.value=ans$p)
 
         # Classify trend
         ans <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
@@ -318,8 +329,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         }
         DrawPlot(d.id.time, tbl.par[parameter, ], xlim=tlim,
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
-                 main=main, ylab=tbl.par[parameter, "Name"],
-                 leg.box.col=leg.box.col, p.value=est$p)
+                 main=main, ylab=ylab, leg.box.col=leg.box.col, p.value=est$p)
 
         # Calculate percentage change per year in slopes
         est$slope_percent <- PercentChange(est$slope, est$intercept, tlim)
