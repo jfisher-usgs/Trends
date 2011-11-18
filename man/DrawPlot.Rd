@@ -9,10 +9,12 @@ This function draws a single plot on a graphics device.
 }
 
 \usage{
-DrawPlot(d, tbl.par, cen.var = NULL, xlim = c(NA, NA), ylim = c(NA, NA),
+DrawPlot(d, tbl.par, cen.var = NULL,
+         xlim = c(NA, NA), ylim = c(NA, NA),
          regr = NULL, regr.lower = NULL, regr.upper = NULL,
-         main = NULL, xlab = NULL, ylab = NULL, leg.box.col="#FFFFFF",
-         tick.lines = TRUE, p.value = NULL)
+         regr.type = "Regression line",
+         main = NULL, xlab = NULL, ylab = NULL,
+         leg.box.col="#FFFFFF", tick.lines = TRUE, p.value = NULL)
 }
 
 \arguments{
@@ -24,6 +26,7 @@ DrawPlot(d, tbl.par, cen.var = NULL, xlim = c(NA, NA), ylim = c(NA, NA),
 \item{regr}{function; something.}
 \item{regr.lower}{function; something.}
 \item{regr.upper}{function; something.}
+\item{regr.type}{character; something.}
 \item{main}{character; something.}
 \item{xlab}{character; something.}
 \item{ylab}{character; something.}

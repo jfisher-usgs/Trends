@@ -1,7 +1,9 @@
-DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
+DrawPlot <- function(d, tbl.par, cen.var=NULL,
+                     xlim=c(NA, NA), ylim=c(NA, NA),
                      regr=NULL, regr.lower=NULL, regr.upper=NULL,
-                     main=NULL, xlab=NULL, ylab=NULL, leg.box.col="#FFFFFF",
-                     tick.lines=TRUE, p.value=NULL) {
+                     regr.type="Regression line",
+                     main=NULL, xlab=NULL, ylab=NULL,
+                     leg.box.col="#FFFFFF", tick.lines=TRUE, p.value=NULL) {
 
   # Data and time
   dt.name <- names(d)[1]
@@ -156,7 +158,7 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
     if (is.regr[1]) {
       leg.pch <- leg.bg <- NULL
       leg.col <- "#000000"
-      leg.name <- "Theil-Sen regression"
+      leg.name <- regr.type
       if (inherits(p.value, "numeric"))
         leg.name <- paste(leg.name, " (p = ", sprintf("%.3f", p.value), ")",
                           sep="")
