@@ -5,7 +5,6 @@
   dir.path <- "D:/WORK/JFisher/Projects/Trend Report"
 
 # Input file paths
-
   file.data         <- file.path(dir.path, "Data_20111114.txt")
   file.parameters   <- file.path(dir.path, "Config_Par_20111118.txt")
   file.plots        <- file.path(dir.path, "Config_Plots_20111107.txt")
@@ -43,6 +42,11 @@
   # Time interval which constituent will be averaged ("year", "6 month")
     avg.time <- "year"
 
+  # Censored data
+    stats.tbl.cens <- RunTrendStats(d, is.censored=TRUE, initial.dir=dir.path,
+                                    file.parameters=file.parameters,
+                                    file.stats=file.stats.cens, gr.type=gr.type)
+
   # Uncensored data
     stats.tbl.uncens <- RunTrendStats(d, is.censored=FALSE,
                                       initial.dir=dir.path,
@@ -50,7 +54,3 @@
                                       file.stats=file.stats.uncens,
                                       avg.time=avg.time, gr.type=gr.type)
 
-  # Censored data
-    stats.tbl.cens <- RunTrendStats(d, is.censored=TRUE, initial.dir=dir.path,
-                                    file.parameters=file.parameters,
-                                    file.stats=file.stats.cens, gr.type=gr.type)
