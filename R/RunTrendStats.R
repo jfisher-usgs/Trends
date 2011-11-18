@@ -1,6 +1,7 @@
 RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                      file.parameters=NULL, file.stats=NULL, file.out=NULL,
-                     figs.dir=NULL, avg.time="year", gr.type="pdf") {
+                     figs.dir=NULL, avg.time="year", gr.type="pdf",
+                     cenken.tol=1e-12, cenken.iter=1e+6) {
 # This function performs a statistical analysis on uncensored and censored data
 # tbl <- RunTrendStats(d, c("ANP 6", "ARBOR TEST"))
 
@@ -174,7 +175,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
       # Start statistical analysis
 
-      # Censored data
+      # Censored data:
       if (is.censored) {
 
         # Remove any row with NA values
@@ -192,36 +193,36 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         len.record <- diff(range(d.id$datetime))
         ans <- try(suppressWarnings(cenfit(dat, is.cen)), silent=TRUE)
         if (inherits(ans, "try-error")) {
-          warning(paste("Cenfit error:", err.extra, sep="\n"))
+          warning(paste("NADA cenfit error:", err.extra, sep="\n"))
           next
         }
-###browser()
-        cen <- show(ans) # objects of type S4 are nothing but trouble
-        cen.n      <- as.integer(cen["n"])
-        cen.n.cen  <- as.integer(cen["n.cen"])
-        cen.median <- as.numeric(cen["median"])
-        cen.mean   <- as.numeric(cen["mean"])
-        cen.sd     <- as.numeric(cen["sd"])
-
+        cen.n      <- as.integer(ans@survfit$n)
+        cen.n.cen  <- cen.n - sum(ans@survfit$n.event)
+        cen.median <- as.numeric(NADA:::median(ans))
+        cen.mean   <- as.numeric(NADA:::.mean.cenfit(ans)["mean"])
+        cen.sd     <- as.numeric(NADA:::sd(ans))
         lst <- list("n"=cen.n, "n_cen"=cen.n.cen,
                     "mean"=cen.mean, "median"=cen.median,
                     "min"=min(dat), "max"=max(dat),
                     "std_dev"=cen.sd, "len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-        # Kendall's tau correlation coefficient and trend line
-        ans <- try(suppressWarnings(cenken(dat, is.cen,
-                                           as.numeric(d.id$datetime))),
-                                           silent=TRUE)
+        # Kendall's tau correlation coefficient and Akritas-Theil-Sen
+        # nonparametric regression line, see ?cenken
+        x <- as.numeric(d.id$datetime)
+        ans <- try(NADA:::kendallATS(y=dat, ycen=is.cen,
+                                     x=x, xcen=rep(FALSE, length(x)),
+                                     tol=cenken.tol, iter=cenken.iter),
+                   silent=TRUE)
         if (inherits(ans, "try-error")) {
-          warning(paste("Cenken error:", err.extra, sep="\n"))
+          warning(paste("NADA kendallATS error:", err.extra, sep="\n"))
           next
         }
         lst <- list("slope"=ans$slope * secs.in.year, "intercept"=ans$intercept,
                     "tau"=ans$tau, "p"=ans$p)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-        # Regression line
+        # Nonparametric line
         if (is.na(ans$slope) || is.na(ans$intercept))
           regr <- NULL
         else
@@ -240,15 +241,16 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           main <- NULL
         }
         DrawPlot(d.id, tbl.par[parameter, ], cen.var=col.code.name,
-                 xlim=c(sdate, edate), regr=regr, main=main,
-                 ylab=ylab, leg.box.col=leg.box.col, p.value=ans$p)
+                 xlim=c(sdate, edate), regr=regr,
+                 regr.type="Akritas-Theil-Sen line",
+                 main=main, ylab=ylab, leg.box.col=leg.box.col, p.value=ans$p)
 
         # Classify trend
         ans <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
         lst <- list(trend=ans)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-      # Uncensored data
+      # Uncensored data:
       } else {
 
         # Warn if censored data found
@@ -295,7 +297,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         y <- d.id.time[, parameter]
         est <- try(suppressWarnings(RunTheilSen(x=x, y=y)$regci), silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
-          warning(paste("regci error:", err.extra, sep="\n"))
+          warning(paste("Wilcox regci error:", err.extra, sep="\n"))
           next
         }
 
@@ -329,7 +331,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         }
         DrawPlot(d.id.time, tbl.par[parameter, ], xlim=c(sdate, edate),
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
-                 main=main, ylab=ylab, leg.box.col=leg.box.col, p.value=est$p)
+                 regr.type="Theil-Sen line", main=main, ylab=ylab,
+                 leg.box.col=leg.box.col, p.value=est$p)
 
         # Calculate percentage change per year in slopes
         est$slope_percent <- PercentChange(est$slope, est$intercept, tlim)

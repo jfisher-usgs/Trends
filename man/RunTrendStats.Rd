@@ -11,7 +11,8 @@ This function performs a statistical analysis on uncensored and censored data.
 \usage{
 RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
               file.parameters = NULL, file.stats = NULL, file.out = NULL,
-              figs.dir = NULL, avg.time = "year", gr.type = "pdf")
+              figs.dir = NULL, avg.time = "year", gr.type = "pdf",
+              cenken.tol = 1e-12, cenken.iter = 1e+6)
 }
 
 \arguments{
@@ -34,6 +35,8 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   is to be cut.}
 \item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
   is \code{"pdf"}.}
+\item{cenken.tol}{numeric; something.}
+\item{cenken.iter}{numeric; something.}
 }
 
 
