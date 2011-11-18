@@ -1,7 +1,8 @@
 RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                      file.parameters=NULL, file.stats=NULL, file.out=NULL,
                      figs.dir=NULL, avg.time="year", gr.type="pdf",
-                     cenken.tol=1e-12, cenken.iter=1e+6) {
+                     cenken.tol=1e-12, cenken.iter=1e+6,
+                     write.tbl.out=FALSE) {
 # This function performs a statistical analysis on uncensored and censored data
 # tbl <- RunTrendStats(d, c("ANP 6", "ARBOR TEST"))
 
@@ -61,12 +62,12 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
   require(tcltk)
   require(NADA)
-  require(Kendall)
 
   # Paths
   file.parameters <- GetPath("config_para", file.parameters, initial.dir)
   file.stats <- GetPath("config_stat", file.stats, initial.dir)
-  file.out <- GetPath("output_stat", file.out, initial.dir)
+  if (write.tbl.out)
+    file.out <- GetPath("output_stat", file.out, initial.dir)
   if (gr.type != "windows")
     figs.dir <- GetPath("output_figs", figs.dir, initial.dir)
 
@@ -310,7 +311,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                     "intercept_lower"=est[1, 1],
                     "intercept_upper"=est[1, 2])
 
-        # Regression lines
+        # Regression line and confidence intervals
         if (is.numeric(est$slope) && is.numeric(est$intercept)) {
           regr <- function(x) {est$slope * as.numeric(x) + est$intercept}
           regr.lower <- function(x) {est$lower * as.numeric(x) +
@@ -346,15 +347,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         est$slope_percent <- est$slope_percent * secs.in.year
         est$lower_percent <- est$lower_percent * secs.in.year
         est$upper_percent <- est$upper_percent * secs.in.year
-
         rec <- cbind(rec, as.data.frame(est))
-
-        # Calculate Kendall estimates using the Kendall package
-        ans <- MannKendall(d.id.time[, parameter])
-        lst <- list("Kendall_tau"=ans$tau[1],
-                    "Kendall_sl"=ans$sl[1],
-                    "Kendall_S"=ans$S[1])
-        rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
         # Classify trend
         trend <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
@@ -370,9 +363,9 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 if (gr.type != "windows")
   graphics.off()
 
-tbl.out <- format(tbl.out, scientific=FALSE)
-
-write.table(tbl.out, file=file.out, quote=FALSE, sep="\t", row.names=FALSE)
+if (write.tbl.out)
+  write.table(format(tbl.out, scientific=FALSE), file=file.out, quote=FALSE,
+              sep="\t", row.names=FALSE)
 
 invisible(tbl.out)
 }

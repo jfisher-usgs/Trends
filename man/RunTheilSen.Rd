@@ -5,7 +5,8 @@
 \title{Run Theil-Sen Estimator}
 
 \description{
-This function computes  a .95 confidence interval for a Theil-Sen estimator.
+This function computes  a 95 percent confidence interval for a
+Theil-Sen estimator.
 }
 
 \usage{

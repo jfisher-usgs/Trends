@@ -13,26 +13,29 @@ DrawPlot(d, tbl.par, cen.var = NULL,
          xlim = c(NA, NA), ylim = c(NA, NA),
          regr = NULL, regr.lower = NULL, regr.upper = NULL,
          regr.type = "Regression line",
-         main = NULL, xlab = NULL, ylab = NULL,
-         leg.box.col="#FFFFFF", tick.lines = TRUE, p.value = NULL)
+         main = NULL, ylab = NULL, leg.box.col="#FFFFFF",
+         tick.lines = TRUE, p.value = NULL)
 }
 
 \arguments{
 \item{d}{data.frame; something.}
-\item{tbl.par}{data.frame; something.}
-\item{cen.var}{character or integer; something.}
-\item{xlim}{POSIXct; something.}
-\item{ylim}{numeric; something.}
-\item{regr}{function; something.}
-\item{regr.lower}{function; something.}
-\item{regr.upper}{function; something.}
-\item{regr.type}{character; something.}
-\item{main}{character; something.}
-\item{xlab}{character; something.}
-\item{ylab}{character; something.}
-\item{leg.box.col}{character; something.}
-\item{tick.lines}{logical; something.}
-\item{p.value}{numeric; something.}
+\item{tbl.par}{data.frame; parameter configuration table,
+  see \code{\link{ShowParameters}}.}
+\item{cen.var}{character or integer; the name or index number of the
+  logical component in \code{d} that indicates whether observations are
+  censored.}
+\item{xlim}{POSIXct; the \code{x} limits (\code{x1}, \code{x2}) of the plot.}
+\item{ylim}{numeric; the \code{y} limits.}
+\item{regr}{function; regression.}
+\item{regr.lower}{function; lower confidence interval for regression.}
+\item{regr.upper}{function; upper confidence interval for regression.}
+\item{regr.type}{character; a legend label for the regression line.}
+\item{main}{character; a main title for the plot.}
+\item{ylab}{character; a label for the \code{y} axis.}
+\item{leg.box.col}{character; the background color for the legend box.}
+\item{tick.lines}{logical; if \code{TRUE}, horizontal and vertical lines are
+  drawn at the major tick marks.}
+\item{p.value}{numeric; the p-value for the regression.}
 }
 
 \details{

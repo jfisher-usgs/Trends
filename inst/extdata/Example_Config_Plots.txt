@@ -10,7 +10,7 @@ Site_id	Site_name	Parameters	Min	Max	Axis_title
 433223112470201	AREA 2	NO3+NO2	NA	NA	Concentration, in milligrams per liter
 432638112484101	ATOMIC CITY	CL, Na	NA	NA	Concentration, in milligrams per liter
 433042112535101	BADGING FACILITY	CL, Na, SO4	NA	NA	Concentration, in milligrams per liter
-433042112535102	BADGING FACILITY	NO3+NO2	NA	NA	Concentration, in milligrams per liter
+433042112535101	BADGING FACILITY	NO3+NO2	NA	NA	Concentration, in milligrams per liter
 433440112554401	CPP 4	CL, Na	NA	NA	Concentration, in milligrams per liter
 433440112554401	CPP 4	NO3+NO2	NA	NA	Concentration, in milligrams per liter
 433051113002601	EBR 1	CL, Na	NA	NA	Concentration, in milligrams per liter

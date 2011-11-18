@@ -2,8 +2,8 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
                      xlim=c(NA, NA), ylim=c(NA, NA),
                      regr=NULL, regr.lower=NULL, regr.upper=NULL,
                      regr.type="Regression line",
-                     main=NULL, xlab=NULL, ylab=NULL,
-                     leg.box.col="#FFFFFF", tick.lines=TRUE, p.value=NULL) {
+                     main=NULL, ylab=NULL, leg.box.col="#FFFFFF",
+                     tick.lines=TRUE, p.value=NULL) {
 
   # Data and time
   dt.name <- names(d)[1]

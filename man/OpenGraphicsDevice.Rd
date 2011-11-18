@@ -20,7 +20,7 @@ OpenGraphicsDevice(figs.dir, file.name, gr.type,
   \code{"pdf"}, \code{"postscript"}, \code{"png"}, or \code{"windows"}.}
 \item{w, h}{numeric; the (nominal) width and height of the canvas of the
   plotting window in inches. Default is \code{8.5} and \code{11}, respectively.}
-\item{p}{numeric; the default pointsize of plotted text, its default is
+\item{p}{numeric; the default point size of plotted text, its default is
   \code{12}.}
 \item{png.res}{numeric; the nominal resolution in points per inch (ppi)
   which will be recorded in the PNG file, its default is \code{300} ppi

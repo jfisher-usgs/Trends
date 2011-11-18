@@ -22,6 +22,7 @@ The imported parameter configuration table requires the following fields:
 \code{"Parameter"}, a unique parameter name corresponding to header fields
   in the data table;
 \code{"Name"}, the parameter name, used for legend text and axis labels;
+\code{"Units"}, the parameter units, used for axis labels;
 \code{"pch"}, an integer specifying the symbol to use in plotting points;
 \code{"col"}, the color code; and
 \code{"bg"}, the background (fill) color for the open plot symbols given by

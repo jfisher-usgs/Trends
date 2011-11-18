@@ -19,7 +19,7 @@ PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
 \item{site.names}{character; an array of local site identifiers; if missing,
   all sites in the plots configuration file are used.}
 \item{sdate, edate}{character; start and end date corresponding to the
-  period of record, in M/D/YYYY (\%m/\%d/\%Y).}
+  period of record, in M/D/YYYY (\code{\%m/\%d/\%Y}).}
 \item{initial.dir}{character; specifies the initial directory in the open files
   pop-up box; only used when \code{file.parameters} or \code{file.plots} is
   \code{NULL}.}
@@ -37,7 +37,7 @@ PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
 The imported plot configuration table requires the following fields:
 \code{"Site_id"}, a unique numerical identifier used to access site data;
 \code{"Site_name"}, a local site identifier;
-\code{"Parameters"}, comma seperated parameter names corresponding to
+\code{"Parameters"}, comma separated parameter names corresponding to
   header fields in the data table, see \code{\link{ReadTrendData}};
 \code{"Min"}, the minimum y-axis plot limit;
 \code{"Max"}, the maximum y-axis plot limit; and

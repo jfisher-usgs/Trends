@@ -45,12 +45,13 @@
   # Censored data
     stats.tbl.cens <- RunTrendStats(d, is.censored=TRUE, initial.dir=dir.path,
                                     file.parameters=file.parameters,
-                                    file.stats=file.stats.cens, gr.type=gr.type)
+                                    file.stats=file.stats.cens, gr.type=gr.type,
+                                    write.tbl.out=TRUE)
 
   # Uncensored data
     stats.tbl.uncens <- RunTrendStats(d, is.censored=FALSE,
                                       initial.dir=dir.path,
                                       file.parameters=file.parameters,
                                       file.stats=file.stats.uncens,
-                                      avg.time=avg.time, gr.type=gr.type)
-
+                                      avg.time=avg.time, gr.type=gr.type,
+                                      write.tbl.out=TRUE)

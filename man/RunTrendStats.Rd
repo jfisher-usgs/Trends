@@ -5,14 +5,15 @@
 \title{Open Graphics Device}
 
 \description{
-This function performs a statistical analysis on uncensored and censored data.
+This function performs a statistical analysis on censored and uncensored data.
 }
 
 \usage{
 RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
               file.parameters = NULL, file.stats = NULL, file.out = NULL,
               figs.dir = NULL, avg.time = "year", gr.type = "pdf",
-              cenken.tol = 1e-12, cenken.iter = 1e+6)
+              cenken.tol = 1e-12, cenken.iter = 1e+6,
+              write.tbl.out = FALSE)
 }
 
 \arguments{
@@ -20,7 +21,7 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 \item{site.names}{character; an array of local site identifiers; if missing,
   all sites in the statistics configuration file are used.}
 \item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
-  censorsed, its default is \code{FALSE}, see \sQuote{Details}.}
+  censored, its default is \code{FALSE}, see \sQuote{Details}.}
 \item{initial.dir}{character; specifies the initial directory in the open files
   pop-up box.}
 \item{file.parameters}{character; file path for the parameters
@@ -35,10 +36,11 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   is to be cut.}
 \item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
   is \code{"pdf"}.}
-\item{cenken.tol}{numeric; something.}
-\item{cenken.iter}{numeric; something.}
+\item{cenken.tol}{numeric; numerical tolerance, \sQuote{Details}.}
+\item{cenken.iter}{numeric; maximum number of iterations, \sQuote{Details}.}
+\item{write.tbl.out}{logical; if \code{TRUE}, the output table
+  is written to a text file, its default is \code{FALSE}.}
 }
-
 
 \format{
 The imported statistics configuration table requires the following fields:
@@ -46,31 +48,63 @@ The imported statistics configuration table requires the following fields:
 \code{"Site_name"}, a local site identifier;
 \code{"Parameters"}, comma seperated parameter names corresponding to
   header fields in the data table, see \code{\link{ReadTrendData}};
-\code{"Start_date"}, something;
-\code{"End_date"}, something; and
-\code{"Remark"}, something.
+\code{"Start_date"}, start date in M/D/YYYY (\code{\%m/\%d/\%Y});
+\code{"End_date"}, end date; and
+\code{"Remark"}, any comments (optional).
 }
 
 \details{
-Something
+The censored data is analyzed using functions provided in the \pkg{NADA}
+package. Summary statistics are calculated using \code{\link{cenfit}} and the
+Kendalls tau correlation coefficient and associated Akritas-Theil-Sen (ATS)
+nonparametric regression line are calculated using \code{kendallATS},
+a hidden function in \pkg{NADA}.
+The ATS slope estimation uses an iterative bisection search
+with a stopping criteria defined by \code{cenken.tol} and \code{cenken.iter}.
+
+The Theil-Sen estimator and trend line for uncensored data is calculated
+using robust statistic functions provided by R.R. Wilcox,
+see \code{\link{RunTheilSen}} for details.
+
+A new graphics device is opened for each site and after four plots have
+been drawn.
 }
 
 \value{
-Something
+Returns a data frame with variables:
+\item{Site_id}{character; something.}
+\item{Site_name}{character; something.}
+\item{Parameter}{character; something.}
+\item{Start_date}{POSIXct; something.}
 }
 
 \author{J.C. Fisher and L.C. Davis}
 
+\references{
+Lorenz, D.L., and others, 2011, USGS library for S-PLUS for Windows --
+Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
+
+Helsel, D.R., 2005, Nondectects and Data Analysis; Statistics for
+censored environmental data. John Wiley and Sons, USA, NJ.
+}
+
 \examples{
 f <- system.file("extdata/Example_Data.txt", package = "Trends")
 d <- ReadTrendData(f)
+file.par <- system.file("extdata/Example_Config_Parameters.txt",
+                        package = "Trends")
 
-file.parameters <- system.file("extdata/Example_Config_Parameters.txt",
-                               package = "Trends")
-file.stats <- system.file("extdata/Example_Stats_Uncensored.txt",
+file.stats <- system.file("extdata/Example_Config_Censored.txt",
                           package = "Trends")
+out <- RunTrendStats(d, site.names = c("ANP 9", "HIGHWAY 3"),
+                     is.censored = TRUE, file.parameters = file.par,
+                     file.stats = file.stats, gr.type="windows")
 
-\donttest{RunTrendStats()}
+file.stats <- system.file("extdata/Example_Config_Uncensored.txt",
+                          package = "Trends")
+out <- RunTrendStats(d, site.names = c("ANP 6", "ATOMIC CITY"),
+                     is.censored = FALSE, file.parameters = file.par,
+                     file.stats = file.stats, gr.type="windows")
 }
 
 \keyword{misc}
