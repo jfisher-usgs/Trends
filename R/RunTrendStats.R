@@ -112,10 +112,10 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   for (i in seq(along=idxs)) {
     idx <- idxs[i]
 
-    id     <- tbl[idx, "Site_id"]
-    site   <- tbl[idx, "Site_name"]
-    sdate  <- tbl[idx, "Start_date"]
-    edate  <- tbl[idx, "End_date"]
+    id    <- tbl[idx, "Site_id"]
+    site  <- tbl[idx, "Site_name"]
+    sdate <- tbl[idx, "Start_date"]
+    edate <- tbl[idx, "End_date"]
 
     p.names <- trim(unique(unlist(strsplit(tbl[idx, "Parameters"], ","))))
     parameters <- make.names(p.names)
@@ -197,7 +197,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           next
         }
         cen.n      <- as.integer(ans@survfit$n)
-        cen.n.cen  <- cen.n - sum(ans@survfit$n.event)
+        cen.n.cen  <- cen.n - as.integer(sum(ans@survfit$n.event))
         cen.median <- as.numeric(NADA:::median(ans))
         cen.mean   <- as.numeric(NADA:::.mean.cenfit(ans)["mean"])
         cen.sd     <- as.numeric(NADA:::sd(ans))
