@@ -240,7 +240,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           main <- NULL
         }
         DrawPlot(d.id, tbl.par[parameter, ], cen.var=col.code.name,
-                 xlim=range(d.id$datetime), regr=regr, main=main,
+                 xlim=c(sdate, edate), regr=regr, main=main,
                  ylab=ylab, leg.box.col=leg.box.col, p.value=ans$p)
 
         # Classify trend
@@ -327,7 +327,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         } else {
           main <- NULL
         }
-        DrawPlot(d.id.time, tbl.par[parameter, ], xlim=tlim,
+        DrawPlot(d.id.time, tbl.par[parameter, ], xlim=c(sdate, edate),
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
                  main=main, ylab=ylab, leg.box.col=leg.box.col, p.value=est$p)
 
