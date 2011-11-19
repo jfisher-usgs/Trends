@@ -15,7 +15,7 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
   if (!is.null(cen.var)) {
     if (inherits(cen.var, "character"))
       cen.var <- which(names(d) == cen.var)
-    if (!inherits(cen.var, "integer") || length(cen.var) != 1) {
+    if (!inherits(cen.var, c("numeric", "integer")) || length(cen.var) != 1) {
       stop("Censor code variable index is not valid")
     } else {
       cen.code <- d[, cen.var]
@@ -28,6 +28,8 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
   p.names <- names(d)[-c(1, cen.var)]
 
   # Set x-axis limits
+  origin <- as.POSIXct("1920-01-01 00:00:00.0")
+  xlim <- as.POSIXct(xlim,  "%m/%d/%Y", tz="MST", origin=origin)
   xlim.default <- extendrange(d[[dt.name]])
   if (is.na(xlim[1]))
     xlim[1] <- xlim.default[1]
@@ -82,8 +84,13 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
   axis(2, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
   axis(4, tcl=tcl.major, lwd=-1, lwd.ticks=lwd, labels=FALSE)
 
-  # Draw x-axis
+  # Draw major x-axis
   at.major <- pretty(xlim)
+  axis.POSIXct(1, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
+  axis.POSIXct(3, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd,
+               labels=FALSE)
+
+  # Draw minor x-axis
   mult <- 12
   num.at.major <- length(at.major) - 1
   no.match <- TRUE
@@ -92,19 +99,19 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
     if (all(at.major %in% at.minor)) {
       at.minor <- at.minor[!at.minor %in% at.major]
       no.match <- FALSE
-    } else if (mult > 100) {
-      stop("Problem with minor-tick marks on x-axis")
+    } else if (mult > 1000) {
+      warning("Problem with minor-tick marks on x-axis")
+      break
     } else {
       mult <- mult + 1
     }
   }
-  axis.POSIXct(1, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
-  axis.POSIXct(3, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd,
-               labels=FALSE)
-  axis.POSIXct(1, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
-               labels=FALSE)
-  axis.POSIXct(3, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
-               labels=FALSE)
+  if (!no.match) {
+    axis.POSIXct(1, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
+                 labels=FALSE)
+    axis.POSIXct(3, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
+                 labels=FALSE)
+  }
 
   # Draw y-axis label
   if (!is.null(ylab))
