@@ -33,10 +33,10 @@ Returns a \code{list} with a single 2 by 5 \code{matrix} component,
 \code{regci}. The matrix has column names of \code{"ci.low"},
 \code{"ci.up"}, \code{"Estimate"}, \code{"S.E."}, and \code{"p-value"}
 and row names of \code{"intercept"} and \code{"X"}. The \emph{p}-value for
-the Theil-Sen estimator \code{[2, 5]}; slope \code{[2, 3]} and
-intercept \code{[1, 3]} of the regression line; slope \code{[2, 1]} and
-intercept \code{[1, 1]} of the lower confidence interval; and
-slope \code{[2, 2]} and intercept \code{[1, 2]} of the upper
+the Theil-Sen estimator \code{[2,5]}; slope \code{[2,3]} and
+intercept \code{[1,3]} of the regression line; slope \code{[2,1]} and
+intercept \code{[1,1]} of the lower confidence interval; and
+slope \code{[2,2]} and intercept \code{[1,2]} of the upper
 confidence interval are included in the matrix.
 }
 
