@@ -81,11 +81,11 @@ Returns a data frame with variables:
 \author{J.C. Fisher and L.C. Davis}
 
 \references{
+Helsel, D.R., 2005, \emph{Nondectects and Data Analysis; Statistics for
+censored environmental data}. John Wiley and Sons, USA, NJ.
+
 Lorenz, D.L., and others, 2011, USGS library for S-PLUS for Windows --
 Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
-
-Helsel, D.R., 2005, Nondectects and Data Analysis; Statistics for
-censored environmental data. John Wiley and Sons, USA, NJ.
 }
 
 \examples{

@@ -300,8 +300,6 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           warning(paste("Wilcox regci error:", err.extra, sep="\n"))
           next
         }
-
-        # Convert slopes from unit per second to unit per year;
         est <- list("p"=est[2, 5],
                     "slope"=est[2, 3],
                     "lower"=est[2, 1],
