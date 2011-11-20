@@ -1,6 +1,6 @@
 PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
-                          initial.dir=getwd(), file.parameters=NULL,
-                          file.plots=NULL, figs.dir=NULL, gr.type="pdf") {
+                          initial.dir=getwd(), file.par=NULL, file.plots=NULL,
+                          figs.dir=NULL, gr.type="pdf") {
 # This function draws plots on the desired device type
 # PlotTrendData(d, site.names=c("ANP 6", "ARBOR TEST"), gr.type="windows")
 
@@ -23,7 +23,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   # Main program:
 
   # Paths
-  file.parameters <- GetPath("config_para", file.parameters, initial.dir)
+  file.par <- GetPath("config_para", file.par, initial.dir)
   file.plots <- GetPath("config_plot", file.plots, initial.dir)
   if (gr.type != "windows")
     figs.dir <- GetPath("output_figs", figs.dir, initial.dir)
@@ -48,7 +48,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   edate  <- as.POSIXct(edate, "%m/%d/%Y", tz="MST", origin=origin)
 
   # Read parameter configuration table
-  tbl.par <- read.table(file=file.parameters, header=TRUE, sep="\t",
+  tbl.par <- read.table(file=file.par, header=TRUE, sep="\t",
                         stringsAsFactors=FALSE, comment.char="", row.names=1)
   row.names(tbl.par) <- make.names(row.names(tbl.par))
 

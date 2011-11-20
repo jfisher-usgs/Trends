@@ -1,5 +1,5 @@
 RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
-                     file.parameters=NULL, file.stats=NULL, write.tbl.out=FALSE,
+                     file.par=NULL, file.stats=NULL, write.tbl.out=FALSE,
                      file.out=NULL, figs.dir=NULL, avg.time="year",
                      gr.type="pdf", cenken.tol=1e-12, cenken.iter=1e+6) {
 # This function performs a statistical analysis on uncensored and censored data
@@ -63,7 +63,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   require(NADA)
 
   # Paths
-  file.parameters <- GetPath("config_para", file.parameters, initial.dir)
+  file.par <- GetPath("config_para", file.par, initial.dir)
   file.stats <- GetPath("config_stat", file.stats, initial.dir)
   if (write.tbl.out)
     file.out <- GetPath("output_stat", file.out, initial.dir)
@@ -71,7 +71,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     figs.dir <- GetPath("output_figs", figs.dir, initial.dir)
 
   # Read parameter configuration table
-  tbl.par <- read.table(file=file.parameters, header=TRUE, sep="\t",
+  tbl.par <- read.table(file=file.par, header=TRUE, sep="\t",
                         stringsAsFactors=FALSE, comment.char="", row.names=1)
   row.names(tbl.par) <- make.names(row.names(tbl.par))
 

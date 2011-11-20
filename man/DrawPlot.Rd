@@ -18,9 +18,11 @@ DrawPlot(d, tbl.par, cen.var = NULL,
 }
 
 \arguments{
-\item{d}{data.frame; something.}
-\item{tbl.par}{data.frame; parameter configuration table,
-  see \code{\link{ShowParameters}}.}
+\item{d}{data.frame; coordinate vectors of points to plot, and a logical vector
+  indicating censored values. The first component contains date-time values of
+  class \code{POSIXct}.}
+\item{tbl.par}{data.frame; parameter configuration table, see
+  \code{\link{ShowParameters}}.}
 \item{cen.var}{character or integer; the name or index number of the
   logical component in \code{d} indicating whether observations are censored.}
 \item{xlim}{POSIXct; the \code{x} limits (\code{x1}, \code{x2}) of the plot.}
@@ -35,17 +37,21 @@ DrawPlot(d, tbl.par, cen.var = NULL,
   semi-transparency supported for some graphics devices.}
 \item{tick.lines}{logical; if \code{TRUE}, horizontal and vertical lines are
   drawn at the major tick marks.}
-\item{p.value}{numeric; the p-value of the regression line.}
+\item{p.value}{numeric; the estimated p-value of the regression line.}
 }
 
 \details{
-Something
+Uncensored data is plotted as points and censored data as vertical dashed lines.
+Regression and confidence interval lines are only drawn if \code{d} contains
+a single parameter.
 }
 
 \author{J.C. Fisher}
 
 \seealso{
-\code{\link{plot.window}}, \code{\link{axis.POSIXct}}, \code{\link{legend}}
+\code{\link{plot.window}}, \code{\link{axis}}, \code{\link{axis.POSIXct}},
+\code{\link{abline}}, \code{\link{polygon}}, \code{\link{lines}},
+\code{\link{points}}, \code{\link{legend}}
 }
 
 \examples{

@@ -1,10 +1,10 @@
-ShowParameters <- function(file.parameters=NULL) {
+ShowParameters <- function(file.par=NULL) {
 
   # Path
-  file.parameters <- GetPath("config_para", file.parameters)
+  file.par <- GetPath("config_para", file.par)
 
   # Read parameters configuration table
-  tbl.par <- read.table(file=file.parameters, header=TRUE, sep="\t",
+  tbl.par <- read.table(file=file.par, header=TRUE, sep="\t",
                         stringsAsFactors=FALSE, comment.char="", row.names=1)
 
   windows(width=5, height=10, pointsize=12)

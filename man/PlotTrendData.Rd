@@ -10,7 +10,7 @@ This function queries and plots trend data.
 
 \usage{
 PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
-              file.parameters = NULL, file.plots = NULL, figs.dir = NULL,
+              file.par = NULL, file.plots = NULL, figs.dir = NULL,
               gr.type = "pdf")
 }
 
@@ -21,9 +21,9 @@ PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
 \item{sdate, edate}{character; start and end date corresponding to the
   period of record, in M/D/YYYY (\code{\%m/\%d/\%Y}).}
 \item{initial.dir}{character; specifies the initial directory in the open files
-  pop-up box; only used when \code{file.parameters} or \code{file.plots} is
+  pop-up box; only used when \code{file.par} or \code{file.plots} is
   \code{NULL}.}
-\item{file.parameters}{character; file path for the parameters
+\item{file.par}{character; file path for the parameters
   configuration table, see \code{\link{ShowParameters}}.}
 \item{file.plots}{character; file path for the plot configuration table,
   see \sQuote{Format}.}
@@ -61,14 +61,14 @@ been drawn.
 f <- system.file("extdata/Example_Data.txt", package = "Trends")
 d <- ReadTrendData(f)
 
-file.parameters <- system.file("extdata/Example_Config_Parameters.txt",
-                               package = "Trends")
+file.par <- system.file("extdata/Example_Config_Parameters.txt",
+                        package = "Trends")
 file.plots <- system.file("extdata/Example_Config_Plots.txt",
                           package = "Trends")
 
 PlotTrendData(d, site.names = c("ANP 6", "ARBOR TEST"),
               sdate = "01/01/1990", edate = "01/01/2010",
-              file.parameters = file.parameters, file.plots = file.plots,
+              file.par = file.par, file.plots = file.plots,
               gr.type = "windows")
 }
 

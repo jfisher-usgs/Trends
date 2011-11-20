@@ -5,7 +5,8 @@
 \title{Read Trend Data}
 
 \description{
-Reads table formatted data from a text file and creates a data frame from it.
+This function reads table formatted data from a text file and creates a
+data frame from it.
 }
 
 \usage{

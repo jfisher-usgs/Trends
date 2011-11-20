@@ -5,7 +5,7 @@
 \title{Open Graphics Device}
 
 \description{
-Starts the device driver for producing graphics.
+This function starts the device driver for producing graphics.
 }
 
 \usage{
@@ -29,7 +29,7 @@ OpenGraphicsDevice(figs.dir, file.name, gr.type,
 
 \details{
 A \code{"postscript"} graphics device produces an EPS file and
-is recommended for figures of publication quality.
+is recommended for producing figures of publication quality.
 }
 
 \value{

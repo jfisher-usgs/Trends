@@ -10,10 +10,9 @@ This function performs a statistical analysis on censored and uncensored data.
 
 \usage{
 RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
-              file.parameters = NULL, file.stats = NULL,
-              write.tbl.out = FALSE, file.out = NULL, figs.dir = NULL,
-              avg.time = "year", gr.type = "pdf", cenken.tol = 1e-12,
-              cenken.iter = 1e+6)
+              file.par = NULL, file.stats = NULL, write.tbl.out = FALSE,
+              file.out = NULL, figs.dir = NULL, avg.time = "year",
+              gr.type = "pdf", cenken.tol = 1e-12, cenken.iter = 1e+6)
 }
 
 \arguments{
@@ -24,7 +23,7 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   censored, its default is \code{FALSE}, see \sQuote{Details}.}
 \item{initial.dir}{character; specifies the initial directory in the open files
   pop-up box.}
-\item{file.parameters}{character; file path for the parameters
+\item{file.par}{character; file path for the parameters
   configuration table, see \code{\link{ShowParameters}}.}
 \item{file.stats}{character; file path for the statistics configuration table,
   see \sQuote{Format}.}
@@ -38,8 +37,8 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   is to be cut.}
 \item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
   is \code{"pdf"}.}
-\item{cenken.tol}{numeric; numerical tolerance, \sQuote{Details}.}
-\item{cenken.iter}{numeric; maximum number of iterations, \sQuote{Details}.}
+\item{cenken.tol}{numeric; numerical tolerance, see \sQuote{Details}.}
+\item{cenken.iter}{numeric; maximum number of iterations, see \sQuote{Details}.}
 }
 
 \format{
@@ -72,8 +71,8 @@ been drawn.
 
 \value{
 Returns a data frame with variables:
-\item{Site_id}{character; something.}
-\item{Site_name}{character; something.}
+\item{Site_id}{numeric; a unique numerical identifier used to access site data.}
+\item{Site_name}{character; a local site identifier.}
 \item{Parameter}{character; something.}
 \item{Start_date}{POSIXct; something.}
 }
@@ -97,13 +96,13 @@ file.par <- system.file("extdata/Example_Config_Parameters.txt",
 file.stats <- system.file("extdata/Example_Config_Censored.txt",
                           package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 9", "HIGHWAY 3"),
-                     is.censored = TRUE, file.parameters = file.par,
+                     is.censored = TRUE, file.par = file.par,
                      file.stats = file.stats, gr.type="windows")
 
 file.stats <- system.file("extdata/Example_Config_Uncensored.txt",
                           package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 6", "ATOMIC CITY"),
-                     is.censored = FALSE, file.parameters = file.par,
+                     is.censored = FALSE, file.par = file.par,
                      file.stats = file.stats, gr.type="windows")
 }
 

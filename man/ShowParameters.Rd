@@ -5,16 +5,18 @@
 \title{Draw All Parameters in a Legend}
 
 \description{
-Draw all possible parameters within a legend.
+This function draws all possible parameters within a legend and
+should assist with the selection of unique symbols and colors for
+each parameter.
 }
 
 \usage{
-ShowParameters(file.parameters = NULL)
+ShowParameters(file.par = NULL)
 }
 
 \arguments{
-\item{file.parameters}{character; file path for the parameter configuration
-   table, see \sQuote{Format}}
+\item{file.par}{character; file path for the parameter configuration table,
+   see \sQuote{Format}}
 }
 
 \format{
@@ -37,8 +39,7 @@ Each line of the table represents a single unique parameter.
 }
 
 \examples{
-f <- system.file("extdata/Example_Config_Parameters.txt",
-                 package = "Trends")
+f <- system.file("extdata/Example_Config_Parameters.txt", package = "Trends")
 ShowParameters(f)
 }
 
