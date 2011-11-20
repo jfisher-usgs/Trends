@@ -10,10 +10,10 @@ This function performs a statistical analysis on censored and uncensored data.
 
 \usage{
 RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
-              file.parameters = NULL, file.stats = NULL, file.out = NULL,
-              figs.dir = NULL, avg.time = "year", gr.type = "pdf",
-              cenken.tol = 1e-12, cenken.iter = 1e+6,
-              write.tbl.out = FALSE)
+              file.parameters = NULL, file.stats = NULL,
+              write.tbl.out = FALSE, file.out = NULL, figs.dir = NULL,
+              avg.time = "year", gr.type = "pdf", cenken.tol = 1e-12,
+              cenken.iter = 1e+6)
 }
 
 \arguments{
@@ -28,6 +28,8 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   configuration table, see \code{\link{ShowParameters}}.}
 \item{file.stats}{character; file path for the statistics configuration table,
   see \sQuote{Format}.}
+\item{write.tbl.out}{logical; if \code{TRUE}, the output table
+  is written to a text file, its default is \code{FALSE}.}
 \item{file.out}{character; file path for the statistics summary table,
   see \sQuote{Value}.}
 \item{figs.dir}{character; if \code{gr.type} not equal to \code{"windows"},
@@ -38,8 +40,6 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   is \code{"pdf"}.}
 \item{cenken.tol}{numeric; numerical tolerance, \sQuote{Details}.}
 \item{cenken.iter}{numeric; maximum number of iterations, \sQuote{Details}.}
-\item{write.tbl.out}{logical; if \code{TRUE}, the output table
-  is written to a text file, its default is \code{FALSE}.}
 }
 
 \format{

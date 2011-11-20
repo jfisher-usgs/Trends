@@ -1,8 +1,7 @@
 RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
-                     file.parameters=NULL, file.stats=NULL, file.out=NULL,
-                     figs.dir=NULL, avg.time="year", gr.type="pdf",
-                     cenken.tol=1e-12, cenken.iter=1e+6,
-                     write.tbl.out=FALSE) {
+                     file.parameters=NULL, file.stats=NULL, write.tbl.out=FALSE,
+                     file.out=NULL, figs.dir=NULL, avg.time="year",
+                     gr.type="pdf", cenken.tol=1e-12, cenken.iter=1e+6) {
 # This function performs a statistical analysis on uncensored and censored data
 # tbl <- RunTrendStats(d, c("ANP 6", "ARBOR TEST"))
 
