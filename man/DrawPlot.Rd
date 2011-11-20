@@ -32,8 +32,7 @@ DrawPlot(d, tbl.par, cen.var = NULL,
 \item{main}{character; a main title for the plot.}
 \item{ylab}{character; a label for the \code{y} axis.}
 \item{leg.box.col}{character; the background color for the legend box with
-  semi-transparency supported for some graphics devices, for example
-  \code{"#FFFFFFBB"}.}
+  semi-transparency supported for some graphics devices.}
 \item{tick.lines}{logical; if \code{TRUE}, horizontal and vertical lines are
   drawn at the major tick marks.}
 \item{p.value}{numeric; the p-value of the regression line.}

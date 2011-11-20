@@ -48,8 +48,9 @@ codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
 Returns a data frame with components:
 \item{Site_id}{numeric; a unique numerical identifier used to access site data.}
 \item{Site_name}{numeric; a local site identifier.}
-\item{Dates}{character; date sample was collected M/D/YYYY (\%m/\%d/\%Y).}
-\item{Times}{character; time sample was collected in HM (\%H\%M).}
+\item{Dates}{character; date sample was collected M/D/YYYY
+  (\code{\%m/\%d/\%Y}).}
+\item{Times}{character; time sample was collected in HM (\code{\%H\%M}).}
 \item{...}{numeric; parameter fields and integer codes.}
 }
 
@@ -62,7 +63,6 @@ Returns a data frame with components:
 \examples{
 f <- system.file("extdata/Example_Data.txt", package = "Trends")
 d <- ReadTrendData(f)
-head(d)
 }
 
 \keyword{file}
