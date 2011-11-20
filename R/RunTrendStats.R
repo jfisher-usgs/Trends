@@ -160,9 +160,9 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
       # Determine the number of samples that are below the recording limit
       if (is.code)
-        below.rl <- sum(as.integer(d.id[[col.code.name]] %in% 1:2))
+        below.rl <- as.integer(sum(d.id[[col.code.name]] %in% 1:2))
       else
-        below.rl <- 0
+        below.rl <- 0L
 
       # Text to append to error messages
       err.extra <- paste("Row index: ", idx, ", Site name: ", site,
@@ -218,8 +218,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           warning(paste("NADA kendallATS error:", err.extra, sep="\n"))
           next
         }
-        lst <- list("slope"=ans$slope * secs.in.year, "intercept"=ans$intercept,
-                    "tau"=ans$tau, "p"=ans$p)
+        lst <- list("slope"=ans$slope * secs.in.year, "int"=ans$intercept,
+                    "tau"=ans$tau, "p_value"=ans$p)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
         # Nonparametric line
@@ -246,7 +246,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                  main=main, ylab=ylab, leg.box.col=leg.box.col, p.value=ans$p)
 
         # Classify trend
-        ans <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
+        ans <- ClassifyTrend(rec[1, "p_value"], rec[1, "slope"])
         lst <- list(trend=ans)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
@@ -300,21 +300,21 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           warning(paste("Wilcox regci error:", err.extra, sep="\n"))
           next
         }
-        est <- list("p"=est[2, 5],
+        est <- list("p_value"=est[2, 5],
                     "slope"=est[2, 3],
                     "lower"=est[2, 1],
                     "upper"=est[2, 2],
-                    "intercept"=est[1, 3],
-                    "intercept_lower"=est[1, 1],
-                    "intercept_upper"=est[1, 2])
+                    "int"=est[1, 3],
+                    "int_lower"=est[1, 1],
+                    "int_upper"=est[1, 2])
 
         # Regression line and confidence intervals
-        if (is.numeric(est$slope) && is.numeric(est$intercept)) {
-          regr <- function(x) {est$slope * as.numeric(x) + est$intercept}
+        if (is.numeric(est$slope) && is.numeric(est$int)) {
+          regr <- function(x) {est$slope * as.numeric(x) + est$int}
           regr.lower <- function(x) {est$lower * as.numeric(x) +
-                                     est$intercept_lower}
+                                     est$int_lower}
           regr.upper <- function(x) {est$upper * as.numeric(x) +
-                                     est$intercept_upper}
+                                     est$int_upper}
         } else {
           regr <- regr.lower <- regr.upper <- NULL
         }
@@ -333,9 +333,9 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                  leg.box.col=leg.box.col, p.value=est$p)
 
         # Calculate percentage change per year in slopes
-        est$slope_percent <- PercentChange(est$slope, est$intercept, tlim)
-        est$lower_percent <- PercentChange(est$lower, est$intercept_lower, tlim)
-        est$upper_percent <- PercentChange(est$upper, est$intercept_upper, tlim)
+        est$slope_percent <- PercentChange(est$slope, est$int, tlim)
+        est$lower_percent <- PercentChange(est$lower, est$int_lower, tlim)
+        est$upper_percent <- PercentChange(est$upper, est$int_upper, tlim)
 
         # Convert slopes from units per second to units per year
         est$slope <- est$slope * secs.in.year
@@ -347,7 +347,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         rec <- cbind(rec, as.data.frame(est))
 
         # Classify trend
-        trend <- ClassifyTrend(rec[1, "p"], rec[1, "slope"])
+        trend <- ClassifyTrend(rec[1, "p_value"], rec[1, "slope"])
         lst <- list("trend"=trend)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
       }

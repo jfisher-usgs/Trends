@@ -71,10 +71,39 @@ been drawn.
 
 \value{
 Returns a data frame with variables:
-\item{Site_id}{numeric; a unique numerical identifier used to access site data.}
-\item{Site_name}{character; a local site identifier.}
-\item{Parameter}{character; something.}
-\item{Start_date}{POSIXct; something.}
+\item{Site_id}{factor; a unique identifier used to access site data.}
+\item{Site_name}{factor; a local site identifier.}
+\item{Parameter}{factor; parameter name.}
+\item{Start_date}{POSIXct; lower temporal limit.}
+\item{End_date}{POSIXct; upper temporal limit.}
+\item{n}{integer; number of non-\code{NA} observations.}
+\item{n_above_rl}{integer; number of observations with values above the
+  recording limit.}
+\item{mean}{numeric; mean.}
+\item{median}{numeric; meadian.}
+\item{min}{numeric; minimum value.}
+\item{max}{numeric; maximum value.}
+\item{std_dev}{numeric; standard deviation.}
+\item{len_record}{difftime; period of record.}
+\item{p_value}{numeric; estimated \emph{p}-value.}
+\item{slope}{numeric; slope of nonparametric regression line, in
+  parameter change per year.}
+\item{lower}{numeric; slope of lower confidence interval.}
+\item{upper}{numeric; slope of upper confidence interval.}
+\item{int}{numeric; intercept of nonparametric regression line.}
+\item{int_lower}{numeric; intercept of lower confidence interval.}
+\item{int_upper}{numeric; intercept of upper confidence interval.}
+\item{slope_percent}{numeric; percent change per year of nonparametric
+  regression line.}
+\item{lower_percent}{numeric; percent change per year of lower confidence
+  interval.}
+\item{upper_percent}{numeric; percent change per year of upper confidence
+  interval.}
+\item{trend}{factor; significant trends are indicated by a \emph{p}-value
+  less than or equal to 0.05. The sign of the \code{slope} indicates
+  whether the significant trend is positive (\code{"+"}) or
+  negative (\code{"-"}). Slopes greater than 0.05 are specified as
+  \code{"no trend"}.}
 }
 
 \author{J.C. Fisher and L.C. Davis}
@@ -97,13 +126,13 @@ file.stats <- system.file("extdata/Example_Config_Censored.txt",
                           package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 9", "HIGHWAY 3"),
                      is.censored = TRUE, file.par = file.par,
-                     file.stats = file.stats, gr.type="windows")
+                     file.stats = file.stats, gr.type = "windows")
 
 file.stats <- system.file("extdata/Example_Config_Uncensored.txt",
                           package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 6", "ATOMIC CITY"),
                      is.censored = FALSE, file.par = file.par,
-                     file.stats = file.stats, gr.type="windows")
+                     file.stats = file.stats, gr.type = "windows")
 }
 
 \keyword{misc}
