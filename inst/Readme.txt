@@ -1,5 +1,5 @@
 # Example workflow
-  require(Trends)
+  library(Trends)
 
 # This workflow requires input files to be located in:
   dir.path <- "D:/WORK/JFisher/Projects/Trend Report"

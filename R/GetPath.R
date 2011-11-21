@@ -9,13 +9,13 @@ GetPath <- function(type, path=NULL, initial.dir=getwd()) {
                  "config_plot"="Open configuration file for plots",
                  "config_stat"="Open configuration file for statistics",
                  "output_stat"="Choose file to write output table",
-                 "output_figs"=paste("Please choose a directory to store",
-                                     "graphic files"))
+                 "output_figs"=paste("Choose a directory to save",
+                                     "graphic files in"))
 
   errors <- list("input_data" ="Data file does not exist",
                  "config_para"="Parameter configuration file does not exist",
                  "config_plot"="Plot configuration file does not exist",
-                 "config_stat"="Statistics  configuration file does not exist",
+                 "config_stat"="Statistics configuration file does not exist",
                  "output_stat"="Output file is required to continue",
                  "output_figs"="Output folder is required to continue")
 
