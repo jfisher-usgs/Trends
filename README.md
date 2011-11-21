@@ -8,7 +8,7 @@ This [R](http://www.r-project.org/ "R") package
 is for identifying trends in data from multiple observation sites.
 Nonparametric regression is applied to both censored and uncensored data.
 
-The set of standards used for coding **RNWIS** is documented in
+The set of standards used for coding **Trends** is documented in
 [Google's R Style Guide](http://google-styleguide.googlecode.com/svn/trunk/google-r-style.html "Google's R Style Guide").
 
 Installation
@@ -24,7 +24,7 @@ by choosing to customize the startup options and specifying the SDI interface
 Install required R packages from CRAN using a simple call to
 `install.packages()`:
 
-    > install.packages(c('NADA'))
+    > install.packages('NADA')
 
 Install the **Trends** package:
 
@@ -42,6 +42,6 @@ An example workflow is provided in `inst/Readme.txt`.
 Updating
 --------
 
-Install **RNWIS** package updates:
+Install **Trends** package updates:
 
     > update.packages(repos='ftp://ftpint.usgs.gov/private/wr/id/scoville/Fisher/Trends')
