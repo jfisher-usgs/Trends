@@ -15,7 +15,8 @@ OpenGraphicsDevice(figs.dir, file.name, gr.type,
 
 \arguments{
 \item{figs.dir}{character; the directory where graphic files are saved.}
-\item{file.name}{character; the name of the graphics file without an extension.}
+\item{file.name}{character; the name of the graphics file and excluding
+  a file extension.}
 \item{gr.type}{character; the name of graphics driver, either
   \code{"pdf"}, \code{"postscript"}, \code{"png"}, or \code{"windows"}.}
 \item{w, h}{numeric; the (nominal) width and height of the canvas of the

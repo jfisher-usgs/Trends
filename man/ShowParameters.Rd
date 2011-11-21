@@ -5,7 +5,7 @@
 \title{Draw All Parameters in a Legend}
 
 \description{
-This function draws all possible parameters within a legend and
+This function draws all possible parameters within a legend, and
 should assist with the selection of unique symbols and colors for
 each parameter.
 }
@@ -21,13 +21,13 @@ ShowParameters(file.par = NULL)
 
 \format{
 The imported parameter configuration table requires the following fields:
-\code{"Parameter"}, a unique parameter name corresponding to header fields
-  in the data table;
-\code{"Name"}, the parameter name, used for legend text and axis labels;
-\code{"Units"}, the parameter units, used for axis labels;
+\code{"Parameter"}, a unique identifier for each parameter and corresponding to
+  field names in the data table;
+\code{"Name"}, the local parameter name, used for legend text and axis labels;
+\code{"Units"}, the parameter units used for axis labels;
 \code{"pch"}, an integer specifying the symbol to use in plotting points;
 \code{"col"}, the color code; and
-\code{"bg"}, the background (fill) color for the open plot symbols given by
+\code{"bg"}, the background (fill) color for open plot symbols,
   \code{pch = 21:25}.
 Each line of the table represents a single unique parameter.
 }

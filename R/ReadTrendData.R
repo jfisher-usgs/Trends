@@ -90,19 +90,24 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
   # Convert names to factor class
   d$Site_name <- as.factor(d$Site_name)
 
-  # Add "datetime" variable, calendar date and time of class POSIXct
+  # Add "Datetime" variable, calendar date and time of class POSIXct
   # Missing time values are replaced with 12:00 pm or 1200
   d$Times[is.na(d$Times)] <- 1200
   dt.string <- paste(d$Dates, sprintf("%04d", d$Times), sep=" ")
-  d$datetime <- as.POSIXct(dt.string, format="%m/%d/%Y %H%M", tz="MST",
+  d$Datetime <- as.POSIXct(dt.string, format="%m/%d/%Y %H%M", tz="MST",
                            origin=as.POSIXct("1920-01-01 00:00:00.0"))
 
-  is.dt.na <- is.na(d$datetime)
+  is.dt.na <- is.na(d$Datetime)
   if (any(is.dt.na)) {
     cat("\nWarning in Datetime: NAs introduced by coercion\n")
     cat(paste("Row: ", which(is.dt.na), ", String: ", dt.string[is.dt.na],
               "\n", collapse="\n", sep=""))
   }
+
+  # Reorganize components in the data table
+  d <- d[, !names(d) %in% c("Dates", "Times")]
+  is.id <- names(d) %in% c("Site_id", "Site_name", "Datetime")
+  d <- d[, c(which(is.id), which(!is.id))]
 
   # Return data table
   d

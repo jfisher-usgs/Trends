@@ -22,13 +22,14 @@ ReadTrendData(file.data = NULL, initial.dir = getwd())
 \format{
 The imported data table requires the following field names:
 \code{"Site_id"}, \code{"Site_name"}, \code{"Dates"}, and \code{"Times"}.
-Parameter field names are arbitrary; however, they must be consistent among
-input tables. See \sQuote{Value} for information on field content.
+The required date and time format is M/D/YYYY (\code{\%m/\%d/\%Y}) and
+HM (\code{\%H\%M}), respectively. Parameter field names are arbitrary; however,
+they must be consistent with names specified in the configuration files.
 }
 
 \details{
-Parameter fields in the imported data table read as
-class \code{character} are checked for character codes in the first digit of
+Parameter fields in the imported data table are read as
+class \code{character} and are checked for character codes in the first digit of
 each value. These fields are stripped of their single digit character
 codes and converted to class \code{numeric}. A new component is added to the
 data frame and populated with integer codes representing their respective
@@ -42,16 +43,15 @@ Codes are identified using the following criteria:
 "U" \tab Undetectable \tab 4}
 A warning is given if the character code
 is not recognized and its value set to \code{NA}. Values with character
-codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
+codes of \code{"V"} and \code{"U"} are set to \code{NA}.
 }
 
 \value{
 Returns a data frame with components:
-\item{Site_id}{numeric; a unique numerical identifier used to access site data.}
-\item{Site_name}{numeric; a local site identifier.}
-\item{Dates}{character; date sample was collected in M/D/YYYY
-  (\code{\%m/\%d/\%Y}).}
-\item{Times}{character; time sample was collected in HM (\code{\%H\%M}).}
+\item{Site_id}{numeric; a unique site identifier.}
+\item{Site_name}{numeric; a local site name.}
+\item{Datetime}{POSIXct; the date and time corresponding to when the
+  sample was collected.}
 \item{...}{numeric; parameter fields and integer codes.}
 }
 

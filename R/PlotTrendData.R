@@ -77,9 +77,9 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   # Reduce size of data table using site id(s) and date-time limits
   d <- d[d[, "Site_id"] %in% site.ids, ]
   if (!is.na(sdate))
-    d <- d[d[, "datetime"] >= sdate, ]
+    d <- d[d[, "Datetime"] >= sdate, ]
   if (!is.na(edate))
-    d <- d[d[, "datetime"] <= edate, ]
+    d <- d[d[, "Datetime"] <= edate, ]
 
   # Loop through site id(s)
 
@@ -97,7 +97,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       next
 
     # Create a smaller data table that is temporary
-    d0 <- d[d[, "Site_id"] == id, c("datetime", parameters)]
+    d0 <- d[d[, "Site_id"] == id, c("Datetime", parameters)]
 
     # Set x-axis limits
     xlim <- c(sdate, edate)
@@ -117,7 +117,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       # Create a smaller data table that is temporary
       p.names <- make.names(trim(unlist(strsplit(tbl.plt$Parameters[idx],
                                                  ","))))
-      d1 <- d0[, c("datetime", p.names)]
+      d1 <- d0[, c("Datetime", p.names)]
 
       # Remove parameters with no data
       rm.idxs <- NULL

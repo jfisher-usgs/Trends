@@ -28,7 +28,7 @@ Options for path \code{type} include:
 \code{"config_plot"}, a plots configuration input file;
 \code{"config_stat"}, a statistics configuration input file;
 \code{"output_stat"}, a statistics output file; and
-\code{"output_figs"}, a output directory for figures.
+\code{"output_figs"}, a output directory where graphic files are saved.
 A check is made to confirm that the file or directory exists.
 }
 

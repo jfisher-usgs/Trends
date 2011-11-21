@@ -17,7 +17,7 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 
 \arguments{
 \item{d}{data.frame; trend data, see \code{\link{ReadTrendData}}.}
-\item{site.names}{character; an array of local site identifiers; if missing,
+\item{site.names}{character; an array of local site names; if missing,
   all sites in the statistics configuration file are used.}
 \item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
   censored, its default is \code{FALSE}, see \sQuote{Details}.}
@@ -34,10 +34,11 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 \item{figs.dir}{character; if \code{gr.type} not equal to \code{"windows"},
   the directory where statistic plots are saved.}
 \item{avg.time}{character; the time interval into which the period of record
-  is to be cut.}
+  is to be cut, its default is annually.}
 \item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
   is \code{"pdf"}.}
-\item{cenken.tol}{numeric; numerical tolerance, see \sQuote{Details}.}
+\item{cenken.tol}{numeric; a tolerance used as a stopping criteria,
+  see \sQuote{Details}.}
 \item{cenken.iter}{numeric; maximum number of iterations, see \sQuote{Details}.}
 }
 
@@ -49,7 +50,7 @@ The imported statistics configuration table requires the following fields:
   header fields in the data table, see \code{\link{ReadTrendData}};
 \code{"Start_date"}, start date in M/D/YYYY (\code{\%m/\%d/\%Y});
 \code{"End_date"}, end date; and
-\code{"Remark"}, any comments (optional).
+\code{"Remark"}, user comments (optional).
 }
 
 \details{
@@ -72,45 +73,52 @@ been drawn.
 \value{
 Returns a data frame with variables:
 \item{Site_id}{factor; a unique identifier used to access site data.}
-\item{Site_name}{factor; a local site identifier.}
-\item{Parameter}{factor; parameter name.}
+\item{Site_name}{character; a local site name.}
+\item{Parameter}{character; parameter identifier.}
 \item{Start_date}{POSIXct; lower temporal limit.}
 \item{End_date}{POSIXct; upper temporal limit.}
 \item{n}{integer; number of non-\code{NA} observations.}
 \item{n_above_rl}{integer; number of observations with values above the
-  recording limit.}
+  recording limit, that is values coded with \sQuote{<} or \sQuote{E},
+  see \code{\link{ReadTrendData}}.}
+\item{n_cen}{integer; number of observations with censored values.}
 \item{mean}{numeric; mean.}
-\item{median}{numeric; meadian.}
+\item{median}{numeric; median.}
 \item{min}{numeric; minimum value.}
 \item{max}{numeric; maximum value.}
 \item{std_dev}{numeric; standard deviation.}
 \item{len_record}{difftime; period of record.}
-\item{p_value}{numeric; estimated \emph{p}-value.}
+\item{p_value}{numeric; estimated \emph{p}-value, if below the acceptance level
+  (5\%), reject the null hypothesis that the parameter is statistically
+  independent of time and accept the hypothesis that they are dependent.}
+\item{tau}{numeric; Kendall's tau (censored only).}
 \item{slope}{numeric; slope of nonparametric regression line, in
   parameter change per year.}
-\item{lower}{numeric; slope of lower confidence interval.}
-\item{upper}{numeric; slope of upper confidence interval.}
+\item{lower}{numeric; slope of lower confidence interval (uncensored only).}
+\item{upper}{numeric; slope of upper confidence interval (uncensored only).}
 \item{int}{numeric; intercept of nonparametric regression line.}
-\item{int_lower}{numeric; intercept of lower confidence interval.}
-\item{int_upper}{numeric; intercept of upper confidence interval.}
+\item{int_lower}{numeric; intercept of lower confidence interval
+  (uncensored only).}
+\item{int_upper}{numeric; intercept of upper confidence interval
+  (uncensored only).}
 \item{slope_percent}{numeric; percent change per year of nonparametric
   regression line.}
 \item{lower_percent}{numeric; percent change per year of lower confidence
-  interval.}
+  interval (uncensored only).}
 \item{upper_percent}{numeric; percent change per year of upper confidence
-  interval.}
-\item{trend}{factor; significant trends are indicated by a \emph{p}-value
-  less than or equal to 0.05. The sign of the \code{slope} indicates
-  whether the significant trend is positive (\code{"+"}) or
-  negative (\code{"-"}). Slopes greater than 0.05 are specified as
-  \code{"no trend"}.}
+  interval (uncensored only).}
+\item{trend}{character; significant trends are indicated by a \emph{p}-value
+  less than or equal to 0.05, a 5\% acceptance level.
+  The sign of the \code{slope} indicates whether the significant trend is
+  positive (\code{"+"}) or negative (\code{"-"}). Slopes greater than 0.05
+  are specified as \code{"no trend"}.}
 }
 
 \author{J.C. Fisher and L.C. Davis}
 
 \references{
 Helsel, D.R., 2005, \emph{Nondectects and Data Analysis; Statistics for
-censored environmental data}. John Wiley and Sons, USA, NJ.
+censored environmental data}, New Jersey, John Wiley and Sons, Inc., 250 p.
 
 Lorenz, D.L., and others, 2011, USGS library for S-PLUS for Windows --
 Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.

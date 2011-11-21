@@ -61,6 +61,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
   require(tcltk)
   require(NADA)
+  options(stringsAsFactors=FALSE)
 
   # Paths
   file.par <- GetPath("config_para", file.par, initial.dir)
@@ -136,13 +137,13 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       }
 
       # Start record that will be added to output table
-      lst <- list("Site_id"=format(id, scientific=FALSE),
+      lst <- list("Site_id"=as.factor(id),
                   "Site_name"=site, "Parameter"=p.names[j],
                   "Start_date"=sdate, "End_date"=edate)
       rec <- as.data.frame(lst, optional=TRUE)
 
       # Determine pertinent column names in data table
-      col.names <- c("datetime", parameter)
+      col.names <- c("Datetime", parameter)
       col.code.name <- paste(parameter, "_code", sep="")
       is.code <- col.code.name %in% d.names
       if (is.code)
@@ -152,17 +153,18 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
       # Reduce size of data table
       is.id <- d$Site_id == id
-      is.dt <- d$datetime >= sdate & d$datetime <= edate
+      is.dt <- d$Datetime >= sdate & d$Datetime <= edate
       d.id <- d[is.id & is.dt, col.names]
 
       # Order dates
-      d.id <- d.id[order(d.id$datetime), ]
+      d.id <- d.id[order(d.id$Datetime), ]
 
       # Determine the number of samples that are below the recording limit
+      # and censored
       if (is.code)
-        below.rl <- as.integer(sum(d.id[[col.code.name]] %in% 1:2))
+        n.below.rl <- as.integer(sum(d.id[[col.code.name]] %in% 1:2))
       else
-        below.rl <- 0L
+        n.below.rl <- 0L
 
       # Text to append to error messages
       err.extra <- paste("Row index: ", idx, ", Site name: ", site,
@@ -190,7 +192,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
         # Basic summary statistics
         dat <- d.id[[parameter]]
-        len.record <- diff(range(d.id$datetime))
+        len.record <- diff(range(d.id$Datetime))
         ans <- try(suppressWarnings(cenfit(dat, is.cen)), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("NADA cenfit error:", err.extra, sep="\n"))
@@ -201,15 +203,15 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         cen.median <- as.numeric(NADA:::median(ans))
         cen.mean   <- as.numeric(NADA:::.mean.cenfit(ans)["mean"])
         cen.sd     <- as.numeric(NADA:::sd(ans))
-        lst <- list("n"=cen.n, "n_cen"=cen.n.cen,
-                    "mean"=cen.mean, "median"=cen.median,
-                    "min"=min(dat), "max"=max(dat),
-                    "std_dev"=cen.sd, "len_record"=len.record)
+        lst <- list("n"=cen.n, "n_above_rl"=cen.n - n.below.rl,
+                    "n_cen"=cen.n.cen, "mean"=cen.mean, "median"=cen.median,
+                    "min"=min(dat), "max"=max(dat), "std_dev"=cen.sd,
+                    "len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
         # Kendall's tau correlation coefficient and Akritas-Theil-Sen
         # nonparametric regression line, see ?cenken
-        x <- as.numeric(d.id$datetime)
+        x <- as.numeric(d.id$Datetime)
         ans <- try(NADA:::kendallATS(y=dat, ycen=is.cen,
                                      x=x, xcen=rep(FALSE, length(x)),
                                      tol=cenken.tol, iter=cenken.iter),
@@ -218,8 +220,14 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           warning(paste("NADA kendallATS error:", err.extra, sep="\n"))
           next
         }
-        lst <- list("slope"=ans$slope * secs.in.year, "int"=ans$intercept,
-                    "tau"=ans$tau, "p_value"=ans$p)
+
+        # Calculate percentage change per year in slopes
+        slope.percent <- PercentChange(ans$slope, ans$intercept,
+                                       tlim=range(d.id$Datetime))
+
+        lst <- list("p_value"=ans$p, "tau"=ans$tau,
+                    "slope"=ans$slope * secs.in.year, "int"=ans$intercept,
+                    "slope_percent"=slope.percent * secs.in.year)
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
         # Nonparametric line
@@ -254,22 +262,26 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       } else {
 
         # Warn if censored data found
-        if (is.code && any(d.id[[col.code.name]] %in% 1)) {
-          txt <- "Censored data found in uncensored statistical analysis:"
-          warning(paste(txt, err.extra, sep="\n"))
-          next
+        if (is.code) {
+          n.cen <- as.integer(sum(d.id[[col.code.name]] %in% 1))
+          if (n.cen > 0) {
+            txt <- "Censored data found in uncensored statistical analysis:"
+            warning(paste(txt, err.extra, sep="\n"))
+          }
+        } else {
+          n.cen <- 0L
         }
 
         # Basic summary statistics
         dat <- na.omit(d.id[[parameter]])
         n <- length(dat)
-        lst <- list("n"=n, "n_above_rl"=n - below.rl,
+        lst <- list("n"=n, "n_above_rl"=n - n.below.rl, "n_cen"=n.cen,
                     "mean"=mean(dat), "median"=median(dat),
                     "min"=min(dat), "max"=max(dat), "std_dev"=sd(dat))
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
         # Find date cuts based on time interval
-        ans <- try(cut(d.id$datetime, avg.time), silent=TRUE)
+        ans <- try(cut(d.id$Datetime, avg.time), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("Time cut error:", ans, err.extra, sep="\n"))
           next
@@ -311,10 +323,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         # Regression line and confidence intervals
         if (is.numeric(est$slope) && is.numeric(est$int)) {
           regr <- function(x) {est$slope * as.numeric(x) + est$int}
-          regr.lower <- function(x) {est$lower * as.numeric(x) +
-                                     est$int_lower}
-          regr.upper <- function(x) {est$upper * as.numeric(x) +
-                                     est$int_upper}
+          regr.lower <- function(x) {est$lower * as.numeric(x) + est$int_lower}
+          regr.upper <- function(x) {est$upper * as.numeric(x) + est$int_upper}
         } else {
           regr <- regr.lower <- regr.upper <- NULL
         }
