@@ -1,7 +1,7 @@
 RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                      file.par=NULL, file.stats=NULL, write.tbl.out=FALSE,
-                     file.out=NULL, figs.dir=NULL, avg.time="year",
-                     gr.type="pdf", cenken.tol=1e-12, cenken.iter=1e+6) {
+                     file.out=NULL, figs.dir=NULL, gr.type="pdf",
+                     cenken.tol=1e-12, cenken.iter=1e+6) {
 # This function performs a statistical analysis on uncensored and censored data
 # tbl <- RunTrendStats(d, c("ANP 6", "ARBOR TEST"))
 
@@ -280,33 +280,16 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                     "min"=min(dat), "max"=max(dat), "std_dev"=sd(dat))
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-        # Find date cuts based on time interval
-        ans <- try(cut(d.id$Datetime, avg.time), silent=TRUE)
-        if (inherits(ans, "try-error")) {
-          warning(paste("Time cut error:", ans, err.extra, sep="\n"))
-          next
-        } else {
-          d.id.cuts <- as.POSIXct(ans, "%Y-%m-%d", tz="MST", origin=origin)
-        }
-
-        # Time average parameter based on date cuts
-        ans <- try(aggregate(d.id, list(date=d.id.cuts),
-                             function(i) mean(i, na.rm=TRUE)), silent=TRUE)
-        if (inherits(ans, "try-error")) {
-          warning(paste("Time average error:", ans, err.extra, sep="\n"))
-          next
-        } else {
-          d.id.time <- na.omit(ans[, c("date", parameter)])
-        }
-        tlim <- range(d.id.time$date)
+        # Length of temporal record
+        tlim <- range(d.id$Datetime)
         len.record <- diff(tlim)
         lst <- list("len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst))
 
         # Calculate Theil-Sen estimator and trend line using R.R. Wilcox'
         # functions
-        x <- as.numeric(d.id.time$date)
-        y <- d.id.time[, parameter]
+        x <- as.numeric(d.id$Datetime)
+        y <- d.id[, parameter]
         est <- try(suppressWarnings(RunTheilSen(x=x, y=y)$regci), silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
           warning(paste("Wilcox regci error:", err.extra, sep="\n"))
@@ -337,7 +320,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         } else {
           main <- NULL
         }
-        DrawPlot(d.id.time, tbl.par[parameter, ], xlim=c(sdate, edate),
+        DrawPlot(d.id[, c("Datetime", parameter)],
+                 tbl.par[parameter, ], xlim=c(sdate, edate),
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
                  regr.type="Theil-Sen line", main=main, ylab=ylab,
                  leg.box.col=leg.box.col, p.value=est$p)

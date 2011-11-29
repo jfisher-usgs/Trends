@@ -36,21 +36,14 @@
 
 # Run statistics
 
-  # Graphics device
-    gr.type <- "pdf"
-
-  # Time interval which constituent will be averaged ("year", "6 month")
-    avg.time <- "year"
-
   # Censored data
     stats.tbl.cens <- RunTrendStats(d, is.censored=TRUE, initial.dir=dir.path,
                                     file.par=file.par,
                                     file.stats=file.stats.cens,
-                                    write.tbl.out=TRUE, gr.type=gr.type)
+                                    write.tbl.out=TRUE, gr.type="pdf")
 
   # Uncensored data
     stats.tbl.uncens <- RunTrendStats(d, is.censored=FALSE,
                                       initial.dir=dir.path, file.par=file.par,
                                       file.stats=file.stats.uncens,
-                                      write.tbl.out=TRUE, avg.time=avg.time,
-                                      gr.type=gr.type)
+                                      write.tbl.out=TRUE, gr.type="pdf")

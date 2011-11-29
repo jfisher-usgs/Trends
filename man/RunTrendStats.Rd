@@ -11,8 +11,8 @@ This function performs a statistical analysis on censored and uncensored data.
 \usage{
 RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
               file.par = NULL, file.stats = NULL, write.tbl.out = FALSE,
-              file.out = NULL, figs.dir = NULL, avg.time = "year",
-              gr.type = "pdf", cenken.tol = 1e-12, cenken.iter = 1e+6)
+              file.out = NULL, figs.dir = NULL, gr.type = "pdf",
+              cenken.tol = 1e-12, cenken.iter = 1e+6)
 }
 
 \arguments{
@@ -33,8 +33,6 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
   see \sQuote{Value}.}
 \item{figs.dir}{character; if \code{gr.type} not equal to \code{"windows"},
   the directory where statistic plots are saved.}
-\item{avg.time}{character; the time interval into which the period of record
-  is to be cut, its default is annually.}
 \item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
   is \code{"pdf"}.}
 \item{cenken.tol}{numeric; a tolerance used as a stopping criteria,
