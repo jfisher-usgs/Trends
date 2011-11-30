@@ -20,10 +20,10 @@
 # Plot parameters (not required)
   ShowParameters(file.par)
 
-# Plot trend data
+# Set graphics device ("pdf", "postscript", "png", "windows")
+  gr.type <- "pdf"
 
-  # Graphics device ("pdf", "postscript", "png", "windows")
-    gr.type <- "pdf"
+# Plot trend data
 
   # Period of record
     sdate <- "01/01/1950"
@@ -40,10 +40,10 @@
     stats.tbl.cens <- RunTrendStats(d, is.censored=TRUE, initial.dir=dir.path,
                                     file.par=file.par,
                                     file.stats=file.stats.cens,
-                                    write.tbl.out=TRUE, gr.type="pdf")
+                                    write.tbl.out=TRUE, gr.type=gr.type)
 
   # Uncensored data
     stats.tbl.uncens <- RunTrendStats(d, is.censored=FALSE,
                                       initial.dir=dir.path, file.par=file.par,
                                       file.stats=file.stats.uncens,
-                                      write.tbl.out=TRUE, gr.type="pdf")
+                                      write.tbl.out=TRUE, gr.type=gr.type)

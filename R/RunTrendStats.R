@@ -76,7 +76,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                         stringsAsFactors=FALSE, comment.char="", row.names=1)
   row.names(tbl.par) <- make.names(row.names(tbl.par))
 
-  # Determine background color for lengend box
+  # Determine background color for legend box
   if (gr.type == "postscript")
     leg.box.col <- "#FFFFFF"
   else
