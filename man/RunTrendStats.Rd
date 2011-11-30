@@ -46,8 +46,8 @@ The imported statistics configuration table requires the following fields:
 \code{"Site_name"}, a local site identifier;
 \code{"Parameters"}, comma seperated parameter names corresponding to
   header fields in the data table, see \code{\link{ReadTrendData}};
-\code{"Start_date"}, start date in M/D/YYYY (\code{\%m/\%d/\%Y});
-\code{"End_date"}, end date; and
+\code{"Start_date"} and \code{"End_date"}, the start and end date in M/D/YYYY
+  (\code{\%m/\%d/\%Y}); and
 \code{"Remark"}, user comments (optional).
 }
 
