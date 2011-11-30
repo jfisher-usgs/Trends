@@ -190,6 +190,12 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         else
           is.cen <- rep(FALSE, nrow(d.id))
 
+        # Warn if no censored data found
+        if (!any(is.cen)) {
+          txt <- "No censored data found in censored statistical analysis:"
+          warning(paste(txt, err.extra, sep="\n"))
+        }
+
         # Basic summary statistics
         dat <- d.id[[parameter]]
         len.record <- diff(range(d.id$Datetime))
