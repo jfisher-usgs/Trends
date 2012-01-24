@@ -5,11 +5,12 @@
   dir.path <- "D:/WORK/JFisher/Projects/Trend Report"
 
 # Input file paths
-  file.data         <- file.path(dir.path, "Data_20111114.txt")
-  file.par          <- file.path(dir.path, "Config_Par_20111118.txt")
+  file.data         <- file.path(dir.path, "Data_20111209.txt")
+  file.par          <- file.path(dir.path, "Config_Par_20111209.txt")
   file.plots        <- file.path(dir.path, "Config_Plots_20111107.txt")
-  file.stats.cens   <- file.path(dir.path, "Config_Cen_20111117.txt")
-  file.stats.uncens <- file.path(dir.path, "Config_Uncen_20111117.txt")
+##file.plots        <- file.path(dir.path, "Config_Plots_Field_20120124.txt")
+  file.stats.cens   <- file.path(dir.path, "Config_Cen_20111219.txt")
+  file.stats.uncens <- file.path(dir.path, "Config_Uncen_20111209.txt")
 ##file.stats.uncens <- file.path(dir.path, "Config_Uncen_Field_20111117.txt")
 ##file.stats.uncens <- file.path(dir.path, "Config_Uncen_POR_20111117.txt")
 ##file.stats.uncens <- file.path(dir.path, "Config_Uncen_Field_POR_20111117.txt")
@@ -26,7 +27,7 @@
 # Plot trend data
 
   # Period of record
-    sdate <- "01/01/1950"
+    sdate <- "01/01/1949"
   ##sdate <- "01/01/1990"
     edate <- "01/01/2010"
 
