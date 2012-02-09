@@ -11,8 +11,8 @@ Nonparametric regression is applied to both censored and uncensored data.
 The set of standards used for coding **Trends** is documented in
 [Google's R Style Guide](http://google-styleguide.googlecode.com/svn/trunk/google-r-style.html "Google's R Style Guide").
 
-Installation
-------------
+Install
+-------
 
 If R is not already installed on your
 computer, download and install the latest binary distribution from
@@ -22,7 +22,7 @@ by choosing to customize the startup options and specifying the SDI interface
 (not the default).
 
 Install required R packages from CRAN using a simple call to
-`install.packages()`:
+`install.packages`:
 
     > install.packages('NADA')
 
@@ -30,8 +30,8 @@ Install the **Trends** package:
 
     > install.packages('Trends', repos='ftp://ftpint.usgs.gov/private/wr/id/scoville/Fisher/Trends')
 
-Running
--------
+Run
+---
 
 Load **Trends** in the current R session:
 
@@ -39,8 +39,8 @@ Load **Trends** in the current R session:
 
 An example workflow is provided in `inst/Readme.txt`.
 
-Updating
---------
+Update
+------
 
 Install **Trends** package updates:
 
