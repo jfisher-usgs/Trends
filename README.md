@@ -1,9 +1,6 @@
 Trends: Analysis of Data Collected from a Monitoring Network
 ============================================================
 
-Description
------------
-
 This [R](http://www.r-project.org/ "R") package
 is for identifying trends in data from multiple observation sites.
 Nonparametric regression is applied to both censored and uncensored data.
