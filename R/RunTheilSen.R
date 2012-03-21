@@ -1,4 +1,4 @@
-RunTheilSen <- function(x, y, alpha=0.5, pr=FALSE) {
+RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE) {
 # These functions are from the WRS package.
 # > install.packages("WRS", repos="http://R-Forge.R-project.org")
 # Code format has been slightly altered for readability purposes.

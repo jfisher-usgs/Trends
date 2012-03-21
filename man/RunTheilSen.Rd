@@ -10,7 +10,7 @@ and 95 percent confidence interval for uncensored data.
 }
 
 \usage{
-RunTheilSen(x, y, alpha = 0.5, pr = FALSE)
+RunTheilSen(x, y, alpha = 0.05, pr = FALSE)
 }
 
 \arguments{
