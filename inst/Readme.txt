@@ -5,9 +5,9 @@
   dir.path <- "D:/WORK/JFisher/Projects/Trend Report"
 
 # Input file paths
-  file.data         <- file.path(dir.path, "Data_20111209.txt")
+  file.data         <- file.path(dir.path, "Data_20120316.txt")
   file.par          <- file.path(dir.path, "Config_Par_20111209.txt")
-  file.plots        <- file.path(dir.path, "Config_Plots_20111107.txt")
+  file.plots        <- file.path(dir.path, "Config_Plots_20120316.txt")
 ##file.plots        <- file.path(dir.path, "Config_Plots_Field_20120124.txt")
   file.stats.cens   <- file.path(dir.path, "Config_Cen_20111219.txt")
   file.stats.uncens <- file.path(dir.path, "Config_Uncen_20111209.txt")
@@ -19,10 +19,11 @@
   d <- ReadTrendData(file.data)
 
 # Plot parameters (not required)
-  ShowParameters(file.par)
+  #ShowParameters(file.par)
 
 # Set graphics device ("pdf", "postscript", "png", "windows")
-  gr.type <- "pdf"
+ #gr.type <- "pdf"
+  gr.type <- "postscript"
 
 # Plot trend data
 
@@ -48,3 +49,4 @@
                                       initial.dir=dir.path, file.par=file.par,
                                       file.stats=file.stats.uncens,
                                       write.tbl.out=TRUE, gr.type=gr.type)
+

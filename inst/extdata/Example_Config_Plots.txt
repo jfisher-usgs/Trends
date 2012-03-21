@@ -48,7 +48,7 @@ Site_id	Site_name	Parameters	Min	Max	Axis_title
 433522112573501	TRA 3	CL, Na, SO4	NA	NA	Concentration, in milligrams per liter
 433521112574201	TRA 4	CL, Na, SO4	NA	NA	Concentration, in milligrams per liter
 432700112470801	USGS 1	CL, Na	NA	NA	Concentration, in milligrams per liter
-432700112470801	USGS 1	NO3+NO2	NA	NA	Concentration, in milligrams per liter
+432700112470801	USGS 1	NO3+NO2, TOC	NA	NA	Concentration, in milligrams per liter
 433320112432301	USGS 2	CL, Na, SO4	NA	NA	Concentration, in milligrams per liter
 433320112432301	USGS 2	NO3+NO2	NA	NA	Concentration, in milligrams per liter
 434657112282201	USGS 4	CL, Na	NA	NA	Concentration, in milligrams per liter

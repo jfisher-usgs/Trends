@@ -161,18 +161,23 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
   box(lwd=lwd)
 
   # Alter legend content if single parameter with regression line
-  if (length(leg.name) == 1) {
+  if (length(leg.name) == 1 && is.regr[1]) {
     if (is.regr[1]) {
       leg.pch <- leg.bg <- NULL
       leg.col <- "#000000"
       leg.name <- regr.type
-      if (inherits(p.value, "numeric"))
-        leg.name <- paste(leg.name, " (p = ", sprintf("%.3f", p.value), ")",
-                          sep="")
       leg.lty <- 1
       if (is.regr[2] || is.regr[3]) {
-        leg.name[2] <- "95 percent confidence interval"
+        leg.col[2] <- "#000000"
+        leg.name[2] <- expression("95 percent confidence interval")
         leg.lty[2] <- 2
+      }
+      if (inherits(p.value, "numeric")) {
+        n <- length(leg.name) + 1
+        leg.col[n] <- "#FFFFFF"
+        leg.name[n] <- parse(text=paste("italic(p)~-value == ",
+                             sprintf("%.3f", p.value), sep=""))
+        leg.lty[n] <- 1
       }
     } else {
       return()
