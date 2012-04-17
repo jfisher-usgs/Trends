@@ -1,7 +1,8 @@
 RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                      file.par=NULL, file.stats=NULL, write.tbl.out=FALSE,
                      file.out=NULL, figs.dir=NULL, gr.type="pdf",
-                     cenken.tol=1e-12, cenken.iter=1e+6) {
+                     cenken.tol=1e-12, cenken.iter=1e+6, dt.breaks=NULL,
+                     xout=FALSE, draw.ci=FALSE) {
 # This function performs a statistical analysis on uncensored and censored data
 # tbl <- RunTrendStats(d, c("ANP 6", "ARBOR TEST"))
 
@@ -291,12 +292,38 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         len.record <- diff(tlim)
         lst <- list("len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst))
+        
+        # Average values over date-time intervals
+        if (!is.null(dt.breaks)) {
+          
+          # Determine date cuts based on time interval
+          ans <- try(cut(d.id$Datetime, dt.breaks), silent=TRUE)
+          if (inherits(ans, "try-error")) {
+            warning(paste("Time cut error:", ans, err.extra, sep="\n"))
+            next
+          } else {
+            d.id.cuts <- as.POSIXct(ans, "%Y-%m-%d", tz="MST", origin=origin)
+          }
+          
+          # Time average constituent based on date cuts
+          ans <- try(aggregate(d.id, list(date=d.id.cuts),
+                               function(i) mean(i, na.rm=TRUE)), silent=TRUE)
+          if (inherits(ans, "try-error")) {
+            warning(paste("Time average error:", ans, err.extra, sep="\n"))
+            next
+          } else {
+            d.id <- na.omit(ans[, c("date", parameter)])
+            names(d.id) <- c("Datetime", parameter)
+          }
+        }
 
         # Calculate Theil-Sen estimator and trend line using R.R. Wilcox'
         # functions
         x <- as.numeric(d.id$Datetime)
         y <- d.id[, parameter]
-        est <- try(suppressWarnings(RunTheilSen(x=x, y=y)$regci), silent=TRUE)
+        
+        est <- try(suppressWarnings(RunTheilSen(x=x, y=y, xout=xout)$regci), 
+                   silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
           warning(paste("Wilcox regci error:", err.extra, sep="\n"))
           next
@@ -310,13 +337,14 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                     "int_upper"=est[1, 2])
 
         # Regression line and confidence intervals
+        regr <- regr.lower <- regr.upper <- NULL
         if (is.numeric(est$slope) && is.numeric(est$int)) {
           regr <- function(x) {est$slope * as.numeric(x) + est$int}
-          regr.lower <- function(x) {est$lower * as.numeric(x) + est$int_lower}
-          regr.upper <- function(x) {est$upper * as.numeric(x) + est$int_upper}
-        } else {
-          regr <- regr.lower <- regr.upper <- NULL
-        }
+          if (draw.ci) {
+            regr.lower <- function(x) {est$lower * as.numeric(x) + est$int_lower}
+            regr.upper <- function(x) {est$upper * as.numeric(x) + est$int_upper}
+          }
+        } 
 
         # Draw plot
         plot.count <- plot.count + 1L

@@ -12,7 +12,8 @@ This function performs a statistical analysis on censored and uncensored data.
 RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
               file.par = NULL, file.stats = NULL, write.tbl.out = FALSE,
               file.out = NULL, figs.dir = NULL, gr.type = "pdf",
-              cenken.tol = 1e-12, cenken.iter = 1e+6)
+              cenken.tol = 1e-12, cenken.iter = 1e+6, dt.breaks = NULL,
+              xout = FALSE, draw.ci = FALSE)
 }
 
 \arguments{
@@ -38,6 +39,14 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 \item{cenken.tol}{numeric; a tolerance used as a stopping criteria,
   see \sQuote{Details}.}
 \item{cenken.iter}{numeric; maximum number of iterations, see \sQuote{Details}.}
+\item{dt.breaks}{character; an interval specification, one of \code{"sec"}, 
+  \code{"min"}, \code{"hour"}, \code{"day"}, \code{"week"}, \code{"month"}, 
+  \code{"quarter"} or \code{"year"}. Parameter values are averaged over this
+  time interval.}
+\item{xout}{logical; if \code{TRUE}, leverage points for uncensored data are 
+  removed based on an outlier detection method.}
+\item{draw.ci}{logical; if \code{TRUE}, 95 percent confidence interval for 
+  uncensored data is drawn on plot.}
 }
 
 \format{
@@ -138,7 +147,8 @@ file.stats <- system.file("extdata/Example_Config_Uncensored.txt",
                           package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 6", "ATOMIC CITY"),
                      is.censored = FALSE, file.par = file.par,
-                     file.stats = file.stats, gr.type = "windows")
+                     file.stats = file.stats, gr.type = "windows",
+                     draw.ci = TRUE)
 }
 
 \keyword{misc}

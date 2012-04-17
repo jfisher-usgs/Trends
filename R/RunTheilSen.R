@@ -1,4 +1,4 @@
-RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE) {
+RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE, xout=FALSE) {
 # These functions are from the WRS package.
 # > install.packages("WRS", repos="http://R-Forge.R-project.org")
 # Code format has been slightly altered for readability purposes.
@@ -309,5 +309,5 @@ RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE) {
 
   # Main program:
 
-  regci(x=x, y=y, alpha=alpha, pr=pr)
+  regci(x=x, y=y, alpha=alpha, pr=pr, xout=xout)
 }

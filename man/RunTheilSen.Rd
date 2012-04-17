@@ -10,7 +10,7 @@ and 95 percent confidence interval for uncensored data.
 }
 
 \usage{
-RunTheilSen(x, y, alpha = 0.05, pr = FALSE)
+RunTheilSen(x, y, alpha = 0.05, pr = FALSE, xout = FALSE)
 }
 
 \arguments{
@@ -21,6 +21,8 @@ RunTheilSen(x, y, alpha = 0.05, pr = FALSE)
   confidence of the test, or the level of significance of the test.}
 \item{pr}{logical; should error messages be reported? Its default is
   \code{FALSE}.}
+\item{xout}{logical; if \code{TRUE}, leverage points are removed based on 
+the minimum volume ellipsoid (MVE) method, an outlier detection method.}
 }
 
 \details{
@@ -46,7 +48,7 @@ confidence interval are included in the matrix.
 
 \references{
 Wilcox, R.R., 2012, \emph{Modern Statistics for the Social and Behavioral
-Sciences: A Practical Introduction}, New York, CRC Press, 862 p.
+Sciences: A Practical Introduction}, New York, CRC Press, 840 p.
 }
 
 \examples{
