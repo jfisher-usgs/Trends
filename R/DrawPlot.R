@@ -169,14 +169,13 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
       leg.lty <- 1
       if (is.regr[2] || is.regr[3]) {
         leg.col[2] <- "#000000"
-        leg.name[2] <- expression("95 percent confidence interval")
+        leg.name[2] <- "95 percent confidence interval"
         leg.lty[2] <- 2
       }
       if (inherits(p.value, "numeric")) {
         n <- length(leg.name) + 1
         leg.col[n] <- "#FFFFFF"
-        leg.name[n] <- parse(text=paste("italic(p)~-value == ",
-                             sprintf("%.3f", p.value), sep=""))
+        leg.name[n] <- paste("p-value =", sprintf("%.3f", p.value))
         leg.lty[n] <- 1
       }
     } else {
