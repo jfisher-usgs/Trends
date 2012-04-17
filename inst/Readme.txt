@@ -2,7 +2,7 @@
   library(Trends)
 
 # This workflow requires input files to be located in:
-  dir.path <- "D:/WORK/JFisher/Projects/Trend Report"
+  dir.path <- "E:/WORK/JFisher/Projects/Trend Report"
 
 # Input file paths
   file.data         <- file.path(dir.path, "Data_20120316.txt")
@@ -22,8 +22,8 @@
   #ShowParameters(file.par)
 
 # Set graphics device ("pdf", "postscript", "png", "windows")
- #gr.type <- "pdf"
-  gr.type <- "postscript"
+  gr.type <- "pdf"
+ #gr.type <- "postscript"
 
 # Plot trend data
 
@@ -49,4 +49,3 @@
                                       initial.dir=dir.path, file.par=file.par,
                                       file.stats=file.stats.uncens,
                                       write.tbl.out=TRUE, gr.type=gr.type)
-
