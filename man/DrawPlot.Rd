@@ -37,13 +37,14 @@ DrawPlot(d, tbl.par, cen.var = NULL,
   semi-transparency supported for some graphics devices.}
 \item{tick.lines}{logical; if \code{TRUE}, horizontal and vertical lines are
   drawn at the major tick marks.}
-\item{p.value}{numeric; the estimated \emph{p}-value of the regression line.}
+\item{p.value}{numeric; the estimated two-sided \emph{p}-value of the 
+  regression line.}
 }
 
 \details{
 Uncensored data is plotted as points and censored data as vertical dashed lines.
-Regression and confidence interval lines are only drawn if \code{d} contains
-a single parameter.
+Regression and optional confidence interval lines are only drawn if \code{d} 
+contains a single parameter.
 }
 
 \author{J.C. Fisher}

@@ -63,7 +63,7 @@ The imported statistics configuration table requires the following fields:
 \details{
 The censored data is analyzed using functions provided in the \pkg{NADA}
 package. Summary statistics are calculated using \code{\link{cenfit}} and the
-Kendalls tau correlation coefficient and associated Akritas-Theil-Sen (ATS)
+Kendall's tau correlation coefficient and associated Akritas-Theil-Sen (ATS)
 nonparametric regression line are calculated using \code{kendallATS},
 a hidden function in \pkg{NADA}.
 The ATS slope estimation uses an iterative bisection search
@@ -95,9 +95,10 @@ Returns a data frame with variables:
 \item{max}{numeric; maximum value.}
 \item{std_dev}{numeric; standard deviation.}
 \item{len_record}{difftime; period of record.}
-\item{p_value}{numeric; estimated \emph{p}-value, if below the acceptance level
-  (5\%), reject the null hypothesis that the parameter is statistically
-  independent of time and accept the hypothesis that they are dependent.}
+\item{p_value}{numeric; estimated two-sided \emph{p}-value, if below the 
+  acceptance level (5 percent), reject the null hypothesis that the parameter is 
+  statistically independent of time and accept the hypothesis that they are 
+  dependent.}
 \item{tau}{numeric; Kendall's tau (censored only).}
 \item{slope}{numeric; slope of nonparametric regression line, in
   parameter change per year.}
@@ -115,10 +116,10 @@ Returns a data frame with variables:
 \item{upper_percent}{numeric; percent change per year of upper confidence
   interval (uncensored only).}
 \item{trend}{character; significant trends are indicated by a \emph{p}-value
-  less than or equal to 0.05, a 5\% acceptance level.
+  less than or equal to 0.05, a 5 percent acceptance level.
   The sign of the \code{slope} indicates whether the significant trend is
-  positive (\code{"+"}) or negative (\code{"-"}). Slopes greater than 0.05
-  are specified as \code{"no trend"}.}
+  positive (\code{"+"}) or negative (\code{"-"}). \emph{p}-values greater 
+  than 0.05 are specified as \code{"no trend"}.}
 }
 
 \author{J.C. Fisher and L.C. Davis}
