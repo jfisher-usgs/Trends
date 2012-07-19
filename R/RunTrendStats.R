@@ -108,6 +108,9 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
   # Number of seconds in year, used for time conversions
   secs.in.year <- 31536000
+  
+  # Initialize plot count list
+  plot.count <- list()
 
   # Loop though records in statistic table
 
@@ -123,7 +126,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     parameters <- make.names(p.names)
 
     # Initialize plot count
-    plot.count <- 0L
+    if (is.null(plot.count[[site]]))
+      plot.count[[site]] <- 0L
 
     # Loop through parameters in record
 
@@ -248,8 +252,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           d.id[[col.code.name]] <- d.id[[col.code.name]] == 1L
 
         # Draw plot
-        plot.count <- plot.count + 1L
-        if (((4L + plot.count) - 1L) %% 4L == 0L) {
+        plot.count[[site]] <- plot.count[[site]] + 1L
+        if (((4L + plot.count[[site]]) - 1L) %% 4L == 0L) {
           GrDev(site, plot.count)
           main <- paste(site, " (", id, ")", sep="")
         } else {
@@ -347,9 +351,9 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         } 
 
         # Draw plot
-        plot.count <- plot.count + 1L
-        if (((4L + plot.count) - 1L) %% 4L == 0L) {
-          GrDev(site, plot.count)
+        plot.count[[site]] <- plot.count[[site]] + 1L
+        if (((4L + plot.count[[site]]) - 1L) %% 4L == 0L) {
+          GrDev(site, plot.count[[site]])
           main <- paste(site, " (", id, ")", sep="")
         } else {
           main <- NULL
