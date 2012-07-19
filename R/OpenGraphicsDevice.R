@@ -6,20 +6,27 @@ OpenGraphicsDevice <- function(figs.dir, file.name, gr.type,
   if (gr.type == "windows") {
     windows(width=w, height=h, pointsize=p)
   } else {
+    
+    if (gr.type == "postscript") {
+      file.ext <- "eps"
+    } else if (gr.type %in% c("pdf", "png")) {
+      file.ext <- gr.type
+    } else {
+      stop(paste("Graphics device", gr.type, "not recognized"))
+    }
+    
+    f <- file.path(figs.dir, paste(file.name, file.ext, sep="."))
+    if (file.access(f, mode=0) == 0)
+      stop(paste(f, "already exists and will not be overwritten"))
+    
     if (gr.type == "pdf") {
-      f <- file.path(figs.dir, paste(file.name, "pdf", sep="."))
       pdf(file=f, width=w, height=h, pointsize=p, version="1.6",
           colormodel="cmyk")
     } else if (gr.type == "png") {
-      f <- file.path(figs.dir, paste(file.name, "png", sep="."))
       png(filename=f, width=w, height=h, units="in", pointsize=p, res=png.res)
-
     } else if (gr.type == "postscript") {
-      f <- file.path(figs.dir, paste(file.name, "eps", sep="."))
       postscript(file=f, width=w, height=h, pointsize=p,
                  horizontal=FALSE, paper="letter")
-    } else {
-      stop(paste("Graphics device", gr.type, "not recognized"))
     }
   }
   par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
