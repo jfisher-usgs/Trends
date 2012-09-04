@@ -254,7 +254,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         # Draw plot
         plot.count[[site]] <- plot.count[[site]] + 1L
         if (((4L + plot.count[[site]]) - 1L) %% 4L == 0L) {
-          GrDev(site, plot.count)
+          GrDev(site, plot.count[[site]])
           main <- paste(site, " (", id, ")", sep="")
         } else {
           main <- NULL
