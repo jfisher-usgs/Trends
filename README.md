@@ -25,7 +25,9 @@ Install required R packages from CRAN using a simple call to
 
 Install the **Trends** package:
 
-    > install.packages('Trends', repos='ftp://ftpint.usgs.gov/private/wr/id/scoville/Fisher/Trends')
+    > install.packages('devtools')
+    > library(devtools)
+    > install_github('Trends', username='jfisher-usgs', ref='v0.1.3')
 
 Run
 ---
@@ -34,11 +36,6 @@ Load **Trends** in the current R session:
 
     > library(Trends)
 
-An example workflow is provided in `inst/Readme.txt`.
+See examples in help documentation:
 
-Update
-------
-
-Install **Trends** package updates:
-
-    > update.packages(repos='ftp://ftpint.usgs.gov/private/wr/id/scoville/Fisher/Trends')
+    > help(package='Trends')
