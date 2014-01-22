@@ -1,9 +1,9 @@
-Trends: Analysis of Data Collected from a Monitoring Network
-============================================================
+Trends
+======
 
-This [R](http://www.r-project.org/ "R") package
-is for identifying trends in data from multiple observation sites.
-Nonparametric regression is applied to both censored and uncensored data.
+This [R](http://www.r-project.org/ "R") package is for identifying trends in
+data from multiple observation sites in a monitoring network. Nonparametric
+regression is applied to both censored and uncensored data.
 
 The set of standards used for coding **Trends** is documented in
 [Google's R Style Guide](http://google-styleguide.googlecode.com/svn/trunk/google-r-style.html "Google's R Style Guide").
