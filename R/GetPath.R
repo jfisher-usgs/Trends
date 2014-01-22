@@ -2,8 +2,6 @@ GetPath <- function(type, path=NULL, initial.dir=getwd()) {
 # type: "input_data", "config_para", "config_plot", "config_stat",
 #       "output_stat", "output_figs"
 
-  require(tcltk)
-
   titles <- list("input_data" ="Please choose a data file to open",
                  "config_para"="Open configuration file for parameters",
                  "config_plot"="Open configuration file for plots",

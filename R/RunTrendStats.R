@@ -60,8 +60,6 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
   # Main program:
 
-  require(tcltk)
-  require(NADA)
   options(stringsAsFactors=FALSE)
 
   # Paths
@@ -108,7 +106,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
   # Number of seconds in year, used for time conversions
   secs.in.year <- 31536000
-  
+
   # Initialize plot count list
   plot.count <- list()
 
@@ -211,9 +209,9 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         }
         cen.n      <- as.integer(ans@survfit$n)
         cen.n.cen  <- cen.n - as.integer(sum(ans@survfit$n.event))
-        cen.median <- as.numeric(NADA:::median(ans))
-        cen.mean   <- as.numeric(NADA:::.mean.cenfit(ans)["mean"])
-        cen.sd     <- as.numeric(NADA:::sd(ans))
+        cen.median <- as.numeric(median(ans))
+        cen.mean   <- as.numeric(mean(ans)["mean"])
+        cen.sd     <- as.numeric(sd(ans))
         lst <- list("n"=cen.n, "n_above_rl"=cen.n - n.below.rl,
                     "n_cen"=cen.n.cen, "mean"=cen.mean, "median"=cen.median,
                     "min"=min(dat), "max"=max(dat), "std_dev"=cen.sd,
@@ -296,10 +294,10 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         len.record <- diff(tlim)
         lst <- list("len_record"=len.record)
         rec <- cbind(rec, as.data.frame(lst))
-        
+
         # Average values over date-time intervals
         if (!is.null(dt.breaks)) {
-          
+
           # Determine date cuts based on time interval
           ans <- try(cut(d.id$Datetime, dt.breaks), silent=TRUE)
           if (inherits(ans, "try-error")) {
@@ -308,7 +306,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           } else {
             d.id.cuts <- as.POSIXct(ans, "%Y-%m-%d", tz="MST", origin=origin)
           }
-          
+
           # Time average constituent based on date cuts
           ans <- try(aggregate(d.id, list(date=d.id.cuts),
                                function(i) mean(i, na.rm=TRUE)), silent=TRUE)
@@ -325,8 +323,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         # functions
         x <- as.numeric(d.id$Datetime)
         y <- d.id[, parameter]
-        
-        est <- try(suppressWarnings(RunTheilSen(x=x, y=y, xout=xout)$regci), 
+
+        est <- try(suppressWarnings(RunTheilSen(x=x, y=y, xout=xout)$regci),
                    silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
           warning(paste("Wilcox regci error:", err.extra, sep="\n"))
@@ -348,7 +346,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
             regr.lower <- function(x) {est$lower * as.numeric(x) + est$int_lower}
             regr.upper <- function(x) {est$upper * as.numeric(x) + est$int_upper}
           }
-        } 
+        }
 
         # Draw plot
         plot.count[[site]] <- plot.count[[site]] + 1L

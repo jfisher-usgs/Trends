@@ -1,3 +1,5 @@
+import(tcltk, MASS, NADA)
+
 export(DrawPlot,
        GetPath,
        OpenGraphicsDevice,

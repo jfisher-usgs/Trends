@@ -20,13 +20,13 @@ by choosing to customize the startup options and specifying the SDI interface
 
 Install required R packages from CRAN:
 
-    > install.packages('NADA')
+    > install.packages("NADA")
 
 Install the **Trends** package:
 
-    > install.packages('devtools')
+    > install.packages("devtools")
     > library(devtools)
-    > install_github('Trends', username='jfisher-usgs', ref='v0.1.3')
+    > install_github("Trends", username = "jfisher-usgs", ref = "v0.1.3")
 
 Run
 ---
@@ -37,4 +37,4 @@ Load **Trends** in the current R session:
 
 See examples in help documentation:
 
-    > help(package='Trends')
+    > help(package = "Trends")

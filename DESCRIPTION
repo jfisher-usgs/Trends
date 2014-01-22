@@ -1,14 +1,16 @@
 Package: Trends
 Version: 0.1-4
-Date: 2012-09-04
+Date: 2014-01-22
 Title: Analysis of Data Collected from a Monitoring Network
 Author: Jason C. Fisher and Linda C. Davis
 Maintainer: Jason C. Fisher <jfisher@usgs.gov>
-Depends: R (>= 2.15.0), tcltk, MASS, NADA
+Depends: R (>= 2.15.0)
+Imports: tcltk, MASS, NADA
 SystemRequirements: Tcl/Tk (>= 8.5)
-Description: This package is for identifying trends in data from multiple observation sites.
-  Nonparametric regression is applied to both censored and uncensored data.
-License: Unlimited
+Description: This package is for identifying trends in data from multiple
+  observation sites. Nonparametric regression is applied to both censored and
+  uncensored data.
+License: file LICENSE
 URL: https://github.com/jfisher-usgs/Trends
 BugReports: https://github.com/jfisher-usgs/Trends/issues
 ByteCompile: yes

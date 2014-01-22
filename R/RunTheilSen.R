@@ -250,7 +250,6 @@ RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE, xout=FALSE) {
   # cov.roc (Rocke's TBS estimator)
   out <- function(x, cov.fun=cov.mve, plotit=TRUE, SEED=TRUE,
                   xlab="X", ylab="Y", qval=.975, crit=NULL, ...) {
-    require(MASS)
     if (SEED)
       set.seed(12)
     if (is.data.frame(x))
