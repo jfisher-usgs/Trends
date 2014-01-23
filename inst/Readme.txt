@@ -1,51 +1,110 @@
+
 # Example workflow
-  library(Trends)
 
-# This workflow requires input files to be located in:
-  dir.path <- "E:/WORK/JFisher/Projects/Trend Report"
+# Load library
+library(Trends)
 
-# Input file paths
-  file.data         <- file.path(dir.path, "Data_20120316.txt")
-  file.par          <- file.path(dir.path, "Config_Par_20111209.txt")
-  file.plots        <- file.path(dir.path, "Config_Plots_20120316.txt")
-##file.plots        <- file.path(dir.path, "Config_Plots_Field_20120124.txt")
-  file.stats.cens   <- file.path(dir.path, "Config_Cen_20111219.txt")
-  file.stats.uncens <- file.path(dir.path, "Config_Uncen_20111209.txt")
-##file.stats.uncens <- file.path(dir.path, "Config_Uncen_Field_20111117.txt")
-##file.stats.uncens <- file.path(dir.path, "Config_Uncen_POR_20111117.txt")
-##file.stats.uncens <- file.path(dir.path, "Config_Uncen_Field_POR_20111117.txt")
+# Set working directory
+setwd("E:/WORK/JFisher/Projects/Trend Report 2014")
+p <- file.path(getwd(), format(Sys.time(), "%Y%m%d%H%M%S"))
+dir.create(path=p)
 
-# Read trend data
-  d <- ReadTrendData(file.data)
+# Set graphics type, such as "pdf", "postscript", "png", and "windows"
+gr.type <- "pdf"
 
-# Plot parameters (not required)
-  #ShowParameters(file.par)
+# Set paths to data and parameter input files
+f.data <- file.path(getwd(), "Data_20140116.tsv")
+f.par  <- file.path(getwd(), "Config_Par_20140116.tsv")
 
-# Set graphics device ("pdf", "postscript", "png", "windows")
-  gr.type <- "pdf"
- #gr.type <- "postscript"
+# Read raw data
+d <- ReadTrendData(f.data)
 
-# Plot trend data
+# Trend plots for non-field parameters and Period-Of-Record (POR)
+sdate <- "01/01/1949"
+edate <- "01/01/2013"
+f.plots <- file.path(getwd(), "Config_Plots_20140116.tsv")
+p.figs <- file.path(p, "Data_1949-2012")
+dir.create(path=p.figs)
+PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
+              file.plots=f.plots, figs.dir=p.figs)
+warnings()
 
-  # Period of record
-    sdate <- "01/01/1949"
-  ##sdate <- "01/01/1990"
-    edate <- "01/01/2010"
+# Trend plots for non-field parameters and designated time period
+sdate <- "01/01/1989"
+p.figs <- file.path(p, "Data_1989-2012")
+dir.create(path=p.figs)
+PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
+              file.plots=f.plots, figs.dir=p.figs)
+warnings()
 
-  PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type,
-                initial.dir=dir.path, file.par=file.par,
-                file.plots=file.plots)
+# Trend plots for field parameters and the entire POR
+sdate <- "01/01/1949"
+f.plots <- file.path(getwd(), "Config_Plots_Field_20140116.tsv")
+p.figs <- file.path(p, "Data_1949-2012_Field")
+dir.create(path=p.figs)
+PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
+              file.plots=f.plots, figs.dir=p.figs)
+warnings()
 
-# Run statistics
+# Trend plots for field parameters and designated time period
+sdate <- "01/01/1989"
+p.figs <- file.path(p, "Data_1989-2012_Field")
+dir.create(path=p.figs)
+PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
+              file.plots=f.plots, figs.dir=p.figs)
+warnings()
 
-  # Censored data
-    stats.tbl.cens <- RunTrendStats(d, is.censored=TRUE, initial.dir=dir.path,
-                                    file.par=file.par,
-                                    file.stats=file.stats.cens,
-                                    write.tbl.out=TRUE, gr.type=gr.type)
+# Statistical plots for censored-non-field parameters and designated time period
+sdate <- "01/01/1989"
+f.stats <- file.path(getwd(), "Config_Cen_20140116.tsv")
+p.figs <- file.path(p, "Stats_1989-2012_Cen")
+dir.create(path=p.figs)
+f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
+out <- RunTrendStats(d, is.censored=TRUE, file.par=f.par,
+                     file.stats=f.stats, write.tbl.out=TRUE,
+                     file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
+warnings()
 
-  # Uncensored data
-    stats.tbl.uncens <- RunTrendStats(d, is.censored=FALSE,
-                                      initial.dir=dir.path, file.par=file.par,
-                                      file.stats=file.stats.uncens,
-                                      write.tbl.out=TRUE, gr.type=gr.type)
+# Statistical plots for uncensored-non-field parameters and POR
+sdate <- "01/01/1949"
+f.stats <- file.path(getwd(), "Config_Uncen_POR_20140116.tsv")
+p.figs <- file.path(p, "Stats_1949-2012_Uncen")
+dir.create(path=p.figs)
+f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
+out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
+                     file.stats=f.stats, write.tbl.out=TRUE,
+                     file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
+warnings()
+
+# Statistical plots for uncensored-non-field parameters and designated time period
+sdate <- "01/01/1989"
+f.stats <- file.path(getwd(), "Config_Uncen_20140116.tsv")
+p.figs <- file.path(p, "Stats_1989-2012_Uncen")
+dir.create(path=p.figs)
+f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
+out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
+                     file.stats=f.stats, write.tbl.out=TRUE,
+                     file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
+warnings()
+
+# Statistical plots for uncensored-field parameters and POR
+sdate <- "01/01/1949"
+f.stats <- file.path(getwd(), "Config_Uncen_Field_POR_20140116.tsv")
+p.figs <- file.path(p, "Stats_1949-2012_Uncen_Field")
+dir.create(path=p.figs)
+f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
+out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
+                     file.stats=f.stats, write.tbl.out=TRUE,
+                     file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
+warnings()
+
+# Statistical plots for uncensored-field parameters and designated time period
+sdate <- "01/01/1989"
+f.stats <- file.path(getwd(), "Config_Uncen_Field_20140116.tsv")
+p.figs <- file.path(p, "Stats_1989-2012_Uncen_Field")
+dir.create(path=p.figs)
+f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
+out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
+                     file.stats=f.stats, write.tbl.out=TRUE,
+                     file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
+warnings()
