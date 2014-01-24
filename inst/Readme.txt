@@ -1,8 +1,8 @@
 
-# Example workflow
-
-# Load library
+# Workflow
 library(Trends)
+options(warn=1)
+
 
 # Set working directory
 setwd("E:/WORK/JFisher/Projects/Trend Report 2014")
@@ -19,6 +19,7 @@ f.par  <- file.path(getwd(), "Config_Par_20140116.tsv")
 # Read raw data
 d <- ReadTrendData(f.data)
 
+
 # Trend plots for non-field parameters and Period-Of-Record (POR)
 sdate <- "01/01/1949"
 edate <- "01/01/2013"
@@ -27,7 +28,8 @@ p.figs <- file.path(p, "Data_1949-2012")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Trend plots for non-field parameters and designated time period
 sdate <- "01/01/1989"
@@ -35,7 +37,8 @@ p.figs <- file.path(p, "Data_1989-2012")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Trend plots for field parameters and the entire POR
 sdate <- "01/01/1949"
@@ -44,7 +47,8 @@ p.figs <- file.path(p, "Data_1949-2012_Field")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Trend plots for field parameters and designated time period
 sdate <- "01/01/1989"
@@ -52,7 +56,8 @@ p.figs <- file.path(p, "Data_1989-2012_Field")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Statistical plots for censored-non-field parameters and designated time period
 sdate <- "01/01/1989"
@@ -63,7 +68,8 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=TRUE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Statistical plots for uncensored-non-field parameters and POR
 sdate <- "01/01/1949"
@@ -74,7 +80,8 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Statistical plots for uncensored-non-field parameters and designated time period
 sdate <- "01/01/1989"
@@ -85,7 +92,8 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Statistical plots for uncensored-field parameters and POR
 sdate <- "01/01/1949"
@@ -96,7 +104,8 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-warnings()
+CombinePDFs(p.figs)
+
 
 # Statistical plots for uncensored-field parameters and designated time period
 sdate <- "01/01/1989"
@@ -107,4 +116,5 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-warnings()
+CombinePDFs(p.figs)
+

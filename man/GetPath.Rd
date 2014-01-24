@@ -34,9 +34,9 @@ A check is made to confirm that the file or directory exists.
 
 \author{J.C. Fisher}
 
-\examples{
-\donttest{f <- GetPath("input_data")
-d <- GetPath("output_figs")}
-}
+\examples{\donttest{
+f <- GetPath("input_data")
+d <- GetPath("output_figs")
+}}
 
 \keyword{misc}

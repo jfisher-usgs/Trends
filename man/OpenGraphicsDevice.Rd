@@ -44,8 +44,8 @@ A plot device is opened.
 \code{\link{postscript}}
 }
 
-\examples{
-\donttest{OpenGraphicsDevice(getwd(), "fig01", "pdf")}
-}
+\examples{\donttest{
+OpenGraphicsDevice(getwd(), "fig01", "pdf")
+}}
 
 \keyword{misc}
