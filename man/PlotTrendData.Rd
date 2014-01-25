@@ -4,9 +4,7 @@
 
 \title{Plot Trend Data}
 
-\description{
-This function queries and plots trend data.
-}
+\description{This function queries and plots trend data.}
 
 \usage{
 PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
@@ -53,9 +51,7 @@ been drawn.
 
 \author{J.C. Fisher and L.C. Davis}
 
-\seealso{
-\code{\link{DrawPlot}}
-}
+\seealso{\code{\link{DrawPlot}}}
 
 \examples{
 f <- system.file("extdata/Example_Data.txt", package = "Trends")

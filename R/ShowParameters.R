@@ -1,6 +1,5 @@
 ShowParameters <- function(file.par=NULL) {
 
-  # Path
   file.par <- GetPath("config_para", file.par)
 
   # Read parameters configuration table

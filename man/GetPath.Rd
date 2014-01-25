@@ -4,13 +4,9 @@
 
 \title{Get Path to File or Directory}
 
-\description{
-This function is used to select a file or directory path.
-}
+\description{This function is used to select a file or directory path.}
 
-\usage{
-GetPath(type, path = NULL, initial.dir = getwd())
-}
+\usage{GetPath(type, path = NULL, initial.dir = getwd())}
 
 \arguments{
 \item{type}{character; code used to identify the path type,

@@ -1,10 +1,11 @@
-RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE, xout=FALSE) {
-# These functions are from the WRS package.
+# These functions are from the WRS package (v0.15).
 # > install.packages("WRS", repos="http://R-Forge.R-project.org")
 # Code format has been slightly altered for readability purposes.
-# see http://www-rcf.usc.edu/~rwilcox/
+# see http://wrs.r-forge.r-project.org/
 
-  # R.R. Wilcox' robust statistics functions (subroutines):
+RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE, xout=FALSE) {
+
+  # R.R. Wilcox' robust statistics functions:
 
   # Compute a .95 confidence interval for each of the parameters of
   # a linear regression equation. The default regression method is

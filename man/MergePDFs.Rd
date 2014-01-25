@@ -4,13 +4,9 @@
 
 \title{Merge PDF Files}
 
-\description{
-This function combines PDF files into a new file.
-}
+\description{This function combines PDF files into a new file.}
 
-\usage{
-MergePDFs(path, open.pdf = FALSE)
-}
+\usage{MergePDFs(path, open.pdf = FALSE)}
 
 \arguments{
 \item{path}{character; the path name of the folder containing the PDF files to
@@ -21,11 +17,10 @@ MergePDFs(path, open.pdf = FALSE)
 
 \details{
 Names of the individual PDF files are used as bookmarks in the merged file.
+The merged file is placed one directory above \code{path}.
 }
 
-\value{
-The name of the merged file is returned.
-}
+\value{The name of the merged file is returned.}
 
 \note{
 Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
@@ -33,6 +28,8 @@ a cross-platform command-line tool for working with PDFs.
 }
 
 \author{J.C. Fisher}
+
+\seealso{\code{\link{system}}}
 
 \examples{\donttest{
 path <- file.path(tempdir(), "merge")

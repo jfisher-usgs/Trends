@@ -3,10 +3,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                      file.out=NULL, figs.dir=NULL, gr.type="pdf",
                      cenken.tol=1e-12, cenken.iter=1e+6, dt.breaks=NULL,
                      xout=FALSE, draw.ci=FALSE) {
-# This function performs a statistical analysis on uncensored and censored data
-# tbl <- RunTrendStats(d, c("ANP 6", "ARBOR TEST"))
 
-  # Additional functions (subroutines):
+  # Additional functions:
 
   # Read table data from file
   ReadTable <- function(f) {
@@ -76,10 +74,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   row.names(tbl.par) <- make.names(row.names(tbl.par))
 
   # Determine background color for legend box
-  if (gr.type == "postscript")
-    leg.box.col <- "#FFFFFF"
-  else
-    leg.box.col <- "#FFFFFFBB"
+  leg.box.col <- ifelse(gr.type == "postscript", "#FFFFFF", "#FFFFFFBB")
 
   # Column names in data table
   d.names <- names(d)
@@ -87,6 +82,14 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   # Read data from statistics tables and combine
   tbl <- read.table(file=file.stats, header=TRUE, sep="\t",
                     stringsAsFactors=FALSE, fill=TRUE)
+  is.valid.site.id <- tbl$Site_id %in% d$Site_id
+  if (!all(is.valid.site.id)) {
+    ids <- tbl[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
+    msg <- paste(paste0("id: ", ids$Site_id, ", name: ", ids$Site_name),
+                 collapse="\n")
+    warning("Ids in stats configuration file do not match data:\n", msg, "\n")
+  }
+  tbl <- tbl[is.valid.site.id, ]
 
   # Convert date-time fields into POSIXct class
   origin <- as.POSIXct("1920-01-01 00:00:00.0")

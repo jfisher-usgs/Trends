@@ -1,10 +1,8 @@
 PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
                           initial.dir=getwd(), file.par=NULL, file.plots=NULL,
                           figs.dir=NULL, gr.type="pdf") {
-# This function draws plots on the desired device type
-# PlotTrendData(d, site.names=c("ANP 6", "ARBOR TEST"), gr.type="windows")
 
-  # Additional functions (subroutines):
+  # Additional functions:
 
   # Trim leading and trailing white space from character string
   trim <- function(s) {
@@ -55,7 +53,14 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   # Read plot configuration table
   tbl.plt <- read.table(file=file.plots, header=TRUE, sep="\t",
                         stringsAsFactors=FALSE)
-  tbl.plt <- tbl.plt[tbl.plt[, "Site_id"] %in% site.ids, ]
+  is.valid.site.id <- tbl.plt$Site_id %in% site.ids
+  if (!all(is.valid.site.id)) {
+    ids <- tbl.plt[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
+    msg <- paste(paste0("id: ", ids$Site_id, ", name: ", ids$Site_name),
+                 collapse="\n")
+    warning("Ids in plots configuration file do not match data:\n", msg, "\n")
+  }
+  tbl.plt <- tbl.plt[is.valid.site.id, ]
 
   # Determine parameters
   parameters <- NULL

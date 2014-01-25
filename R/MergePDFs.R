@@ -1,7 +1,12 @@
 # Combine PDF files into a new file.
-# Requires PDFtk Server http://www.pdflabs.com/tools/pdftk-server/
+# Requires PDFtk Server (http://www.pdflabs.com/tools/pdftk-server/)
 
 MergePDFs <- function(path, open.pdf=FALSE) {
+  if (missing(path) || !is.character(path))
+    stop("argument 'path' is missing or not a character string")
+  if (!is.logical(open.pdf))
+    stop("argument 'open.pdf' is not logical")
+
   input.pdfs <- list.files(path, pattern=".pdf$")
   if (length(input.pdfs) == 0 || input.pdfs == "")
     stop("path does not exist or input pdf files are missing")
@@ -14,6 +19,7 @@ MergePDFs <- function(path, open.pdf=FALSE) {
   tmp.txt <- tempfile(pattern="tmp", fileext=".txt")
   tmp.bat <- tempfile(pattern="tmp", fileext=".bat")
   tmp.pdf <- tempfile(pattern="tmp", fileext=".pdf")
+
   cmd <- paste("cd", shQuote(path))
 
   npages <- NULL
@@ -37,9 +43,9 @@ MergePDFs <- function(path, open.pdf=FALSE) {
 
   bookmarks <- sub("\\.pdf$", "", input.pdfs)
   Fun <- function(i) {
-    return(paste("BookmarkBegin", paste("BookmarkTitle:", bookmarks[i]),
-                 "BookmarkLevel: 1", paste("BookmarkPageNumber:", pages[i]),
-                                           sep="\n"))
+    bookmark <- c("BookmarkBegin", paste("BookmarkTitle:", bookmarks[i]),
+                  "BookmarkLevel: 1", paste("BookmarkPageNumber:", pages[i]))
+    return(paste(bookmark, collapse="\n"))
   }
   bookmarks <- vapply(seq_along(bookmarks), Fun, "")
   cat(bookmarks, file=tmp.txt, sep="\n", append=TRUE)

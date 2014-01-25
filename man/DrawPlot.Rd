@@ -4,9 +4,7 @@
 
 \title{Draw Single Plot}
 
-\description{
-This function draws a single plot on a graphics device.
-}
+\description{This function draws a single plot on a graphics device.}
 
 \usage{
 DrawPlot(d, tbl.par, cen.var = NULL,
@@ -37,13 +35,13 @@ DrawPlot(d, tbl.par, cen.var = NULL,
   semi-transparency supported for some graphics devices.}
 \item{tick.lines}{logical; if \code{TRUE}, horizontal and vertical lines are
   drawn at the major tick marks.}
-\item{p.value}{numeric; the estimated two-sided \emph{p}-value of the 
+\item{p.value}{numeric; the estimated two-sided \emph{p}-value of the
   regression line.}
 }
 
 \details{
 Uncensored data is plotted as points and censored data as vertical dashed lines.
-Regression and optional confidence interval lines are only drawn if \code{d} 
+Regression and optional confidence interval lines are only drawn if \code{d}
 contains a single parameter.
 }
 

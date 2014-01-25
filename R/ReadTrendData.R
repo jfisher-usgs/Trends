@@ -1,5 +1,4 @@
 ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
-# This function reads trend-report table data
 
   # Input data file
   file.data <- GetPath("input_data", file.data, initial.dir)
