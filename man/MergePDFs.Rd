@@ -15,16 +15,21 @@ MergePDFs(path, open.pdf = FALSE)
 \arguments{
 \item{path}{character; the path name of the folder containing the PDF files to
   merge.}
-\item{open.pdf}{logical; if \code{TRUE}, the merged PDF file is opened using the
+\item{open.pdf}{logical; if \code{TRUE}, the merged file is opened using the
   systems default PDF viewer.}
 }
 
 \details{
-Names of the individual PDF files are used as bookmarks in the merged PDF file.
+Names of the individual PDF files are used as bookmarks in the merged file.
 }
 
 \value{
 The name of the merged file is returned.
+}
+
+\note{
+Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
+a cross-platform command-line tool for working with PDFs.
 }
 
 \author{J.C. Fisher}

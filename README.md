@@ -28,6 +28,10 @@ Install the **Trends** package:
     > library(devtools)
     > install_github("Trends", username = "jfisher-usgs", ref = "v0.1.3")
 
+Support for merging PDF files into a new file requires
+[PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
+a cross-platform command-line tool for working with PDFs.
+
 Run
 ---
 
