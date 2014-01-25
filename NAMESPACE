@@ -1,6 +1,6 @@
 import(tcltk, MASS, NADA)
 
-export(CombinePDFs,
+export(MergePDFs,
        DrawPlot,
        GetPath,
        OpenGraphicsDevice,

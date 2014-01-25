@@ -1,7 +1,7 @@
 # Combine PDF files into a new file.
 # Requires PDFtk Server http://www.pdflabs.com/tools/pdftk-server/
 
-CombinePDFs <- function(path, open.pdf=FALSE) {
+MergePDFs <- function(path, open.pdf=FALSE) {
   input.pdfs <- list.files(path, pattern=".pdf$")
   if (length(input.pdfs) == 0 || input.pdfs == "")
     stop("path does not exist or input pdf files are missing")
@@ -11,9 +11,9 @@ CombinePDFs <- function(path, open.pdf=FALSE) {
   if(file.exists(output.pdf))
     file.remove(output.pdf)
 
-  tmp.txt <- tempfile(pattern="tmp", tmpdir=tempdir(), fileext=".txt")
-  tmp.pdf <- tempfile(pattern="tmp", tmpdir=tempdir(), fileext=".pdf")
-  tmp.bat <- tempfile(pattern="tmp", tmpdir=tempdir(), fileext=".bat")
+  tmp.txt <- tempfile(pattern="tmp", fileext=".txt")
+  tmp.bat <- tempfile(pattern="tmp", fileext=".bat")
+  tmp.pdf <- tempfile(pattern="tmp", fileext=".pdf")
   cmd <- paste("cd", shQuote(path))
 
   npages <- NULL
@@ -51,6 +51,10 @@ CombinePDFs <- function(path, open.pdf=FALSE) {
   if (open.pdf)
     system(paste("open", shQuote(output.pdf)), wait=FALSE,
            show.output.on.console=FALSE)
+
+  unlink(tmp.txt)
+  unlink(tmp.bat)
+  unlink(tmp.pdf)
 
   invisible(output.pdf)
 }

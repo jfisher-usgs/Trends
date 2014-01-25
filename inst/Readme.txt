@@ -28,7 +28,7 @@ p.figs <- file.path(p, "Data_1949-2012")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Trend plots for non-field parameters and designated time period
@@ -37,7 +37,7 @@ p.figs <- file.path(p, "Data_1989-2012")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Trend plots for field parameters and the entire POR
@@ -47,7 +47,7 @@ p.figs <- file.path(p, "Data_1949-2012_Field")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Trend plots for field parameters and designated time period
@@ -56,7 +56,7 @@ p.figs <- file.path(p, "Data_1989-2012_Field")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
               file.plots=f.plots, figs.dir=p.figs)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Statistical plots for censored-non-field parameters and designated time period
@@ -68,7 +68,7 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=TRUE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Statistical plots for uncensored-non-field parameters and POR
@@ -80,7 +80,7 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Statistical plots for uncensored-non-field parameters and designated time period
@@ -92,7 +92,7 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Statistical plots for uncensored-field parameters and POR
@@ -104,7 +104,7 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
 
 # Statistical plots for uncensored-field parameters and designated time period
@@ -116,5 +116,5 @@ f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
 out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
                      file.stats=f.stats, write.tbl.out=TRUE,
                      file.out=f.out, figs.dir=p.figs, gr.type=gr.type)
-CombinePDFs(p.figs)
+MergePDFs(p.figs)
 
