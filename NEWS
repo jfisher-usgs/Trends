@@ -1,6 +1,5 @@
 Changes in Version 0.1-4
 
-  o  Warn if site ids in plots and stats configuration files do not match ids
-     in the data file.
+  o  Warn if site ids in configuration files do not match ids in the data file.
 
   o  Added a new function MergePDFs, combines PDF files into a new file.

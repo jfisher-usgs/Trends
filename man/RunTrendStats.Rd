@@ -39,13 +39,13 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 \item{cenken.tol}{numeric; a tolerance used as a stopping criteria,
   see \sQuote{Details}.}
 \item{cenken.iter}{numeric; maximum number of iterations, see \sQuote{Details}.}
-\item{dt.breaks}{character; an interval specification, one of \code{"sec"}, 
-  \code{"min"}, \code{"hour"}, \code{"day"}, \code{"week"}, \code{"month"}, 
+\item{dt.breaks}{character; an interval specification, one of \code{"sec"},
+  \code{"min"}, \code{"hour"}, \code{"day"}, \code{"week"}, \code{"month"},
   \code{"quarter"} or \code{"year"}. Parameter values are averaged over this
   time interval.}
-\item{xout}{logical; if \code{TRUE}, leverage points for uncensored data are 
+\item{xout}{logical; if \code{TRUE}, leverage points for uncensored data are
   removed based on an outlier detection method.}
-\item{draw.ci}{logical; if \code{TRUE}, 95 percent confidence interval for 
+\item{draw.ci}{logical; if \code{TRUE}, 95 percent confidence interval for
   uncensored data is drawn on plot.}
 }
 
@@ -53,7 +53,7 @@ RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
 The imported statistics configuration table requires the following fields:
 \code{"Site_id"}, a unique numerical identifier used to access site data;
 \code{"Site_name"}, a local site identifier;
-\code{"Parameters"}, comma seperated parameter names corresponding to
+\code{"Parameters"}, comma separated parameter names corresponding to
   header fields in the data table, see \code{\link{ReadTrendData}};
 \code{"Start_date"} and \code{"End_date"}, the start and end date in M/D/YYYY
   (\code{\%m/\%d/\%Y}); and
@@ -95,9 +95,9 @@ Returns a data frame with variables:
 \item{max}{numeric; maximum value.}
 \item{std_dev}{numeric; standard deviation.}
 \item{len_record}{difftime; period of record.}
-\item{p_value}{numeric; estimated two-sided \emph{p}-value, if below the 
-  acceptance level (5 percent), reject the null hypothesis that the parameter is 
-  statistically independent of time and accept the hypothesis that they are 
+\item{p_value}{numeric; estimated two-sided \emph{p}-value, if below the
+  acceptance level (5 percent), reject the null hypothesis that the parameter is
+  statistically independent of time and accept the hypothesis that they are
   dependent.}
 \item{tau}{numeric; Kendall's tau (censored only).}
 \item{slope}{numeric; slope of nonparametric regression line, in
@@ -118,7 +118,7 @@ Returns a data frame with variables:
 \item{trend}{character; significant trends are indicated by a \emph{p}-value
   less than or equal to 0.05, a 5 percent acceptance level.
   The sign of the \code{slope} indicates whether the significant trend is
-  positive (\code{"+"}) or negative (\code{"-"}). \emph{p}-values greater 
+  positive (\code{"+"}) or negative (\code{"-"}). \emph{p}-values greater
   than 0.05 are specified as \code{"no trend"}.}
 }
 
