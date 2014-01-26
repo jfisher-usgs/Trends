@@ -2,6 +2,10 @@
 # Requires PDFtk Server (http://www.pdflabs.com/tools/pdftk-server/)
 
 MergePDFs <- function(path, open.pdf=FALSE) {
+
+  if (Sys.which("pdftk") == "")
+    stop("pdftk can not be run")
+
   if (missing(path) || !is.character(path))
     stop("argument 'path' is missing or not a character string")
   if (!is.logical(open.pdf))
