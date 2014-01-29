@@ -1,8 +1,8 @@
 import(tcltk, MASS, NADA)
 
-export(MergePDFs,
-       DrawPlot,
+export(DrawPlot,
        GetPath,
+       MergePDFs,
        OpenGraphicsDevice,
        PlotTrendData,
        ReadTrendData,
