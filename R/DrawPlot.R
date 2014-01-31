@@ -161,7 +161,7 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
   box(lwd=lwd)
 
   # Alter legend content if single parameter with regression line
-  if (length(leg.name) == 1 && is.regr[1]) {
+  if (length(leg.name) == 1L && is.regr[1]) {
     if (is.regr[1]) {
       leg.pch <- leg.bg <- NULL
       leg.col <- "#000000"
@@ -182,6 +182,10 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
       return()
     }
   }
+
+  # Don't draw legend if all censored data
+  if (length(leg.name) == 1L && all(cen.code))
+    return()
 
   # Draw legend
   legend(x=grconvertX(0.01, 'npc'), y=grconvertY(0.95, 'npc'),

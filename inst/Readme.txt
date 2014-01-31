@@ -1,7 +1,8 @@
 # Workflow
 
 # Set working directory
-setwd("E:/WORK/JFisher/Projects/Trend Report 2014")
+###setwd("E:/WORK/JFisher/Projects/Trend Report 2014")
+setwd("D:/Projects/Trend Report 2014")
 
 # Load library
 library(Trends)

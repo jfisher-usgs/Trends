@@ -1,8 +1,8 @@
 RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
-                     file.par=NULL, file.stats=NULL, write.tbl.out=FALSE,
-                     file.out=NULL, figs.dir=NULL, gr.type="pdf",
-                     cenken.tol=1e-12, cenken.iter=1e+6, dt.breaks=NULL,
-                     xout=FALSE, draw.ci=FALSE) {
+                          file.par=NULL, file.stats=NULL, write.tbl.out=FALSE,
+                          file.out=NULL, figs.dir=NULL, gr.type="pdf",
+                          cenken.tol=1e-12, cenken.iter=1e+6, dt.breaks=NULL,
+                          xout=FALSE, draw.ci=FALSE) {
 
   # Additional functions:
 
@@ -34,17 +34,18 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
   # Classify trend using p-value and slope
   ClassifyTrend <- function(p, slope, tol=0.05) {
+    if (!is.numeric(p) || !is.numeric(slope))
+      return("no trend")
     is.sig.trend <- p <= tol
     is.pos.slope <- slope > 0
     if (is.sig.trend) {
       if (is.pos.slope)
-        trend <- "+"
+        return("+")
       else
-        trend <- "-"
+        return("-")
     } else {
-      trend <- "no trend"
+      return("no trend")
     }
-    trend
   }
 
   # Open and close graphics device
@@ -202,51 +203,63 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           warning(paste(txt, err.extra, sep="\n"))
         }
 
+        regr <- NULL
+        lst <- list(n=NA, n_above_rl=NA, n_cen=NA, mean=NA, median=NA, min=NA,
+                    max=NA, std_dev=NA, len_record=NA, p_value=NA, tau=NA,
+                    slope=NA, int=NA, slope_percent=NA)
+
         # Basic summary statistics
         dat <- d.id[[parameter]]
-        len.record <- diff(range(d.id$Datetime))
         ans <- try(suppressWarnings(cenfit(dat, is.cen)), silent=TRUE)
         if (inherits(ans, "try-error")) {
           warning(paste("NADA cenfit error:", err.extra, sep="\n"))
           next
         }
-        cen.n      <- as.integer(ans@survfit$n)
-        cen.n.cen  <- cen.n - as.integer(sum(ans@survfit$n.event))
-        cen.median <- as.numeric(median(ans))
-        cen.mean   <- as.numeric(mean(ans)["mean"])
-        cen.sd     <- as.numeric(sd(ans))
-        lst <- list("n"=cen.n, "n_above_rl"=cen.n - n.below.rl,
-                    "n_cen"=cen.n.cen, "mean"=cen.mean, "median"=cen.median,
-                    "min"=min(dat), "max"=max(dat), "std_dev"=cen.sd,
-                    "len_record"=len.record)
-        rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
 
-        # Kendall's tau correlation coefficient and Akritas-Theil-Sen
-        # nonparametric regression line, see ?cenken
-        x <- as.numeric(d.id$Datetime)
-        ans <- try(NADA:::kendallATS(y=dat, ycen=is.cen,
-                                     x=x, xcen=rep(FALSE, length(x)),
-                                     tol=cenken.tol, iter=cenken.iter),
-                   silent=TRUE)
-        if (inherits(ans, "try-error")) {
-          warning(paste("NADA kendallATS error:", err.extra, sep="\n"))
-          next
+        lst$n          <- ans@survfit$n
+        lst$n_above_rl <- ans@survfit$n - n.below.rl
+        lst$n_cen      <- ans@survfit$n - sum(ans@survfit$n.event)
+        lst$min        <- min(dat)
+        lst$max        <- max(dat)
+        lst$len_record <- diff(range(d.id$Datetime))
+
+        # Compute trend if complete cenfit results
+        if (!is.na(median(ans))) {
+
+          lst$mean    <- suppressWarnings(mean(ans)["mean"])
+          lst$std_dev <- suppressWarnings(sd(ans))
+          lst$median  <- median(ans)
+
+          # Kendall's tau correlation coefficient and Akritas-Theil-Sen
+          # nonparametric regression line, see ?cenken
+          x <- as.numeric(d.id$Datetime)
+          ans <- try(NADA:::kendallATS(y=dat, ycen=is.cen,
+                                       x=x, xcen=rep(FALSE, length(x)),
+                                       tol=cenken.tol, iter=cenken.iter),
+                     silent=TRUE)
+          if (inherits(ans, "try-error")) {
+            warning(paste("NADA kendallATS error:", err.extra, sep="\n"))
+            next
+          }
+
+          # Calculate percentage change per year in slopes
+          slope.percent <- PercentChange(ans$slope, ans$intercept,
+                                         tlim=range(d.id$Datetime))
+
+          # Nonparametric line
+          if (is.numeric(ans$slope) && is.numeric(ans$intercept))
+            regr <- function(x) {ans$slope * as.numeric(x) + ans$intercept}
+
+          # Place summary statistics in list
+          lst$p_value       <- ans$p
+          lst$tau           <- ans$tau
+          lst$slope         <- ans$slope * secs.in.year
+          lst$int           <- ans$intercept
+          lst$slope_percent <- slope.percent * secs.in.year
         }
 
-        # Calculate percentage change per year in slopes
-        slope.percent <- PercentChange(ans$slope, ans$intercept,
-                                       tlim=range(d.id$Datetime))
-
-        lst <- list("p_value"=ans$p, "tau"=ans$tau,
-                    "slope"=ans$slope * secs.in.year, "int"=ans$intercept,
-                    "slope_percent"=slope.percent * secs.in.year)
+        # Add summary record to output table
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
-
-        # Nonparametric line
-        if (is.na(ans$slope) || is.na(ans$intercept))
-          regr <- NULL
-        else
-          regr <- function(x) {ans$slope * as.numeric(x) + ans$intercept}
 
         # Convert censored data code to logical
         if (is.code)
@@ -294,8 +307,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
         # Length of temporal record
         tlim <- range(d.id$Datetime)
-        len.record <- diff(tlim)
-        lst <- list("len_record"=len.record)
+        lst <- list("len_record"=diff(tlim))
         rec <- cbind(rec, as.data.frame(lst))
 
         # Average values over date-time intervals
