@@ -17,16 +17,16 @@ dir.create(path=p)
 gr.type <- "pdf"
 
 # Read raw data
-f.data <- file.path(getwd(), "Data_20140128.tsv")
+f.data <- file.path(getwd(), "Data_20140130.tsv")
 d <- ReadTrendData(f.data)
 
 # Specify name of parameter description file
-f.par  <- file.path(getwd(), "Config_Par_20140128.tsv")
+f.par  <- file.path(getwd(), "Config_Par_20140130.tsv")
 
 # Trend plots for non-field parameters and Period-Of-Record (POR)
 sdate <- "01/01/1949"
 edate <- "01/01/2013"
-f.plots <- file.path(getwd(), "Config_Plots_20140128.tsv")
+f.plots <- file.path(getwd(), "Config_Plots_20140130.tsv")
 p.figs <- file.path(p, "Data_1949-2012")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
@@ -43,7 +43,7 @@ MergePDFs(p.figs)
 
 # Trend plots for field parameters and the entire POR
 sdate <- "01/01/1949"
-f.plots <- file.path(getwd(), "Config_Plots_Field_20140128.tsv")
+f.plots <- file.path(getwd(), "Config_Plots_Field_20140130.tsv")
 p.figs <- file.path(p, "Data_1949-2012_Field")
 dir.create(path=p.figs)
 PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
@@ -59,7 +59,7 @@ PlotTrendData(d, sdate=sdate, edate=edate, gr.type=gr.type, file.par=f.par,
 MergePDFs(p.figs)
 
 # Statistical plots for censored-non-field parameters and designated time period
-f.stats <- file.path(getwd(), "Config_Cen_20140128.tsv")
+f.stats <- file.path(getwd(), "Config_Cen_20140130.tsv")
 p.figs <- file.path(p, "Stats_1989-2012_Cen")
 dir.create(path=p.figs)
 f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
@@ -69,7 +69,7 @@ out <- RunTrendStats(d, is.censored=TRUE, file.par=f.par,
 MergePDFs(p.figs)
 
 # Statistical plots for uncensored-non-field parameters and POR
-f.stats <- file.path(getwd(), "Config_Uncen_POR_20140128.tsv")
+f.stats <- file.path(getwd(), "Config_Uncen_POR_20140130.tsv")
 p.figs <- file.path(p, "Stats_1949-2012_Uncen")
 dir.create(path=p.figs)
 f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
@@ -79,7 +79,7 @@ out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
 MergePDFs(p.figs)
 
 # Statistical plots for uncensored-non-field parameters and designated time period
-f.stats <- file.path(getwd(), "Config_Uncen_20140128.tsv")
+f.stats <- file.path(getwd(), "Config_Uncen_20140130.tsv")
 p.figs <- file.path(p, "Stats_1989-2012_Uncen")
 dir.create(path=p.figs)
 f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
@@ -89,7 +89,7 @@ out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
 MergePDFs(p.figs)
 
 # Statistical plots for uncensored-field parameters and POR
-f.stats <- file.path(getwd(), "Config_Uncen_Field_POR_20140128.tsv")
+f.stats <- file.path(getwd(), "Config_Uncen_Field_POR_20140130.tsv")
 p.figs <- file.path(p, "Stats_1949-2012_Uncen_Field")
 dir.create(path=p.figs)
 f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
@@ -99,7 +99,7 @@ out <- RunTrendStats(d, is.censored=FALSE, file.par=f.par,
 MergePDFs(p.figs)
 
 # Statistical plots for uncensored-field parameters and designated time period
-f.stats <- file.path(getwd(), "Config_Uncen_Field_20140128.tsv")
+f.stats <- file.path(getwd(), "Config_Uncen_Field_20140130.tsv")
 p.figs <- file.path(p, "Stats_1989-2012_Uncen_Field")
 dir.create(path=p.figs)
 f.out <- file.path(p, paste0(basename(p.figs), ".tsv"))
