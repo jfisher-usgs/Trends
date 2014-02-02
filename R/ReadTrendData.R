@@ -66,17 +66,17 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
     # Specify empty strings with NA
     d[str.1 == "", j] <- NA
 
-    # Warn if NAs introduced by coercion,
-    # user needs to address these in the data text file.
+    # Warn if NAs introduced by coercion, user needs to address these in the
+    # data text file.
     ans <- tryCatch(as.numeric(d[, j]), warning=function(w) w)
     if (inherits(ans, "simpleWarning")) {
       for (i in 1L:m) {
         ans <- tryCatch(as.numeric(d[i, j]), warning=function(w) w)
         if (inherits(ans, "simpleWarning")) {
-          txt <- paste(gettext(ans),
-                       "Row index: ", i, ", Column index: ", j, "\n",
-                       "Column name: ", names(d)[j], ", String: ", d[i, j],
-                       "\n", sep="")
+          txt <- paste0(gettext(ans),
+                        "Row index: ", i, ", Column index: ", j, "\n",
+                        "Column name: ", names(d)[j], ", String: ", d[i, j],
+                        "\n")
           cat(txt)
         }
       }

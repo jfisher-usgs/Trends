@@ -13,7 +13,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
   GrDev <- function(site, plot.count) {
     if (gr.type != "windows")
       graphics.off()
-    site <- paste(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L], sep="")
+    site <- paste0(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L])
     OpenGraphicsDevice(figs.dir, site, gr.type)
   }
 
@@ -115,7 +115,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
     # Loop through parameter sets
 
-    for (i in seq(along=tbl.plt.rows)) {
+    for (i in seq_along(tbl.plt.rows)) {
 
       idx <- tbl.plt.rows[i]
 
@@ -136,7 +136,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       if (!inherits(d1, "data.frame") || ncol(d1) < 2) {
         cat(paste("No data found for plot:\nSite id: ", id,
                   "; Site name: ", site, "; Parameters: ",
-                  paste(p.names, collapse=", "), "\n", sep=""))
+                  paste0(p.names, collapse=", "), "\n"))
         next
       }
 
@@ -147,7 +147,7 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
       plot.count <- plot.count + 1L
       if (((4L + plot.count) - 1L) %% 4L == 0L) {
         GrDev(site, plot.count)
-        main <- paste(site, " (", id, ")", sep="")
+        main <- paste0(site, " (", id, ")")
       } else {
         main <- NULL
       }

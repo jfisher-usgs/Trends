@@ -175,7 +175,10 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL,
       if (inherits(p.value, "numeric")) {
         n <- length(leg.name) + 1
         leg.col[n] <- "#FFFFFF"
-        leg.name[n] <- paste("p-value =", sprintf("%.3f", p.value))
+        if (p.value < 0.001)
+          leg.name[n] <- "p-value < 0.001"
+        else
+          leg.name[n] <- paste("p-value =", sprintf("%.3f", p.value))
         leg.lty[n] <- 1
       }
     } else {

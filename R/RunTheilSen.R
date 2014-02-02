@@ -143,7 +143,7 @@ RunTheilSen <- function(x, y, alpha=0.05, pr=FALSE, xout=FALSE) {
     b <- ifelse(b <= -1, -1, b)
     b <- ifelse(b >= 1, 1, b)
     pbcor <- sum(a * b) / sqrt(sum(a^2) * sum(b^2))
-    test <- pbcor * sqrt((length(x) - 2) / (1 - pbcor^2))
+    test <- pbcor * suppressWarnings(sqrt((length(x) - 2) / (1 - pbcor^2)))
     sig <- 2 * (1 - pt(abs(test), length(x) - 2))
     list(cor=pbcor, test=test, siglevel=sig)
   }

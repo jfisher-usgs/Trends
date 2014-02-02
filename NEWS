@@ -1,5 +1,11 @@
 Changes in Version 0.1-4
 
+  o  Plot legends show p-value as less than 0.001; previously these labels were
+     represented as "p-value = 0.000".
+
+  o  Nonparametric regression is prevented when NADA::cenfit function results in
+     warnings.
+
   o  Warn if site ids in configuration files do not match ids in the data file.
 
   o  Added a new function MergePDFs, combines PDF files into a new file.

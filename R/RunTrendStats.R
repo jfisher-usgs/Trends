@@ -14,12 +14,12 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
                                       origin=origin)
     tbl[, "End_date"] <- as.POSIXct(tbl[, "End_date"], "%m/%d/%Y", tz="MST",
                                     origin=origin)
-    tbl
+    return(tbl)
   }
 
   # Trim leading and trailing white space from character string
   trim <- function(s) {
-    sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", s, perl=TRUE)
+    return(sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", s, perl=TRUE))
   }
 
   # Calculate percentage change in slope and uncertainties
@@ -29,7 +29,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
     t2 <- as.numeric(tlim[2])
     c1 <- slope * t1 + intercept
     c2 <- slope * t2 + intercept
-    (((c2 / c1) - 1) / (t2 - t1)) * 100
+    return((((c2 / c1) - 1) / (t2 - t1)) * 100)
   }
 
   # Classify trend using p-value and slope
@@ -52,7 +52,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   GrDev <- function(site, plot.count) {
     if (gr.type != "windows")
       graphics.off()
-    site <- paste(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L], sep="")
+    site <- paste0(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L])
     OpenGraphicsDevice(figs.dir, site, gr.type)
   }
 
@@ -116,7 +116,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
   # Loop though records in statistic table
 
-  for (i in seq(along=idxs)) {
+  for (i in seq_along(idxs)) {
     idx <- idxs[i]
 
     id    <- tbl[idx, "Site_id"]
@@ -133,12 +133,12 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
     # Loop through parameters in record
 
-    for (j in seq(along=parameters)) {
+    for (j in seq_along(parameters)) {
       parameter <- parameters[j]
       if (!parameter %in% d.names) {
-        txt <- paste("Parameter is not recognized and will be skipped:\n",
-                     "Row index: ", idx, ", Column name: Parameters, ",
-                     "String: ", parameter, "\n", sep="")
+        txt <- paste0("Parameter is not recognized and will be skipped:\n",
+                      "Row index: ", idx, ", Column name: Parameters, ",
+                      "String: ", parameter, "\n")
         warning(txt)
         next
       }
@@ -151,7 +151,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
       # Determine pertinent column names in data table
       col.names <- c("Datetime", parameter)
-      col.code.name <- paste(parameter, "_code", sep="")
+      col.code.name <- paste0(parameter, "_code")
       is.code <- col.code.name %in% d.names
       if (is.code)
         col.names <- c(col.names, col.code.name)
@@ -174,8 +174,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         n.below.rl <- 0L
 
       # Text to append to error messages
-      err.extra <- paste("Row index: ", idx, ", Site name: ", site,
-                         ", Parameter: ", parameter, "\n", sep="")
+      err.extra <- paste0("Row index: ", idx, ", Site name: ", site,
+                          ", Parameter: ", parameter, "\n")
 
       # y-axis label
       ylab <- tbl.par[parameter, "Name"]
@@ -226,8 +226,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         # Compute trend if complete cenfit results
         if (!is.na(median(ans))) {
 
-          lst$mean    <- suppressWarnings(mean(ans)["mean"])
-          lst$std_dev <- suppressWarnings(sd(ans))
+          lst$mean    <- mean(ans)["mean"]
+          lst$std_dev <- sd(ans)
           lst$median  <- median(ans)
 
           # Kendall's tau correlation coefficient and Akritas-Theil-Sen
@@ -269,7 +269,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         plot.count[[site]] <- plot.count[[site]] + 1L
         if (((4L + plot.count[[site]]) - 1L) %% 4L == 0L) {
           GrDev(site, plot.count[[site]])
-          main <- paste(site, " (", id, ")", sep="")
+          main <- paste0(site, " (", id, ")")
         } else {
           main <- NULL
         }
@@ -339,8 +339,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         x <- as.numeric(d.id$Datetime)
         y <- d.id[, parameter]
 
-        est <- try(suppressWarnings(RunTheilSen(x=x, y=y, xout=xout)$regci),
-                   silent=TRUE)
+        est <- try(RunTheilSen(x=x, y=y, xout=xout)$regci, silent=TRUE)
         if (inherits(est, "try-error") | is.null(est)) {
           warning(paste("Wilcox regci error:", err.extra, sep="\n"))
           next
@@ -367,7 +366,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
         plot.count[[site]] <- plot.count[[site]] + 1L
         if (((4L + plot.count[[site]]) - 1L) %% 4L == 0L) {
           GrDev(site, plot.count[[site]])
-          main <- paste(site, " (", id, ")", sep="")
+          main <- paste0(site, " (", id, ")")
         } else {
           main <- NULL
         }
