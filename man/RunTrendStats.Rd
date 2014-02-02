@@ -65,9 +65,11 @@ The censored data is analyzed using functions provided in the \pkg{NADA}
 package. Summary statistics are calculated using \code{\link{cenfit}} and the
 Kendall's tau correlation coefficient and associated Akritas-Theil-Sen (ATS)
 nonparametric regression line are calculated using \code{kendallATS},
-a hidden function in \pkg{NADA}.
+a hidden function in \pkg{NADA} (see \code{\link{cenken}}).
 The ATS slope estimation uses an iterative bisection search
-with a stopping criteria defined by \code{cenken.tol} and \code{cenken.iter}.
+with a stopping criteria defined by \code{cenken.tol} and \code{cenken.iter};
+\pkg{NADA} default values for these arguments are \code{1e-7} and
+\code{1e+3}, respectively.
 
 The Theil-Sen estimator and trend line for uncensored data is calculated
 using robust statistic functions provided by R.R. Wilcox,

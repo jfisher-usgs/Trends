@@ -233,10 +233,11 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
           # Kendall's tau correlation coefficient and Akritas-Theil-Sen
           # nonparametric regression line, see ?cenken
           x <- as.numeric(d.id$Datetime)
-          ans <- try(NADA:::kendallATS(y=dat, ycen=is.cen,
-                                       x=x, xcen=rep(FALSE, length(x)),
+          ans <- try(NADA:::kendallATS(y=dat, ycen=is.cen, x=x,
+                                       xcen=rep(FALSE, length(x)),
                                        tol=cenken.tol, iter=cenken.iter),
-                     silent=TRUE)
+                                       silent=TRUE)
+###       ans <- cenken(y=dat, ycen=is.cen, x=x, xcen=rep(FALSE, length(x)))
           if (inherits(ans, "try-error")) {
             warning(paste("NADA kendallATS error:", err.extra, sep="\n"))
             next
