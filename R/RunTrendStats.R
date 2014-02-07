@@ -167,9 +167,8 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       d.id <- d.id[order(d.id$Datetime), ]
 
       # Determine the number of samples that are below the recording limit
-      # and censored
       if (is.code)
-        n.below.rl <- as.integer(sum(d.id[[col.code.name]] %in% 1:2))
+        n.below.rl <- sum(d.id[[col.code.name]] == 1)
       else
         n.below.rl <- 0L
 
@@ -193,7 +192,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
 
         # Identify censored data
         if (is.code)
-          is.cen <- d.id[[col.code.name]] %in% 1
+          is.cen <- d.id[[col.code.name]] %in% 1L
         else
           is.cen <- rep(FALSE, nrow(d.id))
 

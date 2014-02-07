@@ -1,5 +1,9 @@
 Changes in Version 0.1-4
 
+  o  Fixed calculation of the number of samples above the reporting limit
+     (n_above_rl); previous value did not include the number of estimated (E)
+     samples.
+
   o  Plot legends show p-value as less than 0.001; previously these labels were
      represented as "p-value = 0.000".
 
