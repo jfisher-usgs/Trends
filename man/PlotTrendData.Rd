@@ -7,24 +7,20 @@
 \description{This function queries and plots trend data.}
 
 \usage{
-PlotTrendData(d, site.names, sdate = NA, edate = NA, initial.dir = getwd(),
-              file.par = NULL, file.plots = NULL, figs.dir = NULL,
-              gr.type = "pdf")
+PlotTrendData(d, site.names, file.par, file.plots, sdate = NA, edate = NA,
+              figs.dir = getwd(), gr.type = "pdf")
 }
 
 \arguments{
 \item{d}{data.frame; trend data, see \code{\link{ReadTrendData}}.}
 \item{site.names}{character; an array of local site identifiers; if missing,
   all sites in the plots configuration file are used.}
-\item{sdate, edate}{character; start and end date corresponding to the
-  period of record, in M/D/YYYY (\code{\%m/\%d/\%Y}).}
-\item{initial.dir}{character; specifies the initial directory in the Open Files
-  pop-up box; only used when \code{file.par} or \code{file.plots} is
-  \code{NULL}.}
 \item{file.par}{character; file path for the parameters
   configuration table, see \code{\link{ShowParameters}}.}
 \item{file.plots}{character; file path for the plot configuration table,
   see \sQuote{Format}.}
+\item{sdate, edate}{character; start and end date corresponding to the
+  period of record, in M/D/YYYY (\code{\%m/\%d/\%Y}).}
 \item{figs.dir}{character; the directory where data plots are saved,
   only applicable when \code{gr.type} is not equal to \code{"windows"}.}
 \item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
@@ -54,17 +50,15 @@ been drawn.
 \seealso{\code{\link{DrawPlot}}}
 
 \examples{
-f <- system.file("extdata/Example_Data.tsv", package = "Trends")
+f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadTrendData(f)
 
-file.par <- system.file("extdata/Example_Config_Parameters.tsv",
-                        package = "Trends")
-file.plots <- system.file("extdata/Example_Config_Plots.tsv",
-                          package = "Trends")
+file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
+file.plots <- system.file("extdata/ex.config.plots.tsv", package = "Trends")
 
 PlotTrendData(d, site.names = c("ANP 6", "ARBOR TEST"),
-              sdate = "01/01/1990", edate = "01/01/2010",
               file.par = file.par, file.plots = file.plots,
+              sdate = "01/01/1990", edate = "01/01/2010",
               gr.type = "windows")
 }
 

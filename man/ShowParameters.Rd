@@ -10,10 +10,10 @@ should assist with the selection of unique symbols and colors for
 each parameter.
 }
 
-\usage{ShowParameters(file.par = NULL)}
+\usage{ShowParameters(file)}
 
 \arguments{
-\item{file.par}{character; file path for the parameter configuration table,
+\item{file}{character; file path for the parameter configuration table,
    see \sQuote{Format}}
 }
 
@@ -35,7 +35,7 @@ Each line of the table represents a single unique parameter.
 \seealso{\code{\link{legend}}}
 
 \examples{
-f <- system.file("extdata/Example_Config_Parameters.tsv", package = "Trends")
+f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
 ShowParameters(f)
 }
 

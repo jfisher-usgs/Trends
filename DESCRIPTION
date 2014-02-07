@@ -5,7 +5,7 @@ Title: Analysis of Data Collected from a Monitoring Network
 Author: Jason C. Fisher and Linda C. Davis
 Maintainer: Jason C. Fisher <jfisher@usgs.gov>
 Depends: R (>= 3.0.2)
-Imports: tcltk, MASS, NADA
+Imports: MASS, NADA, rgdal
 SystemRequirements: Tcl/Tk (>= 8.5), PDFtk Server (>= 2.02, optional)
 Description: This package is for identifying trends in data from multiple
   observation sites. Nonparametric regression is applied to both censored and

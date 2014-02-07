@@ -54,11 +54,11 @@ contains a single parameter.
 }
 
 \examples{
-f <- system.file("extdata/Example_Data.tsv", package = "Trends")
+f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadTrendData(f)
 d <- d[d$Site_id == 433657112563601, ]
 
-f <- system.file("extdata/Example_Config_Parameters.tsv", package = "Trends")
+f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
 p <- read.table(file = f, header = TRUE, sep = "\t",
                 stringsAsFactors = FALSE, comment.char = "", row.names = 1)
 

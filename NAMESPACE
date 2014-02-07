@@ -1,7 +1,6 @@
-import(tcltk, MASS, NADA)
+import(MASS, NADA, rgdal)
 
 export(DrawPlot,
-       GetPath,
        MergePDFs,
        OpenGraphicsDevice,
        PlotTrendData,

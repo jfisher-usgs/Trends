@@ -1,16 +1,7 @@
-ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
+ReadTrendData <- function(file) {
 
-  # Input data file
-  file.data <- GetPath("input_data", file.data, initial.dir)
-
-  if (is.null(file.data)) {
-    txt <- "Please choose a data file to open"
-    file.data <- paste(tcl("tk_getOpenFile", initialdir=initial.dir, title=txt,
-                       filetypes="{{Text files} {.txt}} {{All files} {*}}",
-                       multiple=FALSE), collapse=" ")
-  }
-  if (!file.exists(file.data))
-    stop("Data file does not exist")
+  if (missing(file) | !file.exists(file))
+    stop("Data file missing or does not exist")
 
   # Read data from file, format determined by R with no factor conversion
   # Character code at front of string:
@@ -19,9 +10,9 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
   #   Sample contaminated: "V" = 3
   #   Undetectable: "U" = 4
   #   No character code: 0
-  d <- read.table(file=file.data, header=TRUE, sep="\t", fill=TRUE,
-                  strip.white=TRUE, blank.lines.skip=TRUE, allowEscapes=TRUE,
-                  flush=TRUE, stringsAsFactors=FALSE)
+  d <- read.table(file=file, header=TRUE, sep="\t", fill=TRUE, strip.white=TRUE,
+                  blank.lines.skip=TRUE, allowEscapes=TRUE, flush=TRUE,
+                  stringsAsFactors=FALSE)
 
   # Get dimensions of data table (m X n)
   m <- nrow(d)

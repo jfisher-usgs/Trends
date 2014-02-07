@@ -1,6 +1,5 @@
-PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
-                          initial.dir=getwd(), file.par=NULL, file.plots=NULL,
-                          figs.dir=NULL, gr.type="pdf") {
+PlotTrendData <- function(d, site.names, file.par, file.plots, sdate=NA,
+                          edate=NA, figs.dir=getwd(), gr.type="pdf") {
 
   # Additional functions:
 
@@ -19,12 +18,6 @@ PlotTrendData <- function(d, site.names, sdate=NA, edate=NA,
 
 
   # Main program:
-
-  # Paths
-  file.par <- GetPath("config_para", file.par, initial.dir)
-  file.plots <- GetPath("config_plot", file.plots, initial.dir)
-  if (gr.type != "windows")
-    figs.dir <- GetPath("output_figs", figs.dir, initial.dir)
 
   # Obtain site id(s) to plot
   if (missing(site.names)) {

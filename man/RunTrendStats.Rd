@@ -9,25 +9,22 @@ This function performs a statistical analysis on censored and uncensored data.
 }
 
 \usage{
-RunTrendStats(d, site.names, is.censored = FALSE, initial.dir = getwd(),
-              file.par = NULL, file.stats = NULL, write.tbl.out = FALSE,
-              file.out = NULL, figs.dir = NULL, gr.type = "pdf",
-              cenken.tol = 1e-12, cenken.iter = 1e+6, dt.breaks = NULL,
-              xout = FALSE, draw.ci = FALSE)
+RunTrendStats(d, site.names, file.par, file.stats, is.censored = FALSE,
+              write.tbl.out = FALSE, file.out = NULL, figs.dir = getwd(),
+              gr.type = "pdf", cenken.tol = 1e-12, cenken.iter = 1e+6,
+              dt.breaks = NULL, xout = FALSE, draw.ci = FALSE)
 }
 
 \arguments{
 \item{d}{data.frame; trend data, see \code{\link{ReadTrendData}}.}
 \item{site.names}{character; an array of local site names; if missing,
   all sites in the statistics configuration file are used.}
-\item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
-  censored, its default is \code{FALSE}, see \sQuote{Details}.}
-\item{initial.dir}{character; specifies the initial directory in the open files
-  pop-up box.}
 \item{file.par}{character; file path for the parameters
   configuration table, see \code{\link{ShowParameters}}.}
 \item{file.stats}{character; file path for the statistics configuration table,
   see \sQuote{Format}.}
+\item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
+  censored, its default is \code{FALSE}, see \sQuote{Details}.}
 \item{write.tbl.out}{logical; if \code{TRUE}, the output table
   is written to a text file, its default is \code{FALSE}.}
 \item{file.out}{character; file path for the statistics summary table,
@@ -135,23 +132,19 @@ Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
 }
 
 \examples{
-f <- system.file("extdata/Example_Data.tsv", package = "Trends")
+f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadTrendData(f)
-file.par <- system.file("extdata/Example_Config_Parameters.tsv",
-                        package = "Trends")
+file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
 
-file.stats <- system.file("extdata/Example_Config_Censored.tsv",
-                          package = "Trends")
+file.stats <- system.file("extdata/ex.config.censored.tsv", package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 9", "HIGHWAY 3"),
-                     is.censored = TRUE, file.par = file.par,
-                     file.stats = file.stats, gr.type = "windows")
+                     file.par = file.par, file.stats = file.stats,
+                     is.censored = TRUE, gr.type = "windows")
 
-file.stats <- system.file("extdata/Example_Config_Uncensored.tsv",
-                          package = "Trends")
+file.stats <- system.file("extdata/ex.config.uncensored.tsv", package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 6", "ATOMIC CITY"),
-                     is.censored = FALSE, file.par = file.par,
-                     file.stats = file.stats, gr.type = "windows",
-                     draw.ci = TRUE)
+                     file.par = file.par, file.stats = file.stats,
+                     is.censored = FALSE, gr.type = "windows", draw.ci = TRUE)
 }
 
 \keyword{misc}

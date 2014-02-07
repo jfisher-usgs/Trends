@@ -1,8 +1,8 @@
-RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
-                          file.par=NULL, file.stats=NULL, write.tbl.out=FALSE,
-                          file.out=NULL, figs.dir=NULL, gr.type="pdf",
-                          cenken.tol=1e-12, cenken.iter=1e+6, dt.breaks=NULL,
-                          xout=FALSE, draw.ci=FALSE) {
+RunTrendStats <- function(d, site.names, file.par, file.stats,
+                          is.censored=FALSE, write.tbl.out=FALSE, file.out=NULL,
+                          figs.dir=getwd(), gr.type="pdf", cenken.tol=1e-12,
+                          cenken.iter=1e+6, dt.breaks=NULL, xout=FALSE,
+                          draw.ci=FALSE) {
 
   # Additional functions:
 
@@ -60,14 +60,6 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
   # Main program:
 
   options(stringsAsFactors=FALSE)
-
-  # Paths
-  file.par <- GetPath("config_para", file.par, initial.dir)
-  file.stats <- GetPath("config_stat", file.stats, initial.dir)
-  if (write.tbl.out)
-    file.out <- GetPath("output_stat", file.out, initial.dir)
-  if (gr.type != "windows")
-    figs.dir <- GetPath("output_figs", figs.dir, initial.dir)
 
   # Read parameter configuration table
   tbl.par <- read.table(file=file.par, header=TRUE, sep="\t",

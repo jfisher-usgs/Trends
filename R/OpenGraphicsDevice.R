@@ -1,7 +1,7 @@
 # Open a graphics device of type "windows", "pdf", "png", or "postscript"
 
-OpenGraphicsDevice <- function(figs.dir, file.name, gr.type,
-                               w=8.5, h=11, p=12, png.res=300) {
+OpenGraphicsDevice <- function(figs.dir, file.name, gr.type, w=8.5, h=11, p=12,
+                               png.res=300) {
   if (gr.type == "windows") {
     windows(width=w, height=h, pointsize=p)
   } else {

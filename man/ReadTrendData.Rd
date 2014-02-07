@@ -9,12 +9,10 @@ This function reads table formatted data from a text file and creates a
 data frame from it.
 }
 
-\usage{ReadTrendData(file.data = NULL, initial.dir = getwd())}
+\usage{ReadTrendData(file)}
 
 \arguments{
-\item{file.data}{character; the file path which the data are to be read from.}
-\item{initial.dir}{character; specifies the initial directory in the open files
-  pop-up box; only used when \code{file.data} is \code{NULL}.}
+\item{file}{character; the file path which the data are to be read from.}
 }
 
 \format{
@@ -58,7 +56,7 @@ Returns a data frame with components:
 \seealso{\code{\link{read.table}}}
 
 \examples{
-f <- system.file("extdata/Example_Data.tsv", package = "Trends")
+f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadTrendData(f)
 }
 
