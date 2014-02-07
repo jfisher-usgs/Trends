@@ -35,7 +35,7 @@ Each line of the table represents a single unique parameter.
 \seealso{\code{\link{legend}}}
 
 \examples{
-f <- system.file("extdata/Example_Config_Parameters.txt", package = "Trends")
+f <- system.file("extdata/Example_Config_Parameters.tsv", package = "Trends")
 ShowParameters(f)
 }
 

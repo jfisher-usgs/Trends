@@ -58,7 +58,7 @@ Returns a data frame with components:
 \seealso{\code{\link{read.table}}}
 
 \examples{
-f <- system.file("extdata/Example_Data.txt", package = "Trends")
+f <- system.file("extdata/Example_Data.tsv", package = "Trends")
 d <- ReadTrendData(f)
 }
 

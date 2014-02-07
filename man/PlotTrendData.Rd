@@ -54,12 +54,12 @@ been drawn.
 \seealso{\code{\link{DrawPlot}}}
 
 \examples{
-f <- system.file("extdata/Example_Data.txt", package = "Trends")
+f <- system.file("extdata/Example_Data.tsv", package = "Trends")
 d <- ReadTrendData(f)
 
-file.par <- system.file("extdata/Example_Config_Parameters.txt",
+file.par <- system.file("extdata/Example_Config_Parameters.tsv",
                         package = "Trends")
-file.plots <- system.file("extdata/Example_Config_Plots.txt",
+file.plots <- system.file("extdata/Example_Config_Plots.tsv",
                           package = "Trends")
 
 PlotTrendData(d, site.names = c("ANP 6", "ARBOR TEST"),

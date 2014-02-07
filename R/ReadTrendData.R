@@ -86,7 +86,8 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
     d[, j] <- suppressWarnings(as.numeric(d[, j]))
   }
 
-  # Convert names to factor class
+  # Convert site ids and names to factor class
+  d$Site_id   <- as.factor(d$Site_id)
   d$Site_name <- as.factor(d$Site_name)
 
   # Add "Datetime" variable, calendar date and time of class POSIXct
@@ -109,5 +110,5 @@ ReadTrendData <- function(file.data=NULL, initial.dir=getwd()) {
   d <- d[, c(which(is.id), which(!is.id))]
 
   # Return data table
-  d
+  return(d)
 }

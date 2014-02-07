@@ -135,18 +135,18 @@ Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
 }
 
 \examples{
-f <- system.file("extdata/Example_Data.txt", package = "Trends")
+f <- system.file("extdata/Example_Data.tsv", package = "Trends")
 d <- ReadTrendData(f)
-file.par <- system.file("extdata/Example_Config_Parameters.txt",
+file.par <- system.file("extdata/Example_Config_Parameters.tsv",
                         package = "Trends")
 
-file.stats <- system.file("extdata/Example_Config_Censored.txt",
+file.stats <- system.file("extdata/Example_Config_Censored.tsv",
                           package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 9", "HIGHWAY 3"),
                      is.censored = TRUE, file.par = file.par,
                      file.stats = file.stats, gr.type = "windows")
 
-file.stats <- system.file("extdata/Example_Config_Uncensored.txt",
+file.stats <- system.file("extdata/Example_Config_Uncensored.tsv",
                           package = "Trends")
 out <- RunTrendStats(d, site.names = c("ANP 6", "ATOMIC CITY"),
                      is.censored = FALSE, file.par = file.par,

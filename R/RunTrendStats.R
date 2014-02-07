@@ -144,8 +144,7 @@ RunTrendStats <- function(d, site.names, is.censored=FALSE, initial.dir=getwd(),
       }
 
       # Start record that will be added to output table
-      lst <- list("Site_id"=as.factor(id),
-                  "Site_name"=site, "Parameter"=p.names[j],
+      lst <- list("Site_id"=id, "Site_name"=site, "Parameter"=p.names[j],
                   "Start_date"=sdate, "End_date"=edate)
       rec <- as.data.frame(lst, optional=TRUE)
 
@@ -407,6 +406,13 @@ if (gr.type != "windows")
 if (write.tbl.out)
   write.table(format(tbl.out, scientific=FALSE), file=file.out, quote=FALSE,
               sep="\t", row.names=FALSE)
+
+tbl.out$Site_id   <- as.factor(tbl.out$Site_id)
+tbl.out$Site_name <- as.factor(tbl.out$Site_name)
+tbl.out$Parameter <- as.factor(tbl.out$Parameter)
+tbl.out$trend     <- as.factor(tbl.out$trend)
+
+rownames(tbl.out) <- seq_len(nrow(tbl.out))
 
 invisible(tbl.out)
 }
