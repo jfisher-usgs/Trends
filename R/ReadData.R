@@ -1,4 +1,4 @@
-ReadTrendData <- function(file) {
+ReadData <- function(file) {
 
   if (missing(file) | !file.exists(file))
     stop("Data file missing or does not exist")

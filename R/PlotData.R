@@ -1,5 +1,5 @@
-PlotTrendData <- function(d, site.names, file.par, file.plots, sdate=NA,
-                          edate=NA, figs.dir=getwd(), gr.type="pdf") {
+PlotData <- function(d, site.names, file.par, file.plots, sdate=NA, edate=NA,
+                     figs.dir=getwd(), gr.type="pdf") {
 
   # Additional functions:
 

@@ -1,6 +1,6 @@
-\name{ReadTrendData}
+\name{ReadData}
 
-\alias{ReadTrendData}
+\alias{ReadData}
 
 \title{Read Trend Data}
 
@@ -9,7 +9,7 @@ This function reads table formatted data from a text file and creates a
 data frame from it.
 }
 
-\usage{ReadTrendData(file)}
+\usage{ReadData(file)}
 
 \arguments{
 \item{file}{character; the file path which the data are to be read from.}
@@ -57,7 +57,7 @@ Returns a data frame with components:
 
 \examples{
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
-d <- ReadTrendData(f)
+d <- ReadData(f)
 }
 
 \keyword{file}

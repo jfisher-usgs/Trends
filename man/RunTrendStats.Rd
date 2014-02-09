@@ -16,11 +16,11 @@ RunTrendStats(d, site.names, file.par, file.stats, is.censored = FALSE,
 }
 
 \arguments{
-\item{d}{data.frame; trend data, see \code{\link{ReadTrendData}}.}
+\item{d}{data.frame; trend data, see \code{\link{ReadData}}.}
 \item{site.names}{character; an array of local site names; if missing,
   all sites in the statistics configuration file are used.}
 \item{file.par}{character; file path for the parameters
-  configuration table, see \code{\link{ShowParameters}}.}
+  configuration table, see \code{\link{ReadParameters}}.}
 \item{file.stats}{character; file path for the statistics configuration table,
   see \sQuote{Format}.}
 \item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
@@ -51,7 +51,7 @@ The imported statistics configuration table requires the following fields:
 \code{"Site_id"}, a unique numerical identifier used to access site data;
 \code{"Site_name"}, a local site identifier;
 \code{"Parameters"}, comma separated parameter names corresponding to
-  header fields in the data table, see \code{\link{ReadTrendData}};
+  header fields in the data table, see \code{\link{ReadData}};
 \code{"Start_date"} and \code{"End_date"}, the start and end date in M/D/YYYY
   (\code{\%m/\%d/\%Y}); and
 \code{"Remark"}, user comments (optional).
@@ -86,7 +86,7 @@ Returns a data frame with variables:
 \item{n}{integer; number of non-\code{NA} observations.}
 \item{n_above_rl}{integer; number of observations with values above the
   recording limit, that is values coded with \sQuote{<} or \sQuote{E},
-  see \code{\link{ReadTrendData}}.}
+  see \code{\link{ReadData}}.}
 \item{n_cen}{integer; number of observations with censored values.}
 \item{mean}{numeric; mean.}
 \item{median}{numeric; median.}
@@ -133,7 +133,7 @@ Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
 
 \examples{
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
-d <- ReadTrendData(f)
+d <- ReadData(f)
 file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
 
 file.stats <- system.file("extdata/ex.config.censored.tsv", package = "Trends")

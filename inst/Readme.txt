@@ -18,7 +18,7 @@ gr.type <- "pdf"
 
 # Read raw data
 f.data <- file.path(getwd(), "Data_20140130.tsv")
-d <- ReadTrendData(f.data)
+d <- ReadData(f.data)
 
 # Read geo-referenced site locations
 site.locs <- rgdal::readOGR(dsn=getwd(), layer="Site_Locations_20140207")
@@ -32,16 +32,16 @@ edate <- "01/01/2013"
 f.plots <- file.path(getwd(), "Config_Plots_20140130.tsv")
 p.figs <- file.path(p, "Data_1949-2012")
 dir.create(path=p.figs)
-PlotTrendData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
-              gr.type=gr.type, figs.dir=p.figs)
+PlotData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
+         gr.type=gr.type, figs.dir=p.figs)
 MergePDFs(p.figs)
 
 # Trend plots for non-field parameters and designated time period
 sdate <- "01/01/1989"
 p.figs <- file.path(p, "Data_1989-2012")
 dir.create(path=p.figs)
-PlotTrendData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
-              gr.type=gr.type, figs.dir=p.figs)
+PlotData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
+         gr.type=gr.type, figs.dir=p.figs)
 MergePDFs(p.figs)
 
 # Trend plots for field parameters and the entire POR
@@ -49,16 +49,16 @@ sdate <- "01/01/1949"
 f.plots <- file.path(getwd(), "Config_Plots_Field_20140130.tsv")
 p.figs <- file.path(p, "Data_1949-2012_Field")
 dir.create(path=p.figs)
-PlotTrendData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
-              gr.type=gr.type, figs.dir=p.figs)
+PlotData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
+         gr.type=gr.type, figs.dir=p.figs)
 MergePDFs(p.figs)
 
 # Trend plots for field parameters and designated time period
 sdate <- "01/01/1989"
 p.figs <- file.path(p, "Data_1989-2012_Field")
 dir.create(path=p.figs)
-PlotTrendData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
-              gr.type=gr.type, figs.dir=p.figs)
+PlotData(d, file.par=f.par, file.plots=f.plots, sdate=sdate, edate=edate,
+         gr.type=gr.type, figs.dir=p.figs)
 MergePDFs(p.figs)
 
 # Statistical plots for censored-non-field parameters and designated time period

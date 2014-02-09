@@ -20,7 +20,7 @@ DrawPlot(d, tbl.par, cen.var = NULL,
   indicating those values that are censored. The first component contains
   date and time values of class \code{POSIXct}.}
 \item{tbl.par}{data.frame; parameter configuration table, see
-  \code{\link{ShowParameters}}.}
+  \code{\link{ReadParameters}}.}
 \item{cen.var}{character or integer; the name or index number of the
   logical component in \code{d} indicating whether observations are censored.}
 \item{xlim}{POSIXct; the \code{x} limits (\code{x1}, \code{x2}) of the plot.}
@@ -55,7 +55,7 @@ contains a single parameter.
 
 \examples{
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
-d <- ReadTrendData(f)
+d <- ReadData(f)
 d <- d[d$Site_id == 433657112563601, ]
 
 f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
