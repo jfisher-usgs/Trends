@@ -2,7 +2,7 @@
 
 \alias{ReadData}
 
-\title{Read Trend Data}
+\title{Read Data File}
 
 \description{
 This function reads table formatted data from a text file and creates a

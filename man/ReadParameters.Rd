@@ -2,7 +2,7 @@
 
 \alias{ReadParameters}
 
-\title{Read Parameters}
+\title{Read Parameter Configuration File}
 
 \description{
 This function reads the symbol type and color for all possible parameters.
@@ -44,7 +44,7 @@ and attribute:
 
 \examples{
 f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
-obj <- ReadParameters(f)
+obj <- ReadParameters(f, draw.legend = TRUE)
 str(obj)
 }
 

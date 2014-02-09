@@ -2,7 +2,7 @@
 
 \alias{PlotData}
 
-\title{Plot Trend Data}
+\title{Plot Data}
 
 \description{This function queries and plots trend data.}
 
