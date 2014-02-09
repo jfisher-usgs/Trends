@@ -1,5 +1,9 @@
 Changes in Version 0.1-4
 
+  o  Removed Tcl/Tk dialog boxes for file and directory selection. Default
+     directory arguments are the working directory and file path names must be
+     passed as arguments.
+
   o  Fixed calculation of the number of samples above the reporting limit
      (n_above_rl); previous value did not include the number of estimated (E)
      samples.

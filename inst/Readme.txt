@@ -24,7 +24,7 @@ d <- ReadTrendData(f.data)
 site.locs <- rgdal::readOGR(dsn=getwd(), layer="Site_Locations_20140207")
 
 # Specify name of parameter description file
-f.par  <- file.path(getwd(), "Config_Par_20140130.tsv")
+f.par <- file.path(getwd(), "Config_Par_20140130.tsv")
 
 # Trend plots for non-field parameters and Period-Of-Record (POR)
 sdate <- "01/01/1949"
