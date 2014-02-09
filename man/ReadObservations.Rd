@@ -1,15 +1,15 @@
-\name{ReadData}
+\name{ReadObservations}
 
-\alias{ReadData}
+\alias{ReadObservations}
 
-\title{Read Data File}
+\title{Read Observation File}
 
 \description{
-This function reads table formatted data from a text file and creates a
-data frame from it.
+This function reads table formatted observation data from a text file and
+creates a data frame from it.
 }
 
-\usage{ReadData(file)}
+\usage{ReadObservations(file)}
 
 \arguments{
 \item{file}{character; the file path which the data are to be read from.}
@@ -57,7 +57,7 @@ Returns a data frame with components:
 
 \examples{
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
-d <- ReadData(f)
+d <- ReadObservations(f)
 }
 
 \keyword{file}

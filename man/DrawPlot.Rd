@@ -55,7 +55,7 @@ contains a single parameter.
 
 \examples{
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
-d <- ReadData(f)
+d <- ReadObservations(f)
 d <- d[d$Site_id == 433657112563601, ]
 
 f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")

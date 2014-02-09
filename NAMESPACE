@@ -3,8 +3,8 @@ import(MASS, NADA, rgdal)
 export(DrawPlot,
        MergePDFs,
        OpenGraphicsDevice,
-       PlotData,
-       ReadData,
+       PlotObservations,
+       ReadObservations,
        ReadParameters,
        RunTheilSen,
        RunTrendStats)

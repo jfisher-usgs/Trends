@@ -1,5 +1,5 @@
-PlotData <- function(d, site.names, file.par, file.plots, sdate=NA, edate=NA,
-                     figs.dir=getwd(), gr.type="pdf") {
+PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
+                             edate=NA, figs.dir=getwd(), gr.type="pdf") {
 
   # Additional functions:
 

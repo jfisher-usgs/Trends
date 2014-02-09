@@ -1,4 +1,4 @@
-ReadData <- function(file) {
+ReadObservations <- function(file) {
 
   if (missing(file) | !file.exists(file))
     stop("Data file missing or does not exist")
