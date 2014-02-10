@@ -1,18 +1,18 @@
-\name{RunTrendStats}
+\name{RunTrendAnalysis}
 
-\alias{RunTrendStats}
+\alias{RunTrendAnalysis}
 
-\title{Open Graphics Device}
+\title{Run Trend Analysis}
 
 \description{
 This function performs a statistical analysis on censored and uncensored data.
 }
 
 \usage{
-RunTrendStats(d, site.names, file.par, file.stats, is.censored = FALSE,
-              write.tbl.out = FALSE, file.out = NULL, figs.dir = getwd(),
-              gr.type = "pdf", cenken.tol = 1e-12, cenken.iter = 1e+6,
-              dt.breaks = NULL, xout = FALSE, draw.ci = FALSE)
+RunTrendAnalysis(d, site.names, file.par, file.stats, is.censored = FALSE,
+                 write.tbl.out = FALSE, file.out = NULL, figs.dir = getwd(),
+                 gr.type = "pdf", cenken.tol = 1e-12, cenken.iter = 1e+6,
+                 dt.breaks = NULL, xout = FALSE, draw.ci = FALSE)
 }
 
 \arguments{
@@ -137,14 +137,14 @@ d <- ReadObservations(f)
 file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
 
 file.stats <- system.file("extdata/ex.config.censored.tsv", package = "Trends")
-out <- RunTrendStats(d, site.names = c("ANP 9", "HIGHWAY 3"),
-                     file.par = file.par, file.stats = file.stats,
-                     is.censored = TRUE, gr.type = "windows")
+out <- RunTrendAnalysis(d, site.names = c("ANP 9", "HIGHWAY 3"),
+                        file.par = file.par, file.stats = file.stats,
+                        is.censored = TRUE, gr.type = "windows")
 
 file.stats <- system.file("extdata/ex.config.uncensored.tsv", package = "Trends")
-out <- RunTrendStats(d, site.names = c("ANP 6", "ATOMIC CITY"),
-                     file.par = file.par, file.stats = file.stats,
-                     is.censored = FALSE, gr.type = "windows", draw.ci = TRUE)
+out <- RunTrendAnalysis(d, site.names = c("ANP 6", "ATOMIC CITY"),
+                        file.par = file.par, file.stats = file.stats,
+                        is.censored = FALSE, gr.type = "windows", draw.ci = TRUE)
 }
 
 \keyword{misc}

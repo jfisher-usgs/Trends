@@ -1,8 +1,8 @@
-RunTrendStats <- function(d, site.names, file.par, file.stats,
-                          is.censored=FALSE, write.tbl.out=FALSE, file.out=NULL,
-                          figs.dir=getwd(), gr.type="pdf", cenken.tol=1e-12,
-                          cenken.iter=1e+6, dt.breaks=NULL, xout=FALSE,
-                          draw.ci=FALSE) {
+RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
+                             is.censored=FALSE, write.tbl.out=FALSE,
+                             file.out=NULL, figs.dir=getwd(), gr.type="pdf",
+                             cenken.tol=1e-12, cenken.iter=1e+6, dt.breaks=NULL,
+                              xout=FALSE, draw.ci=FALSE) {
 
   # Additional functions:
 
