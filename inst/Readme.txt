@@ -21,7 +21,8 @@ f.obs <- file.path(getwd(), "Data_20140130.tsv")
 d <- ReadObservations(f.obs)
 
 # Read geo-referenced site locations
-site.locs <- rgdal::readOGR(dsn=getwd(), layer="Site_Locations_20140207")
+site.locs <- ReadSiteLocations(dsn=getwd(), layer="Site_Locations_20140207",
+                               verbose=FALSE)
 
 # Specify name of parameter description file
 f.par <- file.path(getwd(), "Config_Par_20140130.tsv")

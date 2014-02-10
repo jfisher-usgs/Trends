@@ -34,9 +34,8 @@ PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
   site.nms <- key$Site_name
 
   # Convert date-time arguments into POSIXt class
-  origin <- as.POSIXct("1920-01-01 00:00:00.0")
-  sdate  <- as.POSIXct(sdate, "%m/%d/%Y", tz="MST", origin=origin)
-  edate  <- as.POSIXct(edate, "%m/%d/%Y", tz="MST", origin=origin)
+  sdate  <- as.POSIXct(sdate, "%m/%d/%Y", tz="")
+  edate  <- as.POSIXct(edate, "%m/%d/%Y", tz="")
 
   # Read parameter configuration table
   tbl.par <- read.table(file=file.par, header=TRUE, sep="\t",

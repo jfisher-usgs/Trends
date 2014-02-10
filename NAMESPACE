@@ -6,5 +6,8 @@ export(DrawPlot,
        PlotObservations,
        ReadObservations,
        ReadParameters,
+       ReadPlotConfigObs,
+       ReadPlotConfigTrends,
+       ReadSiteLocations,
        RunTheilSen,
        RunTrendAnalysis)

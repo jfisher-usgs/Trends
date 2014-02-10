@@ -8,11 +8,12 @@
 This function reads the symbol type and color for all possible parameters.
 }
 
-\usage{ReadParameters(file, draw.legend = FALSE)}
+\usage{ReadParameters(file, sep = "\t", draw.legend = FALSE)}
 
 \arguments{
 \item{file}{character; file path for the parameter configuration table data,
    see \sQuote{Format}.}
+\item{sep}{character; the field separator character.}
 \item{draw.legend}{logical; if \code{TRUE}, parameter points are drawn. This
   should assist with the selection of unique symbols and colors for each
   parameter.}
@@ -22,14 +23,15 @@ This function reads the symbol type and color for all possible parameters.
 The imported parameter configuration table requires the following fields:
 \code{"Parameter"} (read as row names), \code{"Name"}, \code{"Units"},
 \code{"pch"}, \code{"col"}, and \code{"bg"}. Each line of the table represents a
-single unique parameter. See \sQuote{Value} for field descriptions.
+single unique parameter. The first line in the table must contain variable
+names. See \sQuote{Value} for field descriptions.
 }
 
 \value{
 Returns a data frame with components:
 \item{Name}{character; the local parameter name, used for legend text and axis
   labels.}
-\item{Units}{character; the parameter units used for axis labels.}
+\item{Units}{factor; the parameter units used for axis labels.}
 \item{pch}{integer; specifies the symbol to use in plotting points.}
 \item{col}{character; the color code.}
 \item{bg}{character; the background (fill) color for open plot symbols,
@@ -48,4 +50,4 @@ obj <- ReadParameters(f, draw.legend = TRUE)
 str(obj)
 }
 
-\keyword{hplot}
+\keyword{IO}

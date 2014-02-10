@@ -26,8 +26,7 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
   p.names <- names(d)[-c(1, cen.var)]
 
   # Set x-axis limits
-  origin <- as.POSIXct("1920-01-01 00:00:00.0")
-  xlim <- as.POSIXct(xlim,  "%m/%d/%Y", tz="MST", origin=origin)
+  xlim <- as.POSIXct(xlim, "%m/%d/%Y", tz="")
   xlim.default <- extendrange(d[[dt.name]])
   if (is.na(xlim[1]))
     xlim[1] <- xlim.default[1]

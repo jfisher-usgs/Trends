@@ -45,7 +45,7 @@ codes of \code{"V"} and \code{"U"} are set to \code{NA}.
 \value{
 Returns a data frame with components:
 \item{Site_id}{numeric; a unique site identifier.}
-\item{Site_name}{numeric; a local site name.}
+\item{Site_name}{character; a local site name.}
 \item{Datetime}{POSIXct; the date and time corresponding to when the
   sample was collected.}
 \item{...}{numeric; parameter fields and integer codes.}

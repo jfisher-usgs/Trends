@@ -1,5 +1,8 @@
 Changes in Version 0.1-4
 
+  o  Many of the function names were updated using a more explicit naming
+     convention.
+
   o  Removed Tcl/Tk dialog boxes for file and directory selection. Default
      directory arguments are the working directory and file path names must be
      passed as arguments.

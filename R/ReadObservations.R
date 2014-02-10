@@ -85,8 +85,7 @@ ReadObservations <- function(file) {
   # Missing time values are replaced with 12:00 pm or 1200
   d$Times[is.na(d$Times)] <- 1200
   dt.string <- paste(d$Dates, sprintf("%04d", d$Times), sep=" ")
-  d$Datetime <- as.POSIXct(dt.string, format="%m/%d/%Y %H%M", tz="MST",
-                           origin=as.POSIXct("1920-01-01 00:00:00.0"))
+  d$Datetime <- as.POSIXct(dt.string, format="%m/%d/%Y %H%M", tz="")
 
   is.dt.na <- is.na(d$Datetime)
   if (any(is.dt.na)) {

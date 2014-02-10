@@ -51,10 +51,9 @@ The imported statistics configuration table requires the following fields:
 \code{"Site_id"}, a unique numerical identifier used to access site data;
 \code{"Site_name"}, a local site identifier;
 \code{"Parameters"}, comma separated parameter names corresponding to
-  header fields in the data table, see \code{\link{ReadObservations}};
+  header fields in the data table, see \code{\link{ReadObservations}}; and
 \code{"Start_date"} and \code{"End_date"}, the start and end date in M/D/YYYY
-  (\code{\%m/\%d/\%Y}); and
-\code{"Remark"}, user comments (optional).
+  (\code{\%m/\%d/\%Y}).
 }
 
 \details{

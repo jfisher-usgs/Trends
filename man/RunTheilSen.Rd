@@ -13,7 +13,7 @@ and 95 percent confidence interval for uncensored data.
 
 \arguments{
 \item{x}{numeric; a vector; such as the number of seconds since some
-  origin date; for example, \code{"1920-01-01 00:00:00.0"}.}
+  origin date.}
 \item{y}{numeric; a vector; such as parameter values.}
 \item{alpha}{numeric; Type I probability error, sometimes referred to as the
   confidence of the test, or the level of significance of the test.}

@@ -10,10 +10,8 @@ RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
   ReadTable <- function(f) {
     tbl <- read.table(file=f, header=TRUE, sep="\t", stringsAsFactors=FALSE,
                       fill=TRUE)
-    tbl[, "Start_date"] <- as.POSIXct(tbl[, "Start_date"], "%m/%d/%Y", tz="MST",
-                                      origin=origin)
-    tbl[, "End_date"] <- as.POSIXct(tbl[, "End_date"], "%m/%d/%Y", tz="MST",
-                                    origin=origin)
+    tbl[, "Start_date"] <- as.POSIXct(tbl[, "Start_date"], "%m/%d/%Y", tz="")
+    tbl[, "End_date"] <- as.POSIXct(tbl[, "End_date"], "%m/%d/%Y", tz="")
     return(tbl)
   }
 
@@ -85,11 +83,8 @@ RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
   tbl <- tbl[is.valid.site.id, ]
 
   # Convert date-time fields into POSIXct class
-  origin <- as.POSIXct("1920-01-01 00:00:00.0")
-  tbl[, "Start_date"] <- as.POSIXct(tbl[, "Start_date"], "%m/%d/%Y", tz="MST",
-                                    origin=origin)
-  tbl[, "End_date"] <- as.POSIXct(tbl[, "End_date"], "%m/%d/%Y", tz="MST",
-                                  origin=origin)
+  tbl[, "Start_date"] <- as.POSIXct(tbl[, "Start_date"], "%m/%d/%Y", tz="")
+  tbl[, "End_date"] <- as.POSIXct(tbl[, "End_date"], "%m/%d/%Y", tz="")
 
   # Output table
   tbl.out <- NULL
@@ -310,7 +305,7 @@ RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
             warning(paste("Time cut error:", ans, err.extra, sep="\n"))
             next
           } else {
-            d.id.cuts <- as.POSIXct(ans, "%Y-%m-%d", tz="MST", origin=origin)
+            d.id.cuts <- as.POSIXct(ans, "%Y-%m-%d", tz="")
           }
 
           # Time average constituent based on date cuts
