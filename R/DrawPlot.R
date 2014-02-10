@@ -157,38 +157,32 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
   # Draw box around plot
   box(lwd=lwd)
 
-  # Alter legend content if single parameter with regression line
+  # Alter legend content
+  if (!is.null(cen.code) && all(cen.code))
+    return()
   if (length(leg.name) == 1L && is.regr[1]) {
-    if (is.regr[1]) {
-      leg.pch <- leg.bg <- NULL
-      leg.col <- "#000000"
-      leg.name <- regr.type
-      leg.lty <- 1
-      if (is.regr[2] || is.regr[3]) {
-        leg.col[2] <- "#000000"
-        leg.name[2] <- "95 percent confidence interval"
-        leg.lty[2] <- 2
-      }
-      if (inherits(p.value, "numeric")) {
-        n <- length(leg.name) + 1
-        leg.col[n] <- "#FFFFFF"
-        if (p.value < 0.001)
-          leg.name[n] <- "p-value < 0.001"
-        else
-          leg.name[n] <- paste("p-value =", sprintf("%.3f", p.value))
-        leg.lty[n] <- 1
-      }
-    } else {
-      return()
+    leg.pch <- leg.bg <- NULL
+    leg.col <- "#000000"
+    leg.name <- regr.type
+    leg.lty <- 1
+    if (is.regr[2] || is.regr[3]) {
+      leg.col[2] <- "#000000"
+      leg.name[2] <- "95 percent confidence interval"
+      leg.lty[2] <- 2
+    }
+    if (is.numeric(p.value)) {
+      n <- length(leg.name) + 1L
+      leg.col[n] <- "#FFFFFF"
+      if (p.value < 0.001)
+        leg.name[n] <- "p-value < 0.001"
+      else
+        leg.name[n] <- paste("p-value =", sprintf("%.3f", p.value))
+      leg.lty[n] <- 1
     }
   }
 
-  # Don't draw legend if all censored data
-  if (length(leg.name) == 1L && all(cen.code))
-    return()
-
   # Draw legend
-  legend(x=grconvertX(0.01, 'npc'), y=grconvertY(0.95, 'npc'),
+  legend(x=grconvertX(0.01, "npc"), y=grconvertY(0.95, "npc"),
          leg.name, lty=leg.lty, pch=leg.pch, col=leg.col, pt.bg=leg.bg,
          xpd=NA, bg=leg.box.col, bty="o", box.lwd=lwd, pt.lwd=lwd)
 }

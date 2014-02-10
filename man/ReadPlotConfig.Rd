@@ -37,14 +37,14 @@ field descriptions.
 \value{
 For \code{ReadPlotConfigObs}, returns a data frame with components:
 \item{Site_id}{numeric; a unique site identifier.}
-\item{Site_name}{factor; a local site name.}
+\item{Site_name}{character; a local site name.}
 \item{Parameters}{character; comma separated unique parameter identifiers.}
 \item{Min}{numeric; minimum plot limit on the y-axis.}
 \item{Max}{numeric; maximum plot limit on the y-axis.}
 \item{Axis_title}{factor; plot label for the y-axis.}
 For \code{ReadPlotConfigTrends}, returns a data frame with components:
 \item{Site_id}{numeric; a unique site identifier.}
-\item{Site_name}{factor; a local site name.}
+\item{Site_name}{character; a local site name.}
 \item{Parameters}{character; comma separated unique parameter identifiers.}
 \item{Start_date}{POSIXct; minimum date range for records (x-axis limit).}
 \item{End_date}{POSIXct; maximum date range for records (x-axis limit).}

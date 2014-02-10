@@ -40,7 +40,7 @@ f2 <- file.path(path, "f2.pdf")
 f3 <- file.path(path, "f3.pdf")
 
 pdf(f1)
-plot(1:10, main = "f1a")
+plot(seq_len(10), main = "f1a")
 plot(sin, -pi, 2 * pi, main = "f1b")
 plot(qnorm, col = "red", main = "f1c")
 dev.off()

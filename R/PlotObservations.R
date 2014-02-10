@@ -1,4 +1,4 @@
-PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
+PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
                              edate=NA, figs.dir=getwd(), gr.type="pdf") {
 
   # Additional functions:
@@ -37,14 +37,7 @@ PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
   sdate  <- as.POSIXct(sdate, "%m/%d/%Y", tz="")
   edate  <- as.POSIXct(edate, "%m/%d/%Y", tz="")
 
-  # Read parameter configuration table
-  tbl.par <- read.table(file=file.par, header=TRUE, sep="\t",
-                        stringsAsFactors=FALSE, comment.char="", row.names=1)
-  row.names(tbl.par) <- make.names(row.names(tbl.par))
-
-  # Read plot configuration table
-  tbl.plt <- read.table(file=file.plots, header=TRUE, sep="\t",
-                        stringsAsFactors=FALSE)
+  # Validate site ids in plot configuration table
   is.valid.site.id <- tbl.plt$Site_id %in% site.ids
   if (!all(is.valid.site.id)) {
     ids <- tbl.plt[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
@@ -56,7 +49,7 @@ PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
 
   # Determine parameters
   parameters <- NULL
-  for (i in 1:nrow(tbl.plt))
+  for (i in seq_len(nrow(tbl.plt)))
     parameters <- c(parameters,
                     unlist(strsplit(tbl.plt$Parameters[i], ",")))
   parameters <- make.names(trim(unique(parameters)))
@@ -72,11 +65,11 @@ PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
   }
 
   # Reduce size of data table using site id(s) and date-time limits
-  d <- d[d[, "Site_id"] %in% site.ids, ]
+  d <- d[d$Site_id %in% site.ids, ]
   if (!is.na(sdate))
-    d <- d[d[, "Datetime"] >= sdate, ]
+    d <- d[d$Datetime >= sdate, ]
   if (!is.na(edate))
-    d <- d[d[, "Datetime"] <= edate, ]
+    d <- d[d$Datetime <= edate, ]
 
   # Loop through site id(s)
 
@@ -94,7 +87,7 @@ PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
       next
 
     # Create a smaller data table that is temporary
-    d0 <- d[d[, "Site_id"] == id, c("Datetime", parameters)]
+    d0 <- d[d$Site_id == id, c("Datetime", parameters)]
 
     # Set x-axis limits
     xlim <- c(sdate, edate)
@@ -118,7 +111,7 @@ PlotObservations <- function(d, site.names, file.par, file.plots, sdate=NA,
 
       # Remove parameters with no data
       rm.idxs <- NULL
-      for (index in 1:ncol(d1)) {
+      for (index in seq_len(ncol(d1))) {
         is.no.lim <- all(is.na(d1[, index]))
         if (is.no.lim)
           rm.idxs <- c(rm.idxs, index)

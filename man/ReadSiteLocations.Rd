@@ -32,7 +32,6 @@ Returns a \code{SpatialPointsDataFrame} with data frame components:
 \examples{
 obj <- ReadSiteLocations(dsn = system.file("extdata", package = "Trends"),
                          layer = "ex.site.locations")
-sp::plot(obj)
 str(obj)
 }
 

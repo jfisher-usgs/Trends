@@ -7,7 +7,7 @@
 \description{This function queries and plots trend data.}
 
 \usage{
-PlotObservations(d, site.names, file.par, file.plots, sdate = NA, edate = NA,
+PlotObservations(d, site.names, tbl.par, tbl.plt, sdate = NA, edate = NA,
                  figs.dir = getwd(), gr.type = "pdf")
 }
 
@@ -15,10 +15,10 @@ PlotObservations(d, site.names, file.par, file.plots, sdate = NA, edate = NA,
 \item{d}{data.frame; trend data, see \code{\link{ReadObservations}}.}
 \item{site.names}{character; an array of local site identifiers; if missing,
   all sites in the plots configuration file are used.}
-\item{file.par}{character; file path for the parameters
-  configuration table, see \code{\link{ReadParameters}}.}
-\item{file.plots}{character; file path for the plot configuration table,
-  see \sQuote{Format}.}
+\item{tbl.par}{data.frame; parameter configuration table, see
+  \code{\link{ReadParameters}}.}
+\item{tbl.plt}{data.frame; plot configuration table, see
+  \code{\link{ReadPlotConfigObs}}.}
 \item{sdate, edate}{character; start and end date corresponding to the
   period of record, in M/D/YYYY (\code{\%m/\%d/\%Y}).}
 \item{figs.dir}{character; the directory where data plots are saved,
@@ -54,11 +54,14 @@ f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadObservations(f)
 
 file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
-file.plots <- system.file("extdata/ex.config.plots.tsv", package = "Trends")
+tbl.par <- ReadParameters(file.par)
 
-PlotObservations(d, site.names = c("ANP 6", "ARBOR TEST"), file.par = file.par,
-                 file.plots = file.plots, sdate = "01/01/1990",
-                 edate = "01/01/2010", gr.type = "windows")
+file.plot <- system.file("extdata/ex.config.plots.tsv", package = "Trends")
+tbl.plt <- ReadPlotConfigObs(file.plot)
+
+PlotObservations(d, site.names = c("ANP 6", "ARBOR TEST"), tbl.par = tbl.par,
+                 tbl.plt = tbl.plt, sdate = "01/01/1990", edate = "01/01/2010",
+                 gr.type = "windows")
 }
 
 \keyword{hplot}

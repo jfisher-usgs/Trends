@@ -1,22 +1,12 @@
-RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
-                             is.censored=FALSE, write.tbl.out=FALSE,
-                             file.out=NULL, figs.dir=getwd(), gr.type="pdf",
-                             cenken.tol=1e-12, cenken.iter=1e+6, dt.breaks=NULL,
-                              xout=FALSE, draw.ci=FALSE) {
+RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
+                             write.tbl.out=FALSE, figs.dir=getwd(),
+                             gr.type="pdf", cenken.tol=1e-12, cenken.iter=1e+6,
+                             dt.breaks=NULL, xout=FALSE, draw.ci=FALSE) {
 
   # Additional functions:
 
-  # Read table data from file
-  ReadTable <- function(f) {
-    tbl <- read.table(file=f, header=TRUE, sep="\t", stringsAsFactors=FALSE,
-                      fill=TRUE)
-    tbl[, "Start_date"] <- as.POSIXct(tbl[, "Start_date"], "%m/%d/%Y", tz="")
-    tbl[, "End_date"] <- as.POSIXct(tbl[, "End_date"], "%m/%d/%Y", tz="")
-    return(tbl)
-  }
-
   # Trim leading and trailing white space from character string
-  trim <- function(s) {
+  Trim <- function(s) {
     return(sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", s, perl=TRUE))
   }
 
@@ -59,11 +49,6 @@ RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
 
   options(stringsAsFactors=FALSE)
 
-  # Read parameter configuration table
-  tbl.par <- read.table(file=file.par, header=TRUE, sep="\t",
-                        stringsAsFactors=FALSE, comment.char="", row.names=1)
-  row.names(tbl.par) <- make.names(row.names(tbl.par))
-
   # Determine background color for legend box
   leg.box.col <- ifelse(gr.type == "postscript", "#FFFFFF", "#FFFFFFBB")
 
@@ -71,29 +56,27 @@ RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
   d.names <- names(d)
 
   # Read data from statistics tables and combine
-  tbl <- read.table(file=file.stats, header=TRUE, sep="\t",
-                    stringsAsFactors=FALSE, fill=TRUE)
-  is.valid.site.id <- tbl$Site_id %in% d$Site_id
+  is.valid.site.id <- tbl.plt$Site_id %in% d$Site_id
   if (!all(is.valid.site.id)) {
-    ids <- tbl[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
+    ids <- tbl.plt[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
     msg <- paste(paste0("id: ", ids$Site_id, ", name: ", ids$Site_name),
                  collapse="\n")
     warning("Ids in stats configuration file do not match data:\n", msg, "\n")
   }
-  tbl <- tbl[is.valid.site.id, ]
+  tbl.plt <- tbl.plt[is.valid.site.id, ]
 
   # Convert date-time fields into POSIXct class
-  tbl[, "Start_date"] <- as.POSIXct(tbl[, "Start_date"], "%m/%d/%Y", tz="")
-  tbl[, "End_date"] <- as.POSIXct(tbl[, "End_date"], "%m/%d/%Y", tz="")
+  tbl.plt$Start_date <- as.POSIXct(tbl.plt$Start_date, "%m/%d/%Y", tz="")
+  tbl.plt$End_date <- as.POSIXct(tbl.plt$End_date, "%m/%d/%Y", tz="")
 
   # Output table
   tbl.out <- NULL
 
   # Identify row index numbers of table
   if (missing(site.names))
-    idxs <- 1:nrow(tbl)
+    idxs <- seq_len(nrow(tbl.plt))
   else
-    idxs <- which(tbl$Site_name %in% site.names)
+    idxs <- which(tbl.plt$Site_name %in% site.names)
 
   # Number of seconds in year, used for time conversions
   secs.in.year <- 31536000
@@ -106,12 +89,12 @@ RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
   for (i in seq_along(idxs)) {
     idx <- idxs[i]
 
-    id    <- tbl[idx, "Site_id"]
-    site  <- tbl[idx, "Site_name"]
-    sdate <- tbl[idx, "Start_date"]
-    edate <- tbl[idx, "End_date"]
+    id    <- tbl.plt[idx, "Site_id"]
+    site  <- tbl.plt[idx, "Site_name"]
+    sdate <- tbl.plt[idx, "Start_date"]
+    edate <- tbl.plt[idx, "End_date"]
 
-    p.names <- trim(unique(unlist(strsplit(tbl[idx, "Parameters"], ","))))
+    p.names <- Trim(unique(unlist(strsplit(tbl.plt[idx, "Parameters"], ","))))
     parameters <- make.names(p.names)
 
     # Initialize plot count
@@ -390,9 +373,11 @@ RunTrendAnalysis <- function(d, site.names, file.par, file.stats,
 if (gr.type != "windows")
   graphics.off()
 
-if (write.tbl.out)
-  write.table(format(tbl.out, scientific=FALSE), file=file.out, quote=FALSE,
+if (write.tbl.out) {
+  f <- file.path(dirname(figs.dir), paste0(basename(figs.dir), ".tsv"))
+  write.table(format(tbl.out, scientific=FALSE), file=f, quote=FALSE,
               sep="\t", row.names=FALSE)
+}
 
 tbl.out$Site_id   <- as.factor(tbl.out$Site_id)
 tbl.out$Site_name <- as.factor(tbl.out$Site_name)

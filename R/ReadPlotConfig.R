@@ -3,7 +3,7 @@
 ReadPlotConfigObs <- function(file, sep="\t") {
   col.names <- c("Site_id", "Site_name", "Parameters", "Min", "Max",
                  "Axis_title")
-  col.classes <- c("numeric", "factor", "character", "numeric", "numeric",
+  col.classes <- c("numeric", "character", "character", "numeric", "numeric",
                    "factor")
   obj <- read.table(file=file, header=TRUE, sep=sep, col.names=col.names,
                     colClasses=col.classes, flush=TRUE, stringsAsFactors=FALSE)
@@ -13,7 +13,8 @@ ReadPlotConfigObs <- function(file, sep="\t") {
 
 ReadPlotConfigTrends <- function(file, sep="\t") {
   col.names <- c("Site_id", "Site_name", "Parameters", "Start_date", "End_date")
-  col.classes <- c("numeric", "factor", "character", "character", "character")
+  col.classes <- c("numeric", "character", "character", "character",
+                   "character")
   obj <- read.table(file=file, header=TRUE, sep=sep, col.names=col.names,
                     colClasses=col.classes, flush=TRUE, stringsAsFactors=FALSE)
   obj$Start_date <- as.POSIXct(obj$Start_date, "%m/%d/%Y", tz="")
