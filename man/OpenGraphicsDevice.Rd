@@ -7,12 +7,12 @@
 \description{This function starts the device driver for producing graphics.}
 
 \usage{
-OpenGraphicsDevice(figs.dir, file.name, gr.type,
+OpenGraphicsDevice(path.out, file.name, gr.type,
                    w = 8.5, h = 11, p = 12, png.res = 300)
 }
 
 \arguments{
-\item{figs.dir}{character; the directory where graphic files are saved.}
+\item{path.out}{character; the directory where graphic files are saved.}
 \item{file.name}{character; the name of the graphics file and excluding
   a file extension.}
 \item{gr.type}{character; the name of graphics driver, either

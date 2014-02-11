@@ -9,25 +9,25 @@ This function performs a statistical analysis on censored and uncensored data.
 }
 
 \usage{
-RunTrendAnalysis(d, site.names, tbl.par, tbl.plt, is.censored = FALSE,
-                 write.tbl.out = FALSE, figs.dir = getwd(), gr.type = "pdf",
+RunTrendAnalysis(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
+                 is.censored = FALSE, path.out = getwd(), gr.type = "pdf",
                  cenken.tol = 1e-12, cenken.iter = 1e+6, dt.breaks = NULL,
-                 xout = FALSE, draw.ci = FALSE)
+                 xout = FALSE, draw.ci = FALSE, site.locs = NULL)
 }
 
 \arguments{
 \item{d}{data.frame; trend data, see \code{\link{ReadObservations}}.}
 \item{site.names}{character; an array of local site names; if missing,
   all sites in the statistics configuration file are used.}
-\item{tbl.par}{data.frame; parameter configuration table, see
-  \code{\link{ReadParameters}}.}
-\item{tbl.plt}{data.frame; plot configuration table, see
-  \code{\link{ReadPlotConfigTrends}}.}
+\item{par.config}{data.frame; parameter configuration table, see
+  \code{\link{ReadParConfig}}.}
+\item{plot.config}{data.frame; plot configuration table, see
+  \code{\link{ReadPlotConfig}}.}
+\item{sdate, edate}{character; start and end dates for records, in M/D/YYYY
+  (\code{\%m/\%d/\%Y}).}
 \item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
   censored, its default is \code{FALSE}, see \sQuote{Details}.}
-\item{write.tbl.out}{logical; if \code{TRUE}, the output table
-  is written to a text file, its default is \code{FALSE}.}
-\item{figs.dir}{character; if \code{gr.type} not equal to \code{"windows"},
+\item{path.out}{character; if \code{gr.type} not equal to \code{"windows"},
   the directory where statistic plots are saved.}
 \item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
   is \code{"pdf"}.}
@@ -42,16 +42,8 @@ RunTrendAnalysis(d, site.names, tbl.par, tbl.plt, is.censored = FALSE,
   removed based on an outlier detection method.}
 \item{draw.ci}{logical; if \code{TRUE}, 95 percent confidence interval for
   uncensored data is drawn on plot.}
-}
-
-\format{
-The imported statistics configuration table requires the following fields:
-\code{"Site_id"}, a unique numerical identifier used to access site data;
-\code{"Site_name"}, a local site identifier;
-\code{"Parameters"}, comma separated parameter names corresponding to
-  header fields in the data table, see \code{\link{ReadObservations}}; and
-\code{"Start_date"} and \code{"End_date"}, the start and end date in M/D/YYYY
-  (\code{\%m/\%d/\%Y}).
+\item{site.locs}{SpatialPointsDataFrame; site locations, see
+  \code{\link{ReadSiteLocations}}.}
 }
 
 \details{
@@ -132,20 +124,21 @@ Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadObservations(f)
 file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
-tbl.par <- ReadParameters(file.par)
+par.config <- ReadParConfig(file.par)
 
 file.plot <- system.file("extdata/ex.config.censored.tsv", package = "Trends")
-tbl.plt <- ReadPlotConfigTrends(file.plot)
+plot.config <- ReadPlotConfig(file.plot)
 
-out <- RunTrendAnalysis(d, site.names = c("ANP 9", "HIGHWAY 3"), tbl.par = tbl.par,
-                        tbl.plt = tbl.plt, is.censored = TRUE, gr.type = "windows")
+out <- RunTrendAnalysis(d, site.names = c("ANP 9", "HIGHWAY 3"), par.config = par.config,
+                        plot.config = plot.config, sdate = "01/01/1980",
+                        edate = "01/01/2010", is.censored = TRUE, gr.type = "windows")
 
 file.plot <- system.file("extdata/ex.config.uncensored.tsv", package = "Trends")
-tbl.plt <- ReadPlotConfigTrends(file.plot)
+plot.config <- ReadPlotConfig(file.plot)
 
-out <- RunTrendAnalysis(d, site.names = c("ANP 6", "ATOMIC CITY"), tbl.par = tbl.par,
-                        tbl.plt = tbl.plt, is.censored = FALSE, gr.type = "windows",
-                        draw.ci = TRUE)
+out <- RunTrendAnalysis(d, site.names = c("ANP 6", "ATOMIC CITY"),
+                        par.config = par.config, plot.config = plot.config,
+                        is.censored = FALSE, gr.type = "windows", draw.ci = TRUE)
 }
 
 \keyword{misc}

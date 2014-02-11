@@ -17,95 +17,104 @@ dir.create(path=p)
 gr.type <- "pdf"
 
 # Read observation data
-f.obs <- file.path(getwd(), "Data_20140130.tsv")
+f.obs <- file.path(getwd(), "Data_20140211.tsv")
 d <- ReadObservations(f.obs)
 
-# Read geo-referenced site locations
-site.locs <- ReadSiteLocations(dsn=getwd(), layer="Site_Locations_20140207",
-                               verbose=FALSE)
-
 # Read parameter options file
-f.par <- file.path(getwd(), "Config_Par_20140130.tsv")
-tbl.par <- ReadParameters(f.par)
+f.par <- file.path(getwd(), "Config_Par_20140211.tsv")
+par.config <- ReadParConfig(f.par)
 
-# Trend plots for non-field parameters and Period-Of-Record (POR)
+# Read geo-referenced site locations
+layer <- "Site_Locations_20140207"
+site.locs <- ReadSiteLocations(dsn=getwd(), layer=layer, verbose=FALSE)
+
+# Plot non-field parameters for Period-Of-Record (POR)
 sdate <- "01/01/1949"
-edate <- "01/01/2013"
-f.plot <- file.path(getwd(), "Config_Plots_20140130.tsv")
-tbl.plt <- ReadPlotConfigObs(f.plot)
-figs.dir <- file.path(p, "Data_1949-2012")
-dir.create(path=figs.dir)
-PlotObservations(d, tbl.par=tbl.par, tbl.plt=tbl.plt, sdate=sdate, edate=edate,
-                 gr.type=gr.type, figs.dir=figs.dir)
-MergePDFs(figs.dir)
+f.plot <- file.path(getwd(), "Config_Plots_20140211.tsv")
+plot.config <- ReadPlotConfig(f.plot)
+path.out <- file.path(p, "Data_1949-2012")
+dir.create(path=path.out)
+PlotObservations(d, par.config=par.config, plot.config=plot.config, sdate=sdate,
+                 edate="01/01/2013", gr.type=gr.type, path.out=path.out)
+MergePDFs(path.out)
 
-# Trend plots for non-field parameters and designated time period
+# Plot non-field parameters for designated time period
 sdate <- "01/01/1989"
-figs.dir <- file.path(p, "Data_1989-2012")
-dir.create(path=figs.dir)
-PlotObservations(d, tbl.par=tbl.par, tbl.plt=tbl.plt, sdate=sdate, edate=edate,
-                 gr.type=gr.type, figs.dir=figs.dir)
-MergePDFs(figs.dir)
+path.out <- file.path(p, "Data_1989-2012")
+dir.create(path=path.out)
+PlotObservations(d, par.config=par.config, plot.config=plot.config, sdate=sdate,
+                 edate="01/01/2013", gr.type=gr.type, path.out=path.out)
+MergePDFs(path.out)
 
-# Trend plots for field parameters and the entire POR
+# Plot field parameters for entire POR
 sdate <- "01/01/1949"
-f.plot <- file.path(getwd(), "Config_Plots_Field_20140130.tsv")
-tbl.plt <- ReadPlotConfigObs(f.plot)
-figs.dir <- file.path(p, "Data_1949-2012_Field")
-dir.create(path=figs.dir)
-PlotObservations(d, tbl.par=tbl.par, tbl.plt=tbl.plt, sdate=sdate, edate=edate,
-                 gr.type=gr.type, figs.dir=figs.dir)
-MergePDFs(figs.dir)
+f.plot <- file.path(getwd(), "Config_Plots_Field_20140211.tsv")
+plot.config <- ReadPlotConfig(f.plot)
+path.out <- file.path(p, "Data_1949-2012_Field")
+dir.create(path=path.out)
+PlotObservations(d, par.config=par.config, plot.config=plot.config, sdate=sdate,
+                 edate="01/01/2013", gr.type=gr.type, path.out=path.out)
+MergePDFs(path.out)
 
-# Trend plots for field parameters and designated time period
+# Plot field parameters for designated time period
 sdate <- "01/01/1989"
-figs.dir <- file.path(p, "Data_1989-2012_Field")
-dir.create(path=figs.dir)
-PlotObservations(d, tbl.par=tbl.par, tbl.plt=tbl.plt, sdate=sdate, edate=edate,
-                 gr.type=gr.type, figs.dir=figs.dir)
-MergePDFs(figs.dir)
+path.out <- file.path(p, "Data_1989-2012_Field")
+dir.create(path=path.out)
+PlotObservations(d, par.config=par.config, plot.config=plot.config, sdate=sdate,
+                 edate="01/01/2013", gr.type=gr.type, path.out=path.out)
+MergePDFs(path.out)
 
-# Statistical plots for censored-non-field parameters and designated time period
-f.plot <- file.path(getwd(), "Config_Cen_20140130.tsv")
-tbl.plt <- ReadPlotConfigTrends(f.plot)
-figs.dir <- file.path(p, "Stats_1989-2012_Cen")
-dir.create(path=figs.dir)
-out <- RunTrendAnalysis(d, tbl.par=tbl.par, tbl.plt=tbl.plt, is.censored=TRUE,
-                        write.tbl.out=TRUE, figs.dir=figs.dir, gr.type=gr.type)
-MergePDFs(figs.dir)
+# Trend analysis for censored-non-field parameters and designated time period
+sdate <- "01/01/1989"
+f.plot <- file.path(getwd(), "Config_Cen_20140211.tsv")
+plot.config <- ReadPlotConfig(f.plot)
+path.out <- file.path(p, "Stats_1989-2012_Cen")
+dir.create(path=path.out)
+out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
+                        sdate=sdate, edate="01/01/2013", is.censored=TRUE,
+                        path.out=path.out, gr.type=gr.type, site.locs=site.locs)
+MergePDFs(path.out)
 
-# Statistical plots for uncensored-non-field parameters and POR
-f.plot <- file.path(getwd(), "Config_Uncen_POR_20140130.tsv")
-tbl.plt <- ReadPlotConfigTrends(f.plot)
-figs.dir <- file.path(p, "Stats_1949-2012_Uncen")
-dir.create(path=figs.dir)
-out <- RunTrendAnalysis(d, tbl.par=tbl.par, tbl.plt=tbl.plt, is.censored=FALSE,
-                        write.tbl.out=TRUE, figs.dir=figs.dir, gr.type=gr.type)
-MergePDFs(figs.dir)
+# Trend analysis for uncensored-non-field parameters and POR
+sdate <- "01/01/1949"
+f.plot <- file.path(getwd(), "Config_Uncen_POR_20140211.tsv")
+plot.config <- ReadPlotConfig(f.plot)
+path.out <- file.path(p, "Stats_1949-2012_Uncen")
+dir.create(path=path.out)
+out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
+                        sdate=sdate, edate="01/01/2013", is.censored=FALSE,
+                        path.out=path.out, gr.type=gr.type, site.locs=site.locs)
+MergePDFs(path.out)
 
-# Statistical plots for uncensored-non-field parameters and designated time period
-f.plot <- file.path(getwd(), "Config_Uncen_20140130.tsv")
-tbl.plt <- ReadPlotConfigTrends(f.plot)
-figs.dir <- file.path(p, "Stats_1989-2012_Uncen")
-dir.create(path=figs.dir)
-out <- RunTrendAnalysis(d, tbl.par=tbl.par, tbl.plt=tbl.plt, is.censored=FALSE,
-                        write.tbl.out=TRUE, figs.dir=figs.dir, gr.type=gr.type)
-MergePDFs(figs.dir)
+# Trend analysis for uncensored-non-field parameters and designated time period
+sdate <- "01/01/1989"
+f.plot <- file.path(getwd(), "Config_Uncen_20140211.tsv")
+plot.config <- ReadPlotConfig(f.plot)
+path.out <- file.path(p, "Stats_1989-2012_Uncen")
+dir.create(path=path.out)
+out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
+                        sdate=sdate, edate="01/01/2013", is.censored=FALSE,
+                        path.out=path.out, gr.type=gr.type, site.locs=site.locs)
+MergePDFs(path.out)
 
-# Statistical plots for uncensored-field parameters and POR
-f.plot <- file.path(getwd(), "Config_Uncen_Field_POR_20140130.tsv")
-tbl.plt <- ReadPlotConfigTrends(f.plot)
-figs.dir <- file.path(p, "Stats_1949-2012_Uncen_Field")
-dir.create(path=figs.dir)
-out <- RunTrendAnalysis(d, tbl.par=tbl.par, tbl.plt=tbl.plt, is.censored=FALSE,
-                        write.tbl.out=TRUE, figs.dir=figs.dir, gr.type=gr.type)
-MergePDFs(figs.dir)
+# Trend analysis for uncensored-field parameters and POR
+sdate <- "01/01/1949"
+f.plot <- file.path(getwd(), "Config_Uncen_Field_POR_20140211.tsv")
+plot.config <- ReadPlotConfig(f.plot)
+path.out <- file.path(p, "Stats_1949-2012_Uncen_Field")
+dir.create(path=path.out)
+out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
+                        sdate=sdate, edate="01/01/2013", is.censored=FALSE,
+                        path.out=path.out, gr.type=gr.type, site.locs=site.locs)
+MergePDFs(path.out)
 
-# Statistical plots for uncensored-field parameters and designated time period
-f.plot <- file.path(getwd(), "Config_Uncen_Field_20140130.tsv")
-tbl.plt <- ReadPlotConfigTrends(f.plot)
-figs.dir <- file.path(p, "Stats_1989-2012_Uncen_Field")
-dir.create(path=figs.dir)
-out <- RunTrendAnalysis(d, tbl.par=tbl.par, tbl.plt=tbl.plt, is.censored=FALSE,
-                        write.tbl.out=TRUE, figs.dir=figs.dir, gr.type=gr.type)
-MergePDFs(figs.dir)
+# Trend analysis for uncensored-field parameters and designated time period
+sdate <- "01/01/1989"
+f.plot <- file.path(getwd(), "Config_Uncen_Field_20140211.tsv")
+plot.config <- ReadPlotConfig(f.plot)
+path.out <- file.path(p, "Stats_1989-2012_Uncen_Field")
+dir.create(path=path.out)
+out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
+                        sdate=sdate, edate="01/01/2013", is.censored=FALSE,
+                        path.out=path.out, gr.type=gr.type, site.locs=site.locs)
+MergePDFs(path.out)

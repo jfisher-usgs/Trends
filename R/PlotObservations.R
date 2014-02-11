@@ -1,5 +1,5 @@
-PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
-                             edate=NA, figs.dir=getwd(), gr.type="pdf") {
+PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
+                             edate=NA, path.out=getwd(), gr.type="pdf") {
 
   # Additional functions:
 
@@ -13,7 +13,7 @@ PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
     if (gr.type != "windows")
       graphics.off()
     site <- paste0(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L])
-    OpenGraphicsDevice(figs.dir, site, gr.type)
+    OpenGraphicsDevice(path.out, site, gr.type)
   }
 
 
@@ -34,27 +34,27 @@ PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
   site.nms <- key$Site_name
 
   # Convert date-time arguments into POSIXt class
-  sdate  <- as.POSIXct(sdate, "%m/%d/%Y", tz="")
-  edate  <- as.POSIXct(edate, "%m/%d/%Y", tz="")
+  sdate <- as.POSIXct(sdate, "%m/%d/%Y", tz="")
+  edate <- as.POSIXct(edate, "%m/%d/%Y", tz="")
 
   # Validate site ids in plot configuration table
-  is.valid.site.id <- tbl.plt$Site_id %in% site.ids
+  is.valid.site.id <- plot.config$Site_id %in% site.ids
   if (!all(is.valid.site.id)) {
-    ids <- tbl.plt[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
+    ids <- plot.config[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
     msg <- paste(paste0("id: ", ids$Site_id, ", name: ", ids$Site_name),
                  collapse="\n")
     warning("Ids in plots configuration file do not match data:\n", msg, "\n")
   }
-  tbl.plt <- tbl.plt[is.valid.site.id, ]
+  plot.config <- plot.config[is.valid.site.id, ]
 
   # Determine parameters
   parameters <- NULL
-  for (i in seq_len(nrow(tbl.plt)))
+  for (i in seq_len(nrow(plot.config)))
     parameters <- c(parameters,
-                    unlist(strsplit(tbl.plt$Parameters[i], ",")))
+                    unlist(strsplit(plot.config$Parameters[i], ",")))
   parameters <- make.names(trim(unique(parameters)))
 
-  is.in.par <- parameters %in% row.names(tbl.par)
+  is.in.par <- parameters %in% row.names(par.config)
   is.in.dat <- parameters %in% names(d)
   if (!all(is.in.par) | !all(is.in.dat)) {
     idxs <- which(!is.in.par | !is.in.dat)
@@ -82,8 +82,8 @@ PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
     site <- site.nms[site.ids == id]
 
     # Determine plots to draw
-    tbl.plt.rows <- which(tbl.plt$Site_id == id)
-    if (length(tbl.plt.rows) == 0)
+    plot.config.rows <- which(plot.config$Site_id == id)
+    if (length(plot.config.rows) == 0)
       next
 
     # Create a smaller data table that is temporary
@@ -100,12 +100,12 @@ PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
 
     # Loop through parameter sets
 
-    for (i in seq_along(tbl.plt.rows)) {
+    for (i in seq_along(plot.config.rows)) {
 
-      idx <- tbl.plt.rows[i]
+      idx <- plot.config.rows[i]
 
       # Create a smaller data table that is temporary
-      p.names <- make.names(trim(unlist(strsplit(tbl.plt$Parameters[idx],
+      p.names <- make.names(trim(unlist(strsplit(plot.config$Parameters[idx],
                                                  ","))))
       d1 <- d0[, c("Datetime", p.names)]
 
@@ -125,9 +125,6 @@ PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
         next
       }
 
-      # Set y-axis limits
-      ylim <- as.numeric(tbl.plt[idx, c("Min", "Max")])
-
       # Draw plot
       plot.count <- plot.count + 1L
       if (((4L + plot.count) - 1L) %% 4L == 0L) {
@@ -136,8 +133,8 @@ PlotObservations <- function(d, site.names, tbl.par, tbl.plt, sdate=NA,
       } else {
         main <- NULL
       }
-      DrawPlot(d1, tbl.par, xlim=xlim, ylim=ylim, main=main,
-               ylab=tbl.plt[idx, "Axis_title"], leg.box.col=leg.box.col)
+      DrawPlot(d1, par.config, xlim=xlim, main=main,
+               ylab=plot.config[idx, "Axis_title"], leg.box.col=leg.box.col)
     }
 
     # Close graphics device

@@ -1,6 +1,6 @@
-\name{ReadParameters}
+\name{ReadParConfig}
 
-\alias{ReadParameters}
+\alias{ReadParConfig}
 
 \title{Read Parameter Configuration File}
 
@@ -8,11 +8,10 @@
 This function reads the symbol type and color for all possible parameters.
 }
 
-\usage{ReadParameters(file, sep = "\t", draw.legend = FALSE)}
+\usage{ReadParConfig(file, sep = "\t", draw.legend = FALSE)}
 
 \arguments{
-\item{file}{character; file path for the parameter configuration table data,
-   see \sQuote{Format}.}
+\item{file}{character; file path for the parameter configuration table data.}
 \item{sep}{character; the field separator character.}
 \item{draw.legend}{logical; if \code{TRUE}, parameter points are drawn. This
   should assist with the selection of unique symbols and colors for each
@@ -46,7 +45,7 @@ and attribute:
 
 \examples{
 f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
-obj <- ReadParameters(f, draw.legend = TRUE)
+obj <- ReadParConfig(f, draw.legend = TRUE)
 str(obj)
 }
 

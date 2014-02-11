@@ -1,6 +1,6 @@
 # Open a graphics device of type "windows", "pdf", "png", or "postscript"
 
-OpenGraphicsDevice <- function(figs.dir, file.name, gr.type, w=8.5, h=11, p=12,
+OpenGraphicsDevice <- function(path.out, file.name, gr.type, w=8.5, h=11, p=12,
                                png.res=300) {
   if (gr.type == "windows") {
     windows(width=w, height=h, pointsize=p)
@@ -12,7 +12,7 @@ OpenGraphicsDevice <- function(figs.dir, file.name, gr.type, w=8.5, h=11, p=12,
     } else {
       stop(paste("Graphics device", gr.type, "not recognized"))
     }
-    f <- file.path(figs.dir, paste(file.name, file.ext, sep="."))
+    f <- file.path(path.out, paste(file.name, file.ext, sep="."))
     if (file.access(f, mode=0) == 0)
       stop(paste(f, "already exists and will not be overwritten"))
     if (gr.type == "pdf") {

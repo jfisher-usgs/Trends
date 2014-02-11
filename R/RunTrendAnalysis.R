@@ -1,7 +1,8 @@
-RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
-                             write.tbl.out=FALSE, figs.dir=getwd(),
+RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
+                             edate=NA, is.censored=FALSE, path.out=getwd(),
                              gr.type="pdf", cenken.tol=1e-12, cenken.iter=1e+6,
-                             dt.breaks=NULL, xout=FALSE, draw.ci=FALSE) {
+                             dt.breaks=NULL, xout=FALSE, draw.ci=FALSE,
+                             site.locs=NULL) {
 
   # Additional functions:
 
@@ -41,7 +42,7 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
     if (gr.type != "windows")
       graphics.off()
     site <- paste0(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L])
-    OpenGraphicsDevice(figs.dir, site, gr.type)
+    OpenGraphicsDevice(path.out, site, gr.type)
   }
 
 
@@ -56,27 +57,27 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
   d.names <- names(d)
 
   # Read data from statistics tables and combine
-  is.valid.site.id <- tbl.plt$Site_id %in% d$Site_id
+  is.valid.site.id <- plot.config$Site_id %in% d$Site_id
   if (!all(is.valid.site.id)) {
-    ids <- tbl.plt[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
+    ids <- plot.config[!is.valid.site.id, c("Site_id", "Site_name"), drop=FALSE]
     msg <- paste(paste0("id: ", ids$Site_id, ", name: ", ids$Site_name),
                  collapse="\n")
     warning("Ids in stats configuration file do not match data:\n", msg, "\n")
   }
-  tbl.plt <- tbl.plt[is.valid.site.id, ]
+  plot.config <- plot.config[is.valid.site.id, ]
 
-  # Convert date-time fields into POSIXct class
-  tbl.plt$Start_date <- as.POSIXct(tbl.plt$Start_date, "%m/%d/%Y", tz="")
-  tbl.plt$End_date <- as.POSIXct(tbl.plt$End_date, "%m/%d/%Y", tz="")
+  # Convert date arguments into POSIXct class
+  sdate <- as.POSIXct(sdate, "%m/%d/%Y", tz="")
+  edate <- as.POSIXct(edate, "%m/%d/%Y", tz="")
 
   # Output table
-  tbl.out <- NULL
+  obj.out <- NULL
 
   # Identify row index numbers of table
   if (missing(site.names))
-    idxs <- seq_len(nrow(tbl.plt))
+    idxs <- seq_len(nrow(plot.config))
   else
-    idxs <- which(tbl.plt$Site_name %in% site.names)
+    idxs <- which(plot.config$Site_name %in% site.names)
 
   # Number of seconds in year, used for time conversions
   secs.in.year <- 31536000
@@ -89,12 +90,10 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
   for (i in seq_along(idxs)) {
     idx <- idxs[i]
 
-    id    <- tbl.plt[idx, "Site_id"]
-    site  <- tbl.plt[idx, "Site_name"]
-    sdate <- tbl.plt[idx, "Start_date"]
-    edate <- tbl.plt[idx, "End_date"]
+    id    <- plot.config[idx, "Site_id"]
+    site  <- plot.config[idx, "Site_name"]
 
-    p.names <- Trim(unique(unlist(strsplit(tbl.plt[idx, "Parameters"], ","))))
+    p.names <- Trim(unique(unlist(strsplit(plot.config[idx, "Parameters"], ","))))
     parameters <- make.names(p.names)
 
     # Initialize plot count
@@ -129,26 +128,24 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
 
       # Reduce size of data table
       is.id <- d$Site_id == id
-      is.dt <- d$Datetime >= sdate & d$Datetime <= edate
-      d.id <- d[is.id & is.dt, col.names]
+      is.gt.sd <- if (is.na(sdate)) TRUE else d$Datetime >= sdate
+      is.lt.ed <- if (is.na(edate)) TRUE else d$Datetime <= edate
+      d.id <- d[is.id & is.gt.sd & is.lt.ed, col.names]
 
-      # Order dates
+      # Order by date-time variable
       d.id <- d.id[order(d.id$Datetime), ]
 
       # Determine the number of samples that are below the recording limit
-      if (is.code)
-        n.below.rl <- sum(d.id[[col.code.name]] == 1)
-      else
-        n.below.rl <- 0L
+      n.lt.rl <- if (is.code) sum(d.id[[col.code.name]] == 1) else 0L
 
       # Text to append to error messages
       err.extra <- paste0("Row index: ", idx, ", Site name: ", site,
                           ", Parameter: ", parameter, "\n")
 
       # y-axis label
-      ylab <- tbl.par[parameter, "Name"]
-      if (!is.na(tbl.par[parameter, "Units"]))
-        ylab <- paste(ylab, tbl.par[parameter, "Units"], sep=", in ")
+      ylab <- par.config[parameter, "Name"]
+      if (!is.na(par.config[parameter, "Units"]))
+        ylab <- paste(ylab, par.config[parameter, "Units"], sep=", in ")
 
       # Start statistical analysis
 
@@ -185,7 +182,7 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
         }
 
         lst$n          <- ans@survfit$n
-        lst$n_above_rl <- ans@survfit$n - n.below.rl
+        lst$n_above_rl <- ans@survfit$n - n.lt.rl
         lst$n_cen      <- ans@survfit$n - sum(ans@survfit$n.event)
         lst$min        <- min(dat)
         lst$max        <- max(dat)
@@ -242,7 +239,7 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
         } else {
           main <- NULL
         }
-        DrawPlot(d.id, tbl.par[parameter, ], cen.var=col.code.name,
+        DrawPlot(d.id, par.config[parameter, ], cen.var=col.code.name,
                  xlim=c(sdate, edate), regr=regr,
                  regr.type="Akritas-Theil-Sen line",
                  main=main, ylab=ylab, leg.box.col=leg.box.col, p.value=ans$p)
@@ -269,7 +266,7 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
         # Basic summary statistics
         dat <- na.omit(d.id[[parameter]])
         n <- length(dat)
-        lst <- list("n"=n, "n_above_rl"=n - n.below.rl, "n_cen"=n.cen,
+        lst <- list("n"=n, "n_above_rl"=n - n.lt.rl, "n_cen"=n.cen,
                     "mean"=mean(dat), "median"=median(dat),
                     "min"=min(dat), "max"=max(dat), "std_dev"=sd(dat))
         rec <- cbind(rec, as.data.frame(lst, optional=TRUE))
@@ -313,11 +310,11 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
           warning(paste("Wilcox regci error:", err.extra, sep="\n"))
           next
         }
-        est <- list("p_value"=est[2, 5],
-                    "slope"=est[2, 3],
-                    "lower"=est[2, 1],
-                    "upper"=est[2, 2],
-                    "int"=est[1, 3],
+        est <- list("p_value"  =est[2, 5],
+                    "slope"    =est[2, 3],
+                    "lower"    =est[2, 1],
+                    "upper"    =est[2, 2],
+                    "int"      =est[1, 3],
                     "int_lower"=est[1, 1],
                     "int_upper"=est[1, 2])
 
@@ -340,7 +337,7 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
           main <- NULL
         }
         DrawPlot(d.id[, c("Datetime", parameter)],
-                 tbl.par[parameter, ], xlim=c(sdate, edate),
+                 par.config[parameter, ], xlim=c(sdate, edate),
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
                  regr.type="Theil-Sen line", main=main, ylab=ylab,
                  leg.box.col=leg.box.col, p.value=est$p)
@@ -366,25 +363,31 @@ RunTrendAnalysis <- function(d, site.names, tbl.par, tbl.plt, is.censored=FALSE,
       }
 
       # Add statistics record to table
-      tbl.out <- rbind(tbl.out, rec)
+      obj.out <- rbind(obj.out, rec)
     }
   }
 
-if (gr.type != "windows")
-  graphics.off()
+  if (gr.type != "windows")
+    graphics.off()
 
-if (write.tbl.out) {
-  f <- file.path(dirname(figs.dir), paste0(basename(figs.dir), ".tsv"))
-  write.table(format(tbl.out, scientific=FALSE), file=f, quote=FALSE,
+  rownames(obj.out) <- seq_len(nrow(obj.out))
+
+  f <- file.path(dirname(path.out), paste0(basename(path.out), ".tsv"))
+  write.table(format(obj.out, scientific=FALSE), file=f, quote=FALSE,
               sep="\t", row.names=FALSE)
-}
 
-tbl.out$Site_id   <- as.factor(tbl.out$Site_id)
-tbl.out$Site_name <- as.factor(tbl.out$Site_name)
-tbl.out$Parameter <- as.factor(tbl.out$Parameter)
-tbl.out$trend     <- as.factor(tbl.out$trend)
+  if (inherits(site.locs, "SpatialPointsDataFrame")) {
+    idxs <- match(obj.out$Site_id, site.locs@data$Site_id)
+    if (!any(is.na(idxs))) {
+      coords <- site.locs@coords[idxs, ]
+      crs <- site.locs@proj4string
+      obj.out$len_record <- format(obj.out$len_record)
+      obj.out <- SpatialPointsDataFrame(coords, data=obj.out, proj4string=crs,
+                                        match.ID=FALSE)
+      writeOGR(obj.out, dirname(path.out), basename(path.out),
+               driver="ESRI Shapefile")
+    }
+  }
 
-rownames(tbl.out) <- seq_len(nrow(tbl.out))
-
-invisible(tbl.out)
+  invisible(obj.out)
 }

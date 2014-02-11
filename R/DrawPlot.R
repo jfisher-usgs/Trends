@@ -1,4 +1,4 @@
-DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
+DrawPlot <- function(d, par.config, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
                      regr=NULL, regr.lower=NULL, regr.upper=NULL,
                      regr.type="Regression line", main=NULL, ylab=NULL,
                      leg.box.col="#FFFFFF", tick.lines=TRUE, p.value=NULL) {
@@ -130,10 +130,10 @@ DrawPlot <- function(d, tbl.par, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
 
   leg.name <- leg.lty <- leg.pch <- leg.col <- leg.bg <- NULL
   for (p in p.names) {
-    pch  <- tbl.par[p, "pch"]
-    col  <- tbl.par[p, "col"]
-    bg   <- tbl.par[p, "bg"]
-    name <- tbl.par[p, "Name"]
+    pch  <- par.config[p, "pch"]
+    col  <- par.config[p, "col"]
+    bg   <- par.config[p, "bg"]
+    name <- par.config[p, "Name"]
 
     x <- d[, dt.name]
     y <- d[, p]

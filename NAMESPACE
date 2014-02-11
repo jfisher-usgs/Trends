@@ -1,13 +1,15 @@
-import(MASS, NADA, rgdal)
+import(MASS, NADA)
+
+importFrom(sp, SpatialPointsDataFrame)
+importFrom(rgdal, readOGR, writeOGR)
 
 export(DrawPlot,
        MergePDFs,
        OpenGraphicsDevice,
        PlotObservations,
        ReadObservations,
-       ReadParameters,
-       ReadPlotConfigObs,
-       ReadPlotConfigTrends,
+       ReadParConfig,
+       ReadPlotConfig,
        ReadSiteLocations,
        RunTheilSen,
        RunTrendAnalysis)
