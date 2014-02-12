@@ -20,7 +20,7 @@ by choosing to customize the startup options and specifying the SDI interface
 
 Install required R packages from CRAN:
 
-    > install.packages("NADA", "rgdal")
+    > install.packages(c("NADA", "rgdal"))
 
 Install the **Trends** package:
 
