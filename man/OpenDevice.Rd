@@ -41,6 +41,6 @@ recommended for producing figures of publication quality.
 \code{\link{pdf}}, \code{\link{png}}, \code{\link{postscript}}
 }
 
-\examples{\donttest{OpenDevice(getwd(), "fig01", "pdf")}}
+\examples{\donttest{OpenDevice(tempdir(), "fig01", "pdf")}}
 
 \keyword{misc}

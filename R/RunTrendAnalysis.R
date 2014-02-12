@@ -1,8 +1,8 @@
 RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
-                             edate=NA, is.censored=FALSE, path.out=getwd(),
+                             edate=NA, is.censored=FALSE, path.out=tempfile(""),
                              gr.type="pdf", cenken.tol=1e-12, cenken.iter=1e+6,
                              dt.breaks=NULL, xout=FALSE, draw.ci=FALSE,
-                             site.locs=NULL) {
+                             site.locs=NULL, merge.pdfs=FALSE) {
 
   # Additional functions:
 
@@ -49,6 +49,9 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
   # Main program:
 
   options(stringsAsFactors=FALSE)
+
+  # Create output directory
+  dir.create(path=path.out, showWarnings=FALSE, recursive=TRUE)
 
   # Determine background color for legend box
   leg.box.col <- ifelse(gr.type == "postscript", "#FFFFFF", "#FFFFFFBB")
@@ -256,8 +259,10 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
         if (is.code) {
           n.cen <- as.integer(sum(d.id[[col.code.name]] %in% 1))
           if (n.cen > 0) {
-            txt <- "Censored data found in uncensored statistical analysis:"
+            txt <- paste("Censored data found in uncensored statistical",
+                         "analysis (parameter will not be plotted):")
             warning(paste(txt, err.extra, sep="\n"))
+            next
           }
         } else {
           n.cen <- 0L
@@ -390,6 +395,9 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
                driver="ESRI Shapefile")
     }
   }
+
+  if (gr.type == "pdf" && merge.pdfs)
+    MergePDFs(path.out)
 
   invisible(obj.out)
 }

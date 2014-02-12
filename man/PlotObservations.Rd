@@ -8,7 +8,7 @@
 
 \usage{
 PlotObservations(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
-                 path.out = getwd(), gr.type = "pdf")
+                 path.out = tempfile(""), gr.type = "pdf", merge.pdfs = FALSE)
 }
 
 \arguments{
@@ -25,6 +25,8 @@ PlotObservations(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
   only applicable when \code{gr.type} is not equal to \code{"windows"}.}
 \item{gr.type}{character; see \code{\link{OpenDevice}}, its default is
   \code{"pdf"}.}
+\item{merge.pdfs}{logical; if \code{TRUE} and \code{gr.type} is \code{"pdf"},
+  plots are combined into a single PDF file, see \code{\link{MergePDFs}}.}
 }
 
 \format{

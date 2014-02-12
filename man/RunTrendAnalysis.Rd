@@ -10,9 +10,10 @@ This function performs a statistical analysis on censored and uncensored data.
 
 \usage{
 RunTrendAnalysis(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
-                 is.censored = FALSE, path.out = getwd(), gr.type = "pdf",
+                 is.censored = FALSE, path.out = tempfile(""), gr.type = "pdf",
                  cenken.tol = 1e-12, cenken.iter = 1e+6, dt.breaks = NULL,
-                 xout = FALSE, draw.ci = FALSE, site.locs = NULL)
+                 xout = FALSE, draw.ci = FALSE, site.locs = NULL,
+                 merge.pdfs = FALSE)
 }
 
 \arguments{
@@ -46,6 +47,8 @@ RunTrendAnalysis(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
   uncensored data is drawn on plot.}
 \item{site.locs}{SpatialPointsDataFrame; site locations, see
   \code{\link{ReadSiteLocations}}.}
+\item{merge.pdfs}{logical; if \code{TRUE} and \code{gr.type} is \code{"pdf"},
+  plots are combined into a single PDF file, see \code{\link{MergePDFs}}.}
 }
 
 \details{

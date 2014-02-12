@@ -1,5 +1,6 @@
 PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
-                             edate=NA, path.out=getwd(), gr.type="pdf") {
+                             edate=NA, path.out=tempfile(""), gr.type="pdf",
+                             merge.pdfs=FALSE) {
 
   # Additional functions:
 
@@ -18,6 +19,9 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
 
 
   # Main program:
+
+  # Create output directory
+  dir.create(path=path.out, showWarnings=FALSE, recursive=TRUE)
 
   # Obtain site id(s) to plot
   if (missing(site.names)) {
@@ -141,4 +145,9 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
     if (gr.type != "windows")
       graphics.off()
   }
+
+  if (gr.type == "pdf" && merge.pdfs)
+    MergePDFs(path.out)
+
+  invisible()
 }
