@@ -1,0 +1,35 @@
+Parameter	Name	Units	pch	col	bg
+pH	pH	NA	21	NA	#4DAF4A
+Spec. Cond.	Specific Conductance	microsiemens per cm	22	NA	#377EB8
+Temp	Temperature	degree celsius	23	NA	#E41A1C
+TOC	Total Organic Carbon	milligrams per liter	24	NA	#33A02C
+NO3+NO2	Nitrate plus Nitrite as N	milligrams per liter	25	NA	#FB9A99
+O-PO4 as P	Orthophosphate as P	milligrams per liter	21	NA	#E31A1C
+ZN	Zinc	micrograms per liter	22	NA	#FDBF6F
+U	Uranium	micrograms per liter	23	NA	#1F78B4
+SE	Selenium	micrograms per liter	24	NA	#6A3D9A
+NI	Nickel	micrograms per liter	25	NA	#B15928
+MO	Molybdenum	micrograms per liter	0	#1B9E77	NA
+MN	Manganese	micrograms per liter	1	#D95F02	NA
+PB	Lead	micrograms per liter	2	#7570B3	NA
+CU	Copper	micrograms per liter	3	#E7298A	NA
+CO	Cobalt	micrograms per liter	4	#66A61E	NA
+BA	Barium	micrograms per liter	5	#E6AB02	NA
+AS	Arsenic	micrograms per liter	6	#A6761D	NA
+CR	Chromium	micrograms per liter	7	#666666	NA
+CL	Chloride	milligrams per liter	8	#A6CEE3	NA
+SO4	Sulfate	milligrams per liter	9	#000000	NA
+F	Fluoride	milligrams per liter	10	#000000	NA
+BR	Bromide	milligrams per liter	11	#000000	NA
+Na	Sodium	milligrams per liter	12	#E31A1C	NA
+CA	Calcium	milligrams per liter	13	#000000	NA
+MG	Magnesium	micrograms per liter	14	#000000	NA
+K	Potassium	micrograms per liter	0	#A6CEE3	NA
+SI	Silica	micrograms per liter	1	#1F78B4	NA
+NH3	Ammonia	milligrams per liter	2	#B2DF8A	NA
+SB	Antimony	micrograms per liter	3	#33A02C	NA
+AG	Silver	micrograms per liter	4	#FB9A99	NA
+HG	Mercury	micrograms per liter	5	#E31A1C	NA
+CD	Cadmium	micrograms per liter	6	#FDBF6F	NA
+TL	Thallium	micrograms per liter	7	#CAB2D6	NA
+AL	Aluminum	micrograms per liter	8	#000000	NA

@@ -1,0 +1,298 @@
+Site_id	Site_name	Parameters	Axis_title
+433204112562001	CFA 1	pH	pH
+433204112562001	CFA 1	Spec. Cond.	Specific Conductance, microsiemens per cm
+433204112562001	CFA 1	Temp	Temperature, in degree celsius
+433144112563501	CFA 2	pH	pH
+433144112563501	CFA 2	Spec. Cond.	Specific Conductance, microsiemens per cm
+433144112563501	CFA 2	Temp	Temperature, in degree celsius
+433216112571001	CFA LF 3-9	pH	pH
+433216112571001	CFA LF 3-9	Spec. Cond.	Specific Conductance, microsiemens per cm
+433216112571001	CFA LF 3-9	Temp	Temperature, in degree celsius
+433216112563301	CFA LF 2-10	pH	pH
+433216112563301	CFA LF 2-10	Spec. Cond.	Specific Conductance, microsiemens per cm
+433216112563301	CFA LF 2-10	Temp	Temperature, in degree celsius
+433433112560201	CPP 1	pH	pH
+433433112560201	CPP 1	Spec. Cond.	Specific Conductance, microsiemens per cm
+433433112560201	CPP 1	Temp	Temperature, in degree celsius
+433432112560801	CPP 2	pH	pH
+433432112560801	CPP 2	Spec. Cond.	Specific Conductance, microsiemens per cm
+433432112560801	CPP 2	Temp	Temperature, in degree celsius
+433520112572601	MTR TEST	pH	pH
+433520112572601	MTR TEST	Spec. Cond.	Specific Conductance, microsiemens per cm
+433520112572601	MTR TEST	Temp	Temperature, in degree celsius
+433243112591101	RIFLE RANGE	pH	pH
+433243112591101	RIFLE RANGE	Spec. Cond.	Specific Conductance, microsiemens per cm
+433243112591101	RIFLE RANGE	Temp	Temperature, in degree celsius
+432956113030901	RWMC M1SA	pH	pH
+432956113030901	RWMC M1SA	Spec. Cond.	Specific Conductance, microsiemens per cm
+432956113030901	RWMC M1SA	Temp	Temperature, in degree celsius
+433008113021801	RWMC M3S	pH	pH
+433008113021801	RWMC M3S	Spec. Cond.	Specific Conductance, microsiemens per cm
+433008113021801	RWMC M3S	Temp	Temperature, in degree celsius
+433023113014801	RWMC M7S	pH	pH
+433023113014801	RWMC M7S	Spec. Cond.	Specific Conductance, microsiemens per cm
+433023113014801	RWMC M7S	Temp	Temperature, in degree celsius
+433058113010401	RWMC M11S	pH	pH
+433058113010401	RWMC M11S	Spec. Cond.	Specific Conductance, microsiemens per cm
+433058113010401	RWMC M11S	Temp	Temperature, in degree celsius
+433118112593401	RWMC M12S	pH	pH
+433118112593401	RWMC M12S	Spec. Cond.	Specific Conductance, microsiemens per cm
+433118112593401	RWMC M12S	Temp	Temperature, in degree celsius
+433037113002701	RWMC M13S	pH	pH
+433037113002701	RWMC M13S	Spec. Cond.	Specific Conductance, microsiemens per cm
+433037113002701	RWMC M13S	Temp	Temperature, in degree celsius
+433052113025001	RWMC M14S	pH	pH
+433052113025001	RWMC M14S	Spec. Cond.	Specific Conductance, microsiemens per cm
+433052113025001	RWMC M14S	Temp	Temperature, in degree celsius
+433002113021701	RWMC Production	pH	pH
+433002113021701	RWMC Production	Spec. Cond.	Specific Conductance, microsiemens per cm
+433002113021701	RWMC Production	Temp	Temperature, in degree celsius
+433506112572301	TRA Disposal	pH	pH
+433506112572301	TRA Disposal	Spec. Cond.	Specific Conductance, microsiemens per cm
+433506112572301	TRA Disposal	Temp	Temperature, in degree celsius
+433253112545901	USGS 20	pH	pH
+433253112545901	USGS 20	Spec. Cond.	Specific Conductance, microsiemens per cm
+433253112545901	USGS 20	Temp	Temperature, in degree celsius
+433334112565501	USGS 34	pH	pH
+433334112565501	USGS 34	Spec. Cond.	Specific Conductance, microsiemens per cm
+433334112565501	USGS 34	Temp	Temperature, in degree celsius
+433339112565801	USGS 35	pH	pH
+433339112565801	USGS 35	Spec. Cond.	Specific Conductance, microsiemens per cm
+433339112565801	USGS 35	Temp	Temperature, in degree celsius
+433330112565201	USGS 36	pH	pH
+433330112565201	USGS 36	Spec. Cond.	Specific Conductance, microsiemens per cm
+433330112565201	USGS 36	Temp	Temperature, in degree celsius
+433326112564801	USGS 37	pH	pH
+433326112564801	USGS 37	Spec. Cond.	Specific Conductance, microsiemens per cm
+433326112564801	USGS 37	Temp	Temperature, in degree celsius
+433322112564301	USGS 38	pH	pH
+433322112564301	USGS 38	Spec. Cond.	Specific Conductance, microsiemens per cm
+433322112564301	USGS 38	Temp	Temperature, in degree celsius
+433343112570001	USGS 39	pH	pH
+433343112570001	USGS 39	Spec. Cond.	Specific Conductance, microsiemens per cm
+433343112570001	USGS 39	Temp	Temperature, in degree celsius
+433411112561101	USGS 40	pH	pH
+433411112561101	USGS 40	Spec. Cond.	Specific Conductance, microsiemens per cm
+433411112561101	USGS 40	Temp	Temperature, in degree celsius
+433409112561301	USGS 41	pH	pH
+433409112561301	USGS 41	Spec. Cond.	Specific Conductance, microsiemens per cm
+433409112561301	USGS 41	Temp	Temperature, in degree celsius
+433404112561301	USGS 42	pH	pH
+433404112561301	USGS 42	Spec. Cond.	Specific Conductance, microsiemens per cm
+433404112561301	USGS 42	Temp	Temperature, in degree celsius
+433415112561501	USGS 43	pH	pH
+433415112561501	USGS 43	Spec. Cond.	Specific Conductance, microsiemens per cm
+433415112561501	USGS 43	Temp	Temperature, in degree celsius
+433409112562101	USGS 44	pH	pH
+433409112562101	USGS 44	Spec. Cond.	Specific Conductance, microsiemens per cm
+433409112562101	USGS 44	Temp	Temperature, in degree celsius
+433402112561801	USGS 45	pH	pH
+433402112561801	USGS 45	Spec. Cond.	Specific Conductance, microsiemens per cm
+433402112561801	USGS 45	Temp	Temperature, in degree celsius
+433407112561501	USGS 46	pH	pH
+433407112561501	USGS 46	Spec. Cond.	Specific Conductance, microsiemens per cm
+433407112561501	USGS 46	Temp	Temperature, in degree celsius
+433407112560301	USGS 47	pH	pH
+433407112560301	USGS 47	Spec. Cond.	Specific Conductance, microsiemens per cm
+433407112560301	USGS 47	Temp	Temperature, in degree celsius
+433401112560301	USGS 48	pH	pH
+433401112560301	USGS 48	Spec. Cond.	Specific Conductance, microsiemens per cm
+433401112560301	USGS 48	Temp	Temperature, in degree celsius
+433350112560601	USGS 51	pH	pH
+433350112560601	USGS 51	Spec. Cond.	Specific Conductance, microsiemens per cm
+433350112560601	USGS 51	Temp	Temperature, in degree celsius
+433414112554201	USGS 52	pH	pH
+433414112554201	USGS 52	Spec. Cond.	Specific Conductance, microsiemens per cm
+433414112554201	USGS 52	Temp	Temperature, in degree celsius
+433344112562601	USGS 57	pH	pH
+433344112562601	USGS 57	Spec. Cond.	Specific Conductance, microsiemens per cm
+433344112562601	USGS 57	Temp	Temperature, in degree celsius
+433500112572502	USGS 58	pH	pH
+433500112572502	USGS 58	Spec. Cond.	Specific Conductance, microsiemens per cm
+433500112572502	USGS 58	Temp	Temperature, in degree celsius
+433354112554701	USGS 59	pH	pH
+433354112554701	USGS 59	Spec. Cond.	Specific Conductance, microsiemens per cm
+433354112554701	USGS 59	Temp	Temperature, in degree celsius
+433447112574501	USGS 65	pH	pH
+433447112574501	USGS 65	Spec. Cond.	Specific Conductance, microsiemens per cm
+433447112574501	USGS 65	Temp	Temperature, in degree celsius
+433344112554101	USGS 67	pH	pH
+433344112554101	USGS 67	Spec. Cond.	Specific Conductance, microsiemens per cm
+433344112554101	USGS 67	Temp	Temperature, in degree celsius
+433425112573201	USGS 76	pH	pH
+433425112573201	USGS 76	Spec. Cond.	Specific Conductance, microsiemens per cm
+433425112573201	USGS 76	Temp	Temperature, in degree celsius
+433315112560301	USGS 77	pH	pH
+433315112560301	USGS 77	Spec. Cond.	Specific Conductance, microsiemens per cm
+433315112560301	USGS 77	Temp	Temperature, in degree celsius
+433505112581901	USGS 79	pH	pH
+433505112581901	USGS 79	Spec. Cond.	Specific Conductance, microsiemens per cm
+433505112581901	USGS 79	Temp	Temperature, in degree celsius
+433401112551001	USGS 82	pH	pH
+433401112551001	USGS 82	Spec. Cond.	Specific Conductance, microsiemens per cm
+433401112551001	USGS 82	Temp	Temperature, in degree celsius
+433356112574201	USGS 84	pH	pH
+433356112574201	USGS 84	Spec. Cond.	Specific Conductance, microsiemens per cm
+433356112574201	USGS 84	Temp	Temperature, in degree celsius
+433246112571201	USGS 85	pH	pH
+433246112571201	USGS 85	Spec. Cond.	Specific Conductance, microsiemens per cm
+433246112571201	USGS 85	Temp	Temperature, in degree celsius
+433013113024201	USGS 87	pH	pH
+433013113024201	USGS 87	Spec. Cond.	Specific Conductance, microsiemens per cm
+433013113024201	USGS 87	Temp	Temperature, in degree celsius
+432940113030201	USGS 88	pH	pH
+432940113030201	USGS 88	Spec. Cond.	Specific Conductance, microsiemens per cm
+432940113030201	USGS 88	Temp	Temperature, in degree celsius
+433005113032801	USGS 89	pH	pH
+433005113032801	USGS 89	Spec. Cond.	Specific Conductance, microsiemens per cm
+433005113032801	USGS 89	Temp	Temperature, in degree celsius
+432856112560801	USGS 104	pH	pH
+432856112560801	USGS 104	Spec. Cond.	Specific Conductance, microsiemens per cm
+432856112560801	USGS 104	Temp	Temperature, in degree celsius
+432703113001801	USGS 105	pH	pH
+432703113001801	USGS 105	Spec. Cond.	Specific Conductance, microsiemens per cm
+432703113001801	USGS 105	Temp	Temperature, in degree celsius
+432959112593101	USGS 106	pH	pH
+432959112593101	USGS 106	Spec. Cond.	Specific Conductance, microsiemens per cm
+432959112593101	USGS 106	Temp	Temperature, in degree celsius
+432659112582601	USGS 108	pH	pH
+432659112582601	USGS 108	Spec. Cond.	Specific Conductance, microsiemens per cm
+432659112582601	USGS 108	Temp	Temperature, in degree celsius
+433331112560501	USGS 111	pH	pH
+433331112560501	USGS 111	Spec. Cond.	Specific Conductance, microsiemens per cm
+433331112560501	USGS 111	Temp	Temperature, in degree celsius
+433314112563001	USGS 112	pH	pH
+433314112563001	USGS 112	Spec. Cond.	Specific Conductance, microsiemens per cm
+433314112563001	USGS 112	Temp	Temperature, in degree celsius
+433314112561801	USGS 113	pH	pH
+433314112561801	USGS 113	Spec. Cond.	Specific Conductance, microsiemens per cm
+433314112561801	USGS 113	Temp	Temperature, in degree celsius
+433318112555001	USGS 114	pH	pH
+433318112555001	USGS 114	Spec. Cond.	Specific Conductance, microsiemens per cm
+433318112555001	USGS 114	Temp	Temperature, in degree celsius
+433320112554101	USGS 115	pH	pH
+433320112554101	USGS 115	Spec. Cond.	Specific Conductance, microsiemens per cm
+433320112554101	USGS 115	Temp	Temperature, in degree celsius
+433331112553201	USGS 116	pH	pH
+433331112553201	USGS 116	Spec. Cond.	Specific Conductance, microsiemens per cm
+433331112553201	USGS 116	Temp	Temperature, in degree celsius
+432919113031501	USGS 120	pH	pH
+432919113031501	USGS 120	Spec. Cond.	Specific Conductance, microsiemens per cm
+432919113031501	USGS 120	Temp	Temperature, in degree celsius
+433352112561401	USGS 123	pH	pH
+433352112561401	USGS 123	Spec. Cond.	Specific Conductance, microsiemens per cm
+433352112561401	USGS 123	Temp	Temperature, in degree celsius
+432307112583101	USGS 124	pH	pH
+432307112583101	USGS 124	Spec. Cond.	Specific Conductance, microsiemens per cm
+432307112583101	USGS 124	Temp	Temperature, in degree celsius
+433058112572201	USGS 127	pH	pH
+433058112572201	USGS 127	Spec. Cond.	Specific Conductance, microsiemens per cm
+433058112572201	USGS 127	Temp	Temperature, in degree celsius
+433250112565601	USGS 128	pH	pH
+433250112565601	USGS 128	Spec. Cond.	Specific Conductance, microsiemens per cm
+433250112565601	USGS 128	Temp	Temperature, in degree celsius
+433459112572601	CWP 1	pH	pH
+433459112572601	CWP 1	Spec. Cond.	Specific Conductance, microsiemens per cm
+433459112572601	CWP 1	Temp	Temperature, in degree celsius
+433458112572401	CWP 2	pH	pH
+433458112572401	CWP 2	Spec. Cond.	Specific Conductance, microsiemens per cm
+433458112572401	CWP 2	Temp	Temperature, in degree celsius
+433455112572501	CWP 3	pH	pH
+433455112572501	CWP 3	Spec. Cond.	Specific Conductance, microsiemens per cm
+433455112572501	CWP 3	Temp	Temperature, in degree celsius
+433454112572601	CWP 4	pH	pH
+433454112572601	CWP 4	Spec. Cond.	Specific Conductance, microsiemens per cm
+433454112572601	CWP 4	Temp	Temperature, in degree celsius
+433455112572901	CWP 5	pH	pH
+433455112572901	CWP 5	Spec. Cond.	Specific Conductance, microsiemens per cm
+433455112572901	CWP 5	Temp	Temperature, in degree celsius
+433500112573001	CWP 8	pH	pH
+433500112573001	CWP 8	Spec. Cond.	Specific Conductance, microsiemens per cm
+433500112573001	CWP 8	Temp	Temperature, in degree celsius
+433349112560701	PW 1	pH	pH
+433349112560701	PW 1	Spec. Cond.	Specific Conductance, microsiemens per cm
+433349112560701	PW 1	Temp	Temperature, in degree celsius
+433344112555601	PW 2	pH	pH
+433344112555601	PW 2	Spec. Cond.	Specific Conductance, microsiemens per cm
+433344112555601	PW 2	Temp	Temperature, in degree celsius
+433351112555701	PW 3	pH	pH
+433351112555701	PW 3	Spec. Cond.	Specific Conductance, microsiemens per cm
+433351112555701	PW 3	Temp	Temperature, in degree celsius
+433348112554901	PW 4	pH	pH
+433348112554901	PW 4	Spec. Cond.	Specific Conductance, microsiemens per cm
+433348112554901	PW 4	Temp	Temperature, in degree celsius
+433348112555701	PW 5	pH	pH
+433348112555701	PW 5	Spec. Cond.	Specific Conductance, microsiemens per cm
+433348112555701	PW 5	Temp	Temperature, in degree celsius
+433353112562201	PW 6	pH	pH
+433353112562201	PW 6	Spec. Cond.	Specific Conductance, microsiemens per cm
+433353112562201	PW 6	Temp	Temperature, in degree celsius
+433446112574602	PW 7	pH	pH
+433446112574602	PW 7	Spec. Cond.	Specific Conductance, microsiemens per cm
+433446112574602	PW 7	Temp	Temperature, in degree celsius
+433456112572001	PW 8	pH	pH
+433456112572001	PW 8	Spec. Cond.	Specific Conductance, microsiemens per cm
+433456112572001	PW 8	Temp	Temperature, in degree celsius
+433500112575401	PW 9	pH	pH
+433500112575401	PW 9	Spec. Cond.	Specific Conductance, microsiemens per cm
+433500112575401	PW 9	Temp	Temperature, in degree celsius
+433502112572802	TRA A 13	pH	pH
+433502112572802	TRA A 13	Spec. Cond.	Specific Conductance, microsiemens per cm
+433502112572802	TRA A 13	Temp	Temperature, in degree celsius
+433507112573801	TRA A 77	pH	pH
+433507112573801	TRA A 77	Spec. Cond.	Specific Conductance, microsiemens per cm
+433507112573801	TRA A 77	Temp	Temperature, in degree celsius
+433419112560201	USGS 50	pH	pH
+433419112560201	USGS 50	Spec. Cond.	Specific Conductance, microsiemens per cm
+433419112560201	USGS 50	Temp	Temperature, in degree celsius
+433503112573401	USGS 53	pH	pH
+433503112573401	USGS 53	Spec. Cond.	Specific Conductance, microsiemens per cm
+433503112573401	USGS 53	Temp	Temperature, in degree celsius
+433503112572801	USGS 54	pH	pH
+433503112572801	USGS 54	Spec. Cond.	Specific Conductance, microsiemens per cm
+433503112572801	USGS 54	Temp	Temperature, in degree celsius
+433508112573001	USGS 55	pH	pH
+433508112573001	USGS 55	Spec. Cond.	Specific Conductance, microsiemens per cm
+433508112573001	USGS 55	Temp	Temperature, in degree celsius
+433509112573501	USGS 56	pH	pH
+433509112573501	USGS 56	Spec. Cond.	Specific Conductance, microsiemens per cm
+433509112573501	USGS 56	Temp	Temperature, in degree celsius
+433456112571901	USGS 60	pH	pH
+433456112571901	USGS 60	Spec. Cond.	Specific Conductance, microsiemens per cm
+433456112571901	USGS 60	Temp	Temperature, in degree celsius
+433453112571601	USGS 61	pH	pH
+433453112571601	USGS 61	Spec. Cond.	Specific Conductance, microsiemens per cm
+433453112571601	USGS 61	Temp	Temperature, in degree celsius
+433446112570701	USGS 62	pH	pH
+433446112570701	USGS 62	Spec. Cond.	Specific Conductance, microsiemens per cm
+433446112570701	USGS 62	Temp	Temperature, in degree celsius
+433455112574001	USGS 63	pH	pH
+433455112574001	USGS 63	Spec. Cond.	Specific Conductance, microsiemens per cm
+433455112574001	USGS 63	Temp	Temperature, in degree celsius
+433436112564801	USGS 66	pH	pH
+433436112564801	USGS 66	Spec. Cond.	Specific Conductance, microsiemens per cm
+433436112564801	USGS 66	Temp	Temperature, in degree celsius
+433516112573901	USGS 68	pH	pH
+433516112573901	USGS 68	Spec. Cond.	Specific Conductance, microsiemens per cm
+433516112573901	USGS 68	Temp	Temperature, in degree celsius
+433450112573001	USGS 69	pH	pH
+433450112573001	USGS 69	Spec. Cond.	Specific Conductance, microsiemens per cm
+433450112573001	USGS 69	Temp	Temperature, in degree celsius
+433504112571001	USGS 70	pH	pH
+433504112571001	USGS 70	Spec. Cond.	Specific Conductance, microsiemens per cm
+433504112571001	USGS 70	Temp	Temperature, in degree celsius
+433439112571501	USGS 71	pH	pH
+433439112571501	USGS 71	Spec. Cond.	Specific Conductance, microsiemens per cm
+433439112571501	USGS 71	Temp	Temperature, in degree celsius
+433519112574601	USGS 72	pH	pH
+433519112574601	USGS 72	Spec. Cond.	Specific Conductance, microsiemens per cm
+433519112574601	USGS 72	Temp	Temperature, in degree celsius
+433502112575401	USGS 73	pH	pH
+433502112575401	USGS 73	Spec. Cond.	Specific Conductance, microsiemens per cm
+433502112575401	USGS 73	Temp	Temperature, in degree celsius
+433413112573501	USGS 78	pH	pH
+433413112573501	USGS 78	Spec. Cond.	Specific Conductance, microsiemens per cm
+433413112573501	USGS 78	Temp	Temperature, in degree celsius
+433000113025301	USGS 92	pH	pH
+433000113025301	USGS 92	Spec. Cond.	Specific Conductance, microsiemens per cm
+433000113025301	USGS 92	Temp	Temperature, in degree celsius

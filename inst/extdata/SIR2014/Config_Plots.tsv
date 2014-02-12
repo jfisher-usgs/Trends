@@ -1,0 +1,175 @@
+Site_id	Site_name	Parameters	Axis_title
+433204112562001	CFA 1	CL, Na, SO4	Concentration, in milligrams per liter
+433204112562001	CFA 1	NO3+NO2	Concentration, in milligrams per liter
+433144112563501	CFA 2	CL, Na, SO4	Concentration, in milligrams per liter
+433144112563501	CFA 2	NO3+NO2	Concentration, in milligrams per liter
+433216112571001	CFA LF 3-9	CL	Concentration, in milligrams per liter
+433216112571001	CFA LF 3-9	NO3+NO2	Concentration, in milligrams per liter
+433216112563301	CFA LF 2-10	CL, Na	Concentration, in milligrams per liter
+433216112563301	CFA LF 2-10	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433216112563301	CFA LF 2-10	CR	Concentration, in micrograms per liter
+433433112560201	CPP 1	CL, Na, SO4	Concentration, in milligrams per liter
+433433112560201	CPP 1	NO3+NO2	Concentration, in milligrams per liter
+433433112560201	CPP 1	F	Concentration, in milligrams per liter
+433432112560801	CPP 2	CL, Na, SO4	Concentration, in milligrams per liter
+433432112560801	CPP 2	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433520112572601	MTR TEST	CL, Na, SO4	Concentration, in milligrams per liter
+433520112572601	MTR TEST	NO3+NO2	Concentration, in milligrams per liter
+433243112591101	RIFLE RANGE	CL, Na, SO4	Concentration, in milligrams per liter
+433243112591101	RIFLE RANGE	CR	Concentration, in micrograms per liter
+433008113021801	RWMC M3S	CL	Concentration, in milligrams per liter
+433008113021801	RWMC M3S	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433023113014801	RWMC M7S	CL	Concentration, in milligrams per liter
+433023113014801	RWMC M7S	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433058113010401	RWMC M11S	CL, Na	Concentration, in milligrams per liter
+433058113010401	RWMC M11S	NO3+NO2	Concentration, in milligrams per liter
+433118112593401	RWMC M12S	CL, Na	Concentration, in milligrams per liter
+433118112593401	RWMC M12S	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433118112593401	RWMC M12S	CR	Concentration, in micrograms per liter
+433037113002701	RWMC M13S	CL, Na	Concentration, in milligrams per liter
+433037113002701	RWMC M13S	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433037113002701	RWMC M13S	CR	Concentration, in micrograms per liter
+433052113025001	RWMC M14S	CL, Na	Concentration, in milligrams per liter
+433052113025001	RWMC M14S	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433052113025001	RWMC M14S	CR	Concentration, in micrograms per liter
+433002113021701	RWMC Production	CL, Na, SO4	Concentration, in milligrams per liter
+433002113021701	RWMC Production	NO3+NO2	Concentration, in milligrams per liter
+433506112572301	TRA Disposal	CL, Na, SO4	Concentration, in milligrams per liter
+433506112572301	TRA Disposal	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433506112572301	TRA Disposal	CR	Concentration, in micrograms per liter
+433253112545901	USGS 20	CL, Na, SO4	Concentration, in milligrams per liter
+433253112545901	USGS 20	NO3+NO2	Concentration, in milligrams per liter
+433334112565501	USGS 34	CL, Na, SO4	Concentration, in milligrams per liter
+433334112565501	USGS 34	NO3+NO2	Concentration, in milligrams per liter
+433334112565501	USGS 34	F	Concentration, in milligrams per liter
+433339112565801	USGS 35	CL, Na, SO4	Concentration, in milligrams per liter
+433339112565801	USGS 35	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433330112565201	USGS 36	CL, Na, SO4	Concentration, in milligrams per liter
+433330112565201	USGS 36	NO3+NO2	Concentration, in milligrams per liter
+433326112564801	USGS 37	CL, Na, SO4	Concentration, in milligrams per liter
+433326112564801	USGS 37	NO3+NO2	Concentration, in milligrams per liter
+433322112564301	USGS 38	CL, Na, SO4	Concentration, in milligrams per liter
+433322112564301	USGS 38	F	Concentration, in milligrams per liter
+433343112570001	USGS 39	CL, Na, SO4	Concentration, in milligrams per liter
+433343112570001	USGS 39	NO3+NO2	Concentration, in milligrams per liter
+433411112561101	USGS 40	CL, Na, SO4	Concentration, in milligrams per liter
+433411112561101	USGS 40	NO3+NO2	Concentration, in milligrams per liter
+433409112561301	USGS 41	CL, Na, SO4	Concentration, in milligrams per liter
+433409112561301	USGS 41	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433404112561301	USGS 42	CL, Na, SO4	Concentration, in milligrams per liter
+433404112561301	USGS 42	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433415112561501	USGS 43	CL, Na, SO4	Concentration, in milligrams per liter
+433415112561501	USGS 43	NO3+NO2	Concentration, in milligrams per liter
+433409112562101	USGS 44	CL, Na, SO4	Concentration, in milligrams per liter
+433409112562101	USGS 44	NO3+NO2	Concentration, in milligrams per liter
+433402112561801	USGS 45	CL, Na, SO4	Concentration, in milligrams per liter
+433402112561801	USGS 45	NO3+NO2	Concentration, in milligrams per liter
+433407112561501	USGS 46	CL, Na, SO4	Concentration, in milligrams per liter
+433407112561501	USGS 46	NO3+NO2	Concentration, in milligrams per liter
+433407112560301	USGS 47	CL, Na, SO4	Concentration, in milligrams per liter
+433407112560301	USGS 47	NO3+NO2	Concentration, in milligrams per liter
+433401112560301	USGS 48	CL, Na, SO4	Concentration, in milligrams per liter
+433401112560301	USGS 48	NO3+NO2	Concentration, in milligrams per liter
+433350112560601	USGS 51	CL, Na, SO4	Concentration, in milligrams per liter
+433350112560601	USGS 51	NO3+NO2	Concentration, in milligrams per liter
+433414112554201	USGS 52	CL, Na, SO4	Concentration, in milligrams per liter
+433414112554201	USGS 52	NO3+NO2	Concentration, in milligrams per liter
+433344112562601	USGS 57	CL, Na, SO4	Concentration, in milligrams per liter
+433344112562601	USGS 57	NO3+NO2	Concentration, in milligrams per liter
+433500112572502	USGS 58	CL, Na, SO4	Concentration, in milligrams per liter
+433500112572502	USGS 58	CR	Concentration, in micrograms per liter
+433354112554701	USGS 59	CL, Na, SO4	Concentration, in milligrams per liter
+433354112554701	USGS 59	NO3+NO2	Concentration, in milligrams per liter
+433447112574501	USGS 65	CL, Na, SO4	Concentration, in milligrams per liter
+433447112574501	USGS 65	NO3+NO2	Concentration, in milligrams per liter
+433447112574501	USGS 65	CR, U	Concentration, in micrograms per liter
+433447112574501	USGS 65	BA	Concentration, in micrograms per liter
+433344112554101	USGS 67	CL, Na, SO4	Concentration, in milligrams per liter
+433344112554101	USGS 67	NO3+NO2	Concentration, in milligrams per liter
+433425112573201	USGS 76	CL, Na, SO4	Concentration, in milligrams per liter
+433425112573201	USGS 76	NO3+NO2	Concentration, in milligrams per liter
+433315112560301	USGS 77	CL, Na, SO4	Concentration, in milligrams per liter
+433315112560301	USGS 77	NO3+NO2	Concentration, in milligrams per liter
+433315112560301	USGS 77	F	Concentration, in milligrams per liter
+433505112581901	USGS 79	CL, Na, SO4	Concentration, in milligrams per liter
+433401112551001	USGS 82	CL, Na, SO4	Concentration, in milligrams per liter
+433356112574201	USGS 84	CL, Na, SO4	Concentration, in milligrams per liter
+433356112574201	USGS 84	NO3+NO2	Concentration, in milligrams per liter
+433356112574201	USGS 84	BA	Concentration, in micrograms per liter
+433356112574201	USGS 84	CR, MO, U, AL	Concentration, in micrograms per liter
+433246112571201	USGS 85	CL, Na, SO4	Concentration, in milligrams per liter
+433246112571201	USGS 85	NO3+NO2	Concentration, in milligrams per liter
+433013113024201	USGS 87	CL, Na, SO4	Concentration, in milligrams per liter
+433013113024201	USGS 87	NO3+NO2	Concentration, in milligrams per liter
+433013113024201	USGS 87	CR	Concentration, in micrograms per liter
+432940113030201	USGS 88	CL, Na, SO4	Concentration, in milligrams per liter
+432940113030201	USGS 88	NO3+NO2	Concentration, in milligrams per liter
+433005113032801	USGS 89	CL, Na	Concentration, in milligrams per liter
+433005113032801	USGS 89	NO3+NO2	Concentration, in milligrams per liter
+432856112560801	USGS 104	CL, Na	Concentration, in milligrams per liter
+432856112560801	USGS 104	NO3+NO2	Concentration, in milligrams per liter
+432703113001801	USGS 105	CL, Na	Concentration, in milligrams per liter
+432703113001801	USGS 105	NO3+NO2	Concentration, in milligrams per liter
+432959112593101	USGS 106	CL, Na	Concentration, in milligrams per liter
+432659112582601	USGS 108	CL, Na	Concentration, in milligrams per liter
+432659112582601	USGS 108	NO3+NO2	Concentration, in milligrams per liter
+433331112560501	USGS 111	CL, Na, SO4	Concentration, in milligrams per liter
+433331112560501	USGS 111	NO3+NO2	Concentration, in milligrams per liter
+433314112563001	USGS 112	CL, Na, SO4	Concentration, in milligrams per liter
+433314112563001	USGS 112	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433314112561801	USGS 113	CL, Na, SO4	Concentration, in milligrams per liter
+433318112555001	USGS 114	CL, Na, SO4	Concentration, in milligrams per liter
+433318112555001	USGS 114	NO3+NO2	Concentration, in milligrams per liter
+433320112554101	USGS 115	CL, Na, SO4	Concentration, in milligrams per liter
+433320112554101	USGS 115	NO3+NO2	Concentration, in milligrams per liter
+433331112553201	USGS 116	CL, Na, SO4	Concentration, in milligrams per liter
+433331112553201	USGS 116	NO3+NO2	Concentration, in milligrams per liter
+432919113031501	USGS 120	CL, Na, SO4	Concentration, in milligrams per liter
+432919113031501	USGS 120	NO3+NO2	Concentration, in milligrams per liter
+433352112561401	USGS 123	CL, Na, SO4	Concentration, in milligrams per liter
+433352112561401	USGS 123	NO3+NO2	Concentration, in milligrams per liter
+432307112583101	USGS 124	CL, Na	Concentration, in milligrams per liter
+432307112583101	USGS 124	NO3+NO2	Concentration, in milligrams per liter
+433058112572201	USGS 127	CL, Na	Concentration, in milligrams per liter
+433058112572201	USGS 127	NO3+NO2	Concentration, in milligrams per liter
+433058112572201	USGS 127	CR	Concentration, in micrograms per liter
+433250112565601	USGS 128	CL	Concentration, in milligrams per liter
+433250112565601	USGS 128	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433459112572601	CWP 1	CL, SO4	Concentration, in milligrams per liter
+433458112572401	CWP 2	CL	Concentration, in milligrams per liter
+433455112572501	CWP 3	CL, SO4	Concentration, in milligrams per liter
+433454112572601	CWP 4	CL	Concentration, in milligrams per liter
+433500112573001	CWP 8	CL, SO4	Concentration, in milligrams per liter
+433349112560701	PW 1	CL, Na	Concentration, in milligrams per liter
+433344112555601	PW 2	CL, Na, SO4	Concentration, in milligrams per liter
+433351112555701	PW 3	CL, Na	Concentration, in milligrams per liter
+433348112554901	PW 4	CL, Na, SO4	Concentration, in milligrams per liter
+433348112555701	PW 5	CL, Na	Concentration, in milligrams per liter
+433353112562201	PW 6	CL	Concentration, in milligrams per liter
+433446112574602	PW 7	CL	Concentration, in milligrams per liter
+433456112572001	PW 8	CL, Na, SO4	Concentration, in milligrams per liter
+433500112575401	PW 9	CL, Na, SO4	Concentration, in milligrams per liter
+433500112575401	PW 9	CR	Concentration, in micrograms per liter
+433502112572802	TRA A 13	CL, Na	Concentration, in milligrams per liter
+433507112573801	TRA A 77	CL, Na	Concentration, in milligrams per liter
+433419112560201	USGS 50	CL, Na, SO4	Concentration, in milligrams per liter
+433419112560201	USGS 50	NO3+NO2, O-PO4 as P	Concentration, in milligrams per liter
+433503112573401	USGS 53	CL, Na	Concentration, in milligrams per liter
+433503112572801	USGS 54	CL, Na, SO4	Concentration, in milligrams per liter
+433508112573001	USGS 55	CL, Na, SO4	Concentration, in milligrams per liter
+433508112573001	USGS 55	CR	Concentration, in micrograms per liter
+433509112573501	USGS 56	CL, Na	Concentration, in milligrams per liter
+433509112573501	USGS 56	CR	Concentration, in micrograms per liter
+433456112571901	USGS 60	CL, Na, SO4	Concentration, in milligrams per liter
+433453112571601	USGS 61	CL, Na, SO4	Concentration, in milligrams per liter
+433446112570701	USGS 62	CL, Na, SO4	Concentration, in milligrams per liter
+433455112574001	USGS 63	CL, Na, SO4	Concentration, in milligrams per liter
+433436112564801	USGS 66	CL, Na, SO4	Concentration, in milligrams per liter
+433516112573901	USGS 68	CL, Na, SO4	Concentration, in milligrams per liter
+433450112573001	USGS 69	CL, Na, SO4	Concentration, in milligrams per liter
+433504112571001	USGS 70	CL, Na, SO4	Concentration, in milligrams per liter
+433439112571501	USGS 71	CL, Na, SO4	Concentration, in milligrams per liter
+433519112574601	USGS 72	CL, Na, SO4	Concentration, in milligrams per liter
+433502112575401	USGS 73	CL, Na, SO4	Concentration, in milligrams per liter
+433413112573501	USGS 78	CL, Na, SO4	Concentration, in milligrams per liter
+433000113025301	USGS 92	CL	Concentration, in milligrams per liter
