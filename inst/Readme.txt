@@ -1,32 +1,33 @@
 # Workflow
 
-# Set working directory
-setwd("E:/WORK/JFisher/Projects/Trend Report 2014")
-
 # Load library
 library(Trends)
 
 # Set option to print all warnings
 options(warn=1)
 
-# Create output directory under working directory
-p <- file.path(getwd(), format(Sys.time(), "%Y%m%d%H%M%S"))
+# Set path name for output directory
+p <- file.path(getwd(), paste0("Trends_", format(Sys.time(), "%Y%m%d%H%M%S")))
 dir.create(path=p)
 
 # Set graphics type
 gr.type <- "pdf"
 
 # Read observation data
-d <- ReadObservations(file.path(getwd(), "Data.tsv"))
+f <- system.file("extdata/SIR2014/Data.tsv", package="Trends")
+d <- ReadObservations(f)
 
 # Read parameter options file
-par.config <- ReadParConfig(file.path(getwd(), "Config_Par.tsv"))
+f <- system.file("extdata/SIR2014/Config_Par.tsv", package="Trends")
+par.config <- ReadParConfig(f)
 
 # Read geo-referenced site locations
-site.locs <- ReadSiteLocations(dsn=getwd(), layer="Site_Locations", verbose=FALSE)
+dsn <- system.file("extdata/SIR2014", package="Trends")
+site.locs <- ReadSiteLocations(dsn, layer="Site_Locations", verbose=FALSE)
 
 # Plot non-field parameters for Period-Of-Record (POR)
-plot.config <- ReadPlotConfig(file.path(getwd(), "Config_Plots.tsv"))
+f <- system.file("extdata/SIR2014/Config_Plots.tsv", package="Trends")
+plot.config <- ReadPlotConfig(f)
 PlotObservations(d, par.config=par.config, plot.config=plot.config,
                  sdate="01/01/1960", edate="01/01/2013", gr.type=gr.type,
                  path.out=file.path(p, "Data_1960-2012"), merge.pdfs=TRUE)
@@ -37,7 +38,8 @@ PlotObservations(d, par.config=par.config, plot.config=plot.config,
                  path.out=file.path(p, "Data_1989-2012"), merge.pdfs=TRUE)
 
 # Plot field parameters for entire POR
-plot.config <- ReadPlotConfig(file.path(getwd(), "Config_Plots_Field.tsv"))
+f <- system.file("extdata/SIR2014/Config_Plots_Field.tsv", package="Trends")
+plot.config <- ReadPlotConfig(f)
 PlotObservations(d, par.config=par.config, plot.config=plot.config,
                  sdate="01/01/1960", edate="01/01/2013", gr.type=gr.type,
                  path.out=file.path(p, "Data_1960-2012_Field"), merge.pdfs=TRUE)
@@ -48,14 +50,16 @@ PlotObservations(d, par.config=par.config, plot.config=plot.config,
                  path.out=file.path(p, "Data_1989-2012_Field"), merge.pdfs=TRUE)
 
 # Trend analysis for censored-non-field parameters and designated time period
-plot.config <- ReadPlotConfig(file.path(getwd(), "Config_Cen.tsv"))
+f <- system.file("extdata/SIR2014/Config_Cen.tsv", package="Trends")
+plot.config <- ReadPlotConfig(f)
 out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
                         sdate="01/01/1989", edate="01/01/2013", is.censored=TRUE,
                         path.out=file.path(p, "Stats_1989-2012_Cen"),
                         gr.type=gr.type, site.locs=site.locs, merge.pdfs=TRUE)
 
 # Trend analysis for uncensored-non-field parameters and POR
-plot.config <- ReadPlotConfig(file.path(getwd(), "Config_Uncen.tsv"))
+f <- system.file("extdata/SIR2014/Config_Uncen.tsv", package="Trends")
+plot.config <- ReadPlotConfig(f)
 out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
                         sdate="01/01/1960", edate="01/01/2013", is.censored=FALSE,
                         path.out=file.path(p, "Stats_1960-2012_Uncen"),
@@ -68,7 +72,8 @@ out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
                         gr.type=gr.type, site.locs=site.locs, merge.pdfs=TRUE)
 
 # Trend analysis for uncensored-field parameters and POR
-plot.config <- ReadPlotConfig(file.path(getwd(), "Config_Uncen_Field.tsv"))
+f <- system.file("extdata/SIR2014/Config_Uncen_Field.tsv", package="Trends")
+plot.config <- ReadPlotConfig(f)
 out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
                         sdate="01/01/1960", edate="01/01/2013", is.censored=FALSE,
                         path.out=file.path(p, "Stats_1960-2012_Uncen_Field"),
