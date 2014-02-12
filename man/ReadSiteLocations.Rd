@@ -4,9 +4,7 @@
 
 \title{Read Site Location Shapefile}
 
-\description{
-This function reads the geo-referenced observation site locations.
-}
+\description{This function reads the geo-referenced observation site locations.}
 
 \usage{ReadSiteLocations(...)}
 

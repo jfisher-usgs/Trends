@@ -4,9 +4,7 @@
 
 \title{Read Plot Configuration File}
 
-\description{
-This functions reads a plot configuration file.
-}
+\description{This functions reads a plot configuration file.}
 
 \usage{ReadPlotConfig(file, sep = "\t")}
 
@@ -27,7 +25,8 @@ Returns a data frame with components:
 \item{Site_id}{numeric; a unique site identifier.}
 \item{Site_name}{character; a local site name.}
 \item{Parameters}{character; comma separated unique parameter identifiers.}
-\item{Axis_title}{factor; plot label for the y-axis (missing values permitted).}
+\item{Axis_title}{factor; plot label for the y-axis (allows for missing
+  values).}
 }
 
 \author{J.C. Fisher}

@@ -47,11 +47,7 @@ contains a single parameter.
 
 \author{J.C. Fisher}
 
-\seealso{
-\code{\link{plot.window}}, \code{\link{axis}}, \code{\link{axis.POSIXct}},
-\code{\link{abline}}, \code{\link{polygon}}, \code{\link{lines}},
-\code{\link{points}}, \code{\link{legend}}
-}
+\seealso{\code{\link{legend}}}
 
 \examples{
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
@@ -61,8 +57,6 @@ d <- d[d$Site_id == 433657112563601, ]
 f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
 p <- read.table(file = f, header = TRUE, sep = "\t",
                 stringsAsFactors = FALSE, comment.char = "", row.names = 1)
-
-windows()
 
 d1 <- d[, c("Datetime", "Temp", "AS")]
 DrawPlot(d1, par.config = p, main = "Uncensored Data with Multiple Parameters",

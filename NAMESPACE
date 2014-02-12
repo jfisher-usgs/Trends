@@ -5,7 +5,7 @@ importFrom(rgdal, readOGR, writeOGR)
 
 export(DrawPlot,
        MergePDFs,
-       OpenGraphicsDevice,
+       OpenDevice,
        PlotObservations,
        ReadObservations,
        ReadParConfig,

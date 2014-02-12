@@ -13,7 +13,7 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
     if (gr.type != "windows")
       graphics.off()
     site <- paste0(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L])
-    OpenGraphicsDevice(path.out, site, gr.type)
+    OpenDevice(path.out, site, gr.type)
   }
 
 

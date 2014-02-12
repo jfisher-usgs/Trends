@@ -1,5 +1,8 @@
 Changes in Version 0.1-4
 
+  o  Graphics opened in a platform-independent way using the grDevices::dev.new
+     function.
+
   o  Many of the function names were updated using a more explicit naming
      convention.
 

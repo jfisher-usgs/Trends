@@ -4,7 +4,7 @@
 MergePDFs <- function(path, open.pdf=FALSE) {
 
   if (Sys.which("pdftk") == "")
-    stop("pdftk can not be run")
+    stop("pdftk can not be run, check that PDFtk Server is installed")
 
   if (missing(path) || !is.character(path))
     stop("argument 'path' is missing or not a character string")

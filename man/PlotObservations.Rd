@@ -23,8 +23,8 @@ PlotObservations(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
   period of record, in M/D/YYYY (\code{\%m/\%d/\%Y}).}
 \item{path.out}{character; the directory where data plots are saved,
   only applicable when \code{gr.type} is not equal to \code{"windows"}.}
-\item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
-  is \code{"pdf"}.}
+\item{gr.type}{character; see \code{\link{OpenDevice}}, its default is
+  \code{"pdf"}.}
 }
 
 \format{
@@ -35,6 +35,11 @@ symbols drawn for each parameter in its \code{"Parameters"} field.
 \details{
 A new graphics device is opened for each site and after four plots have
 been drawn.
+}
+
+\value{
+None. For \code{gr.type} other than \code{"windows"}, this function is used
+for the side-effect of drawing plots to external files.
 }
 
 \author{J.C. Fisher and L.C. Davis}

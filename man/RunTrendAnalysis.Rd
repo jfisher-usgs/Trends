@@ -28,9 +28,10 @@ RunTrendAnalysis(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
 \item{is.censored}{logical; if \code{TRUE}, the data is assumed to be
   censored, its default is \code{FALSE}, see \sQuote{Details}.}
 \item{path.out}{character; if \code{gr.type} not equal to \code{"windows"},
-  the directory where statistic plots are saved.}
-\item{gr.type}{character; see \code{\link{OpenGraphicsDevice}}, its default
-  is \code{"pdf"}.}
+  the directory where trend plots are saved. This argument is also used to
+  create path names for summary statistics files.}
+\item{gr.type}{character; see \code{\link{OpenDevice}}, its default is
+  \code{"pdf"}.}
 \item{cenken.tol}{numeric; a tolerance used as a stopping criteria,
   see \sQuote{Details}.}
 \item{cenken.iter}{numeric; maximum number of iterations, see \sQuote{Details}.}
@@ -61,12 +62,15 @@ The Theil-Sen estimator and trend line for uncensored data is calculated
 using robust statistic functions provided by R.R. Wilcox,
 see \code{\link{RunTheilSen}} for details.
 
-A new graphics device is opened for each site and after four plots have
-been drawn.
+A new graphics device is opened for each site or after four consecutive plots
+have been drawn for the same site.
 }
 
 \value{
-Returns a data frame with variables:
+If \code{site.locs} is specified, an object of
+\code{\link{SpatialPointsDataFrame-class}} is returned; otherwise, a
+\code{\link{data.frame}} is returned. The data frame consists of
+variables:
 \item{Site_id}{factor; a unique identifier used to access site data.}
 \item{Site_name}{character; a local site name.}
 \item{Parameter}{character; parameter identifier.}
@@ -108,6 +112,10 @@ Returns a data frame with variables:
   The sign of the \code{slope} indicates whether the significant trend is
   positive (\code{"+"}) or negative (\code{"-"}). \emph{p}-values greater
   than 0.05 are specified as \code{"no trend"}.}
+
+This function is used for the side-effect of writing summary statistics to
+a text file and ESRI Shapefile (requires \code{site.locs}). Specifying a
+\code{gr.type} other than \code{"windows"} saves plots to external files.
 }
 
 \author{J.C. Fisher and L.C. Davis}

@@ -1,9 +1,9 @@
 # Open a graphics device of type "windows", "pdf", "png", or "postscript"
 
-OpenGraphicsDevice <- function(path.out, file.name, gr.type, w=8.5, h=11, p=12,
-                               png.res=300) {
+OpenDevice <- function(path.out, file.name, gr.type, w=8.5, h=11, p=12,
+                       png.res=300) {
   if (gr.type == "windows") {
-    windows(width=w, height=h, pointsize=p)
+    dev.new(width=w, height=h, pointsize=p)
   } else {
     if (gr.type == "postscript") {
       file.ext <- "eps"

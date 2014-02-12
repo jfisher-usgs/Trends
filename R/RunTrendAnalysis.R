@@ -42,7 +42,7 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
     if (gr.type != "windows")
       graphics.off()
     site <- paste0(site, "_", LETTERS[((4L + plot.count) - 1L) %/% 4L])
-    OpenGraphicsDevice(path.out, site, gr.type)
+    OpenDevice(path.out, site, gr.type)
   }
 
 
@@ -378,7 +378,9 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
 
   if (inherits(site.locs, "SpatialPointsDataFrame")) {
     idxs <- match(obj.out$Site_id, site.locs@data$Site_id)
-    if (!any(is.na(idxs))) {
+    if (any(is.na(idxs))) {
+      warning("Site ids in 'site.locs' do not match those in 'd'")
+    } else {
       coords <- site.locs@coords[idxs, ]
       crs <- site.locs@proj4string
       obj.out$len_record <- format(obj.out$len_record)
