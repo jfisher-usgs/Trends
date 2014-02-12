@@ -22,7 +22,8 @@ RunTrendAnalysis(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
 \item{par.config}{data.frame; parameter configuration table, see
   \code{\link{ReadParConfig}}.}
 \item{plot.config}{data.frame; plot configuration table, see
-  \code{\link{ReadPlotConfig}}.}
+  \code{\link{ReadPlotConfig}}. Note that the \code{Axis_title} variable is not
+  used by this function.}
 \item{sdate, edate}{character; start and end dates for records, in M/D/YYYY
   (\code{\%m/\%d/\%Y}).}
 \item{is.censored}{logical; if \code{TRUE}, the data is assumed to be

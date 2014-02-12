@@ -1,14 +1,24 @@
 Changes in Version 0.1-4
 
-  o  Graphics opened in a platform-independent way using the grDevices::dev.new
-     function.
+  o  Summary statistics are written to a ESRI Shapefile.
+
+  o  Added new functions for reading configuration files (ReadParConfig and
+     ReadPlotConfig) and a geo-referenced site location file
+     (ReadSiteLocations).
+
+  o  The 'Min', 'Max', 'Start_date', and 'End_date' fields have been removed
+     from the plot configuration files. Users need to update their input files
+     to account for this change.
+
+  o  Graphics now opened in a platform-independent way using the
+     grDevices::dev.new function.
 
   o  Many of the function names were updated using a more explicit naming
      convention.
 
-  o  Removed Tcl/Tk dialog boxes for file and directory selection. Default
-     directory arguments are the working directory and file path names must be
-     passed as arguments.
+  o  The tcltk package is no longer required. Removed Tcl/Tk dialog boxes for
+     file and directory selection. Default directory arguments are the working
+     directory and file path names must be passed as arguments.
 
   o  Fixed calculation of the number of samples above the reporting limit
      (n_above_rl); previous value did not include the number of estimated (E)

@@ -30,8 +30,8 @@ Install the **Trends** package:
 
 Support for merging PDF files into a new file requires
 [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
-a cross-platform command-line tool for working with PDFs.
-If this feature is desired, download and install.
+a cross-platform command-line tool for working with PDFs; if this feature is
+desired, download and install.
 
 Run
 ---
