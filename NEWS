@@ -1,5 +1,7 @@
 Changes in Version 0.1-4
 
+  o  Added package vignette describing 2014 water quality data processing.
+
   o  Summary statistics are written to a ESRI Shapefile.
 
   o  Added new functions for reading configuration files (ReadParConfig and
@@ -24,8 +26,8 @@ Changes in Version 0.1-4
      (n_above_rl); previous value did not include the number of estimated (E)
      samples.
 
-  o  Plot legends show p-value as less than 0.001; previously these labels were
-     represented as "p-value = 0.000".
+  o  Plot legends show "p-value < 0.001"; previously these labels were shown as
+     "p-value = 0.000".
 
   o  Nonparametric regression is prevented when NADA::cenfit function results in
      warnings.

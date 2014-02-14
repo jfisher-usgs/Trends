@@ -259,8 +259,7 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
         if (is.code) {
           n.cen <- as.integer(sum(d.id[[col.code.name]] %in% 1))
           if (n.cen > 0) {
-            txt <- paste("Censored data found in uncensored statistical",
-                         "analysis (parameter will not be plotted):")
+            txt <- "Censored data found in uncensored analysis, not plotted:"
             warning(paste(txt, err.extra, sep="\n"))
             next
           }

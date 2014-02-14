@@ -1,4 +1,4 @@
-% \VignetteIndexEntry{Process Water Quality Data}
+% \VignetteIndexEntry{Processing 2014 Water Quality Data}
 % \VignetteEngine{knitr::knitr}
 % \VignetteDepends{Trends, MASS, NADA, sp, rgdal}
 
@@ -30,82 +30,140 @@
 \makeatletter
 \makeatother
 
-
 \begin{document}
 
 <<setup, include=FALSE, cache=FALSE>>=
-library(Trends)
 knitr::opts_chunk$set(dev="pdf", tidy=FALSE)
+options(warn=1)
+options(width=90)
+ptime <- proc.time()
 @
 
-\title{Process Water Quality Data}
+\title{Processing 2014 Water Quality Data}
 
 \author{Jason C. Fisher}
 
 \maketitle
 
-
-Load library
-<<eval=FALSE>>=
+Load required \textbf{R} package:
+<<>>=
 library(Trends)
 @
 
-
-Set option to print all warnings
+Set path name for input files:
 <<>>=
-options(warn = 1)
+path.in <- system.file("extdata/SIR2014", package = "Trends")
+list.files(path.in)
 @
 
-
-Set path name for output directory
+Set path name for output files:
 <<>>=
-p <- file.path(getwd(), paste0("Trends_", format(Sys.time(), "%Y%m%d%H%M%S")))
-dir.create(path = p)
+path.out <- file.path(getwd(), paste0("Trends_", format(Sys.time(), "%Y%m%d%H%M%S")))
+dir.create(path = path.out, showWarnings = FALSE)
+print(path.out)
 @
 
-
-Set graphics type
+Set graphics type for output figures, either "pdf", "postscript", "png", or "windows"
+(normal screen device):
 <<>>=
 gr.type <- "pdf"
 @
 
-
-Read observation data
+Read observational data file:
 <<>>=
-f <- system.file("extdata/SIR2014/Data.tsv", package = "Trends")
-d <- ReadObservations(f)
+d <- ReadObservations(file.path(path.in, "Data.tsv"))
 @
 
-
-Read parameter options file
+Read parameter options file:
 <<>>=
-f <- system.file("extdata/SIR2014/Config_Par.tsv", package = "Trends")
-par.config <- ReadParConfig(f)
+par.config <- ReadParConfig(file.path(path.in, "Config_Par.tsv"))
 @
 
-
-Read geo-referenced site locations
+Read site location shapefile:
 <<>>=
-dsn <- system.file("extdata/SIR2014", package = "Trends")
-site.locs <- ReadSiteLocations(dsn, layer = "Site_Locations", verbose = FALSE)
+site.locs <- ReadSiteLocations(path.in, layer = "Site_Locations", verbose = FALSE)
 @
 
-
-Plot non-field parameters for Period-Of-Record (POR)
+Plot non-field parameters for period-of-record (POR):
 <<>>=
-f <- system.file("extdata/SIR2014/Config_Plots.tsv", package = "Trends")
-plot.config <- ReadPlotConfig(f)
+plot.config <- ReadPlotConfig(file.path(path.in, "Config_Plots.tsv"))
 PlotObservations(d, par.config = par.config, plot.config = plot.config,
                  sdate = "01/01/1960", edate = "01/01/2013", gr.type = gr.type,
-                 path.out = file.path(p, "Data_1960-2012"), merge.pdfs = TRUE)
+                 path.out = file.path(path.out, "Data_1960-2012"), merge.pdfs = TRUE)
 @
 
+Plot non-field parameters for designated time period:
+<<>>=
+PlotObservations(d, par.config = par.config, plot.config = plot.config,
+                 sdate = "01/01/1989", edate = "01/01/2013", gr.type = gr.type,
+                 path.out = file.path(path.out, "Data_1989-2012"), merge.pdfs = TRUE)
+@
 
+Plot field parameters for entire POR:
+<<>>=
+plot.config <- ReadPlotConfig(file.path(path.in, "Config_Plots_Field.tsv"))
+PlotObservations(d, par.config = par.config, plot.config = plot.config,
+                 sdate = "01/01/1960", edate = "01/01/2013", gr.type = gr.type,
+                 path.out = file.path(path.out, "Data_1960-2012_Field"),
+                 merge.pdfs = TRUE)
+@
 
+Plot field parameters for designated time period:
+<<>>=
+PlotObservations(d, par.config = par.config, plot.config = plot.config,
+                 sdate = "01/01/1989", edate = "01/01/2013", gr.type = gr.type,
+                 path.out = file.path(path.out, "Data_1989-2012_Field"),
+                 merge.pdfs = TRUE)
+@
 
+Run trend analysis for censored-non-field parameters and designated time period:
+<<>>=
+plot.config <- ReadPlotConfig(file.path(path.in, "Config_Cen.tsv"))
+out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
+                        sdate = "01/01/1989", edate = "01/01/2013", is.censored = TRUE,
+                        path.out = file.path(path.out, "Stats_1989-2012_Cen"),
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+@
 
-Reproducibility requires version information about \textbf{R} and attached or
-loaded packages:
+Run trend analysis for uncensored-non-field parameters and POR:
+<<>>=
+plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen.tsv"))
+out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
+                        sdate = "01/01/1960", edate = "01/01/2013", is.censored = FALSE,
+                        path.out = file.path(path.out, "Stats_1960-2012_Uncen"),
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+@
+
+Run trend analysis for uncensored-non-field parameters and designated time period:
+<<>>=
+out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
+                        sdate = "01/01/1989", edate = "01/01/2013", is.censored = FALSE,
+                        path.out = file.path(path.out, "Stats_1989-2012_Uncen"),
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+@
+
+Run trend analysis for uncensored-field parameters and POR:
+<<>>=
+plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen_Field.tsv"))
+out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
+                        sdate = "01/01/1960", edate = "01/01/2013", is.censored = FALSE,
+                        path.out = file.path(path.out, "Stats_1960-2012_Uncen_Field"),
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+@
+
+Run trend analysis for uncensored-field parameters and designated time period:
+<<>>=
+out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
+                        sdate = "01/01/1989", edate = "01/01/2013", is.censored = FALSE,
+                        path.out = file.path(path.out, "Stats_1989-2012_Uncen_Field"),
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+@
+
+<<echo=FALSE>>=
+ptime <- format(round((proc.time() - ptime)["elapsed"] / 60, digits=0))
+@
+Total processing time for package vignette was \Sexpr{ptime} minutes.
+Version information about \textbf{R} and attached or loaded packages:
 <<echo=FALSE, results="asis">>=
 print(toLatex(sessionInfo(), locale=FALSE))
 @
