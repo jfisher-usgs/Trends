@@ -22,8 +22,7 @@ Open an R session and install required packages using the following commands:
 
 Support for merging PDF files into a new file requires
 [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
-a cross-platform command-line tool for working with PDFs; if this feature is
-desired, download and install.
+a cross-platform command-line tool for working with PDFs; download and install.
 
 Run
 ---
@@ -32,6 +31,6 @@ Load **Trends** in the current R session:
 
     > library(Trends)
 
-See examples in help documentation:
+See help documentation:
 
     > help(package = "Trends")
