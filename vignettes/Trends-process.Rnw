@@ -48,7 +48,8 @@ ptime <- proc.time()
 If \href{http://www.r-project.org/}{R} is not already installed on your
 computer, download and install the latest binary distribution from
 \href{http://cran.r-project.org/}{CRAN}.
-Open an \textbf{R} session and install the following packages:
+Open an \textbf{R} session and install required packages using the
+following commands:
 <<eval=FALSE>>=
 install.packages(c("NADA", "rgdal"), repos = "http://cran.rstudio.com/")
 install.packages("Trends", repos = "http://jfisher-usgs.github.com/R/")
@@ -65,6 +66,7 @@ cross-platform command-line tool for working with PDFs; download and install
 this software. Determine if \textbf{pdftk} is accessible from \textbf{R}:
 <<>>=
 merge.pdfs <- as.logical(nchar(Sys.which("pdftk")))
+print(merge.pdfs)
 @
 
 Set path name for input files:
@@ -100,7 +102,7 @@ Read site location shapefile:
 site.locs <- ReadSiteLocations(path.in, layer = "Site_Locations", verbose = FALSE)
 @
 
-Plot non-field parameters from 1960 through 2012 (period-of-record):
+Plot non-field parameters from 1960 through 2012, that is, the period-of-record:
 <<>>=
 plot.config <- ReadPlotConfig(file.path(path.in, "Config_Plots.tsv"))
 PlotObservations(d, par.config = par.config, plot.config = plot.config,
