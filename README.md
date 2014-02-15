@@ -14,19 +14,11 @@ Install
 If R is not already installed on your
 computer, download and install the latest binary distribution from
 [CRAN](http://cran.r-project.org/ "The Comprehensive R Archive Network").
-Windows users should set R to operate as an SDI application during installation
-by choosing to customize the startup options and specifying the SDI interface
-(not the default).
 
-Install required R packages from CRAN:
+Open an R session and install required packages using the following commands:
 
-    > install.packages(c("NADA", "rgdal"))
-
-Install the **Trends** package:
-
-    > install.packages("devtools")
-    > library(devtools)
-    > install_github("Trends", username = "jfisher-usgs", ref = "v0.1.3")
+    > install.packages(c("NADA", "rgdal"), repos = "http://cran.rstudio.com/")
+    > install.packages("Trends", repos = "http://jfisher-usgs.github.com/R/")
 
 Support for merging PDF files into a new file requires
 [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
