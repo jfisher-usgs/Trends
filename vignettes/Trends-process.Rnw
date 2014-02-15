@@ -45,14 +45,31 @@ ptime <- proc.time()
 
 \maketitle
 
-Load required \textbf{R} package:
+If \href{http://www.r-project.org/}{R} is not already installed on your
+computer, download and install the latest binary distribution from
+\href{http://cran.r-project.org/}{CRAN}.
+Open an \textbf{R} session and install the following packages:
+<<eval=FALSE>>=
+install.packages(c("NADA", "rgdal"), repos = "http://cran.rstudio.com/")
+install.packages("Trends", repos = "http://jfisher-usgs.github.com/R/")
+@
+
+Load the \textbf{Trends} package:
 <<>>=
 library(Trends)
 @
 
+Support for merging PDF files into a new file requires
+\href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a
+cross-platform command-line tool for working with PDFs; download and install
+this software. Determine if \textbf{pdftk} is accessible from \textbf{R}:
+<<>>=
+merge.pdfs <- as.logical(nchar(Sys.which("pdftk")))
+@
+
 Set path name for input files:
 <<>>=
-path.in <- system.file("extdata/SIR2014", package = "Trends")
+path.in <- system.file("extdata", "SIR2014", package = "Trends")
 list.files(path.in)
 @
 
@@ -60,11 +77,10 @@ Set path name for output files:
 <<>>=
 path.out <- file.path(getwd(), paste0("Trends_", format(Sys.time(), "%Y%m%d%H%M%S")))
 dir.create(path = path.out, showWarnings = FALSE)
-print(path.out)
 @
 
-Set graphics type for output figures, either "pdf", "postscript", "png", or "windows"
-(normal screen device):
+Set graphics type for output figures, either \textit{pdf}, \textit{postscript},
+\textit{png}, or \textit{windows}:
 <<>>=
 gr.type <- "pdf"
 @
@@ -84,79 +100,81 @@ Read site location shapefile:
 site.locs <- ReadSiteLocations(path.in, layer = "Site_Locations", verbose = FALSE)
 @
 
-Plot non-field parameters for period-of-record (POR):
+Plot non-field parameters from 1960 through 2012 (period-of-record):
 <<>>=
 plot.config <- ReadPlotConfig(file.path(path.in, "Config_Plots.tsv"))
 PlotObservations(d, par.config = par.config, plot.config = plot.config,
                  sdate = "01/01/1960", edate = "01/01/2013", gr.type = gr.type,
-                 path.out = file.path(path.out, "Data_1960-2012"), merge.pdfs = TRUE)
+                 path.out = file.path(path.out, "Data_1960-2012"),
+                 merge.pdfs = merge.pdfs)
 @
 
-Plot non-field parameters for designated time period:
+Plot non-field parameters from 1989 through 2012:
 <<>>=
 PlotObservations(d, par.config = par.config, plot.config = plot.config,
                  sdate = "01/01/1989", edate = "01/01/2013", gr.type = gr.type,
-                 path.out = file.path(path.out, "Data_1989-2012"), merge.pdfs = TRUE)
+                 path.out = file.path(path.out, "Data_1989-2012"),
+                 merge.pdfs = merge.pdfs)
 @
 
-Plot field parameters for entire POR:
+Plot field parameters from 1960 through 2012:
 <<>>=
 plot.config <- ReadPlotConfig(file.path(path.in, "Config_Plots_Field.tsv"))
 PlotObservations(d, par.config = par.config, plot.config = plot.config,
                  sdate = "01/01/1960", edate = "01/01/2013", gr.type = gr.type,
                  path.out = file.path(path.out, "Data_1960-2012_Field"),
-                 merge.pdfs = TRUE)
+                 merge.pdfs = merge.pdfs)
 @
 
-Plot field parameters for designated time period:
+Plot field parameters from 1989 through 2012:
 <<>>=
 PlotObservations(d, par.config = par.config, plot.config = plot.config,
                  sdate = "01/01/1989", edate = "01/01/2013", gr.type = gr.type,
                  path.out = file.path(path.out, "Data_1989-2012_Field"),
-                 merge.pdfs = TRUE)
+                 merge.pdfs = merge.pdfs)
 @
 
-Run trend analysis for censored-non-field parameters and designated time period:
+Run trend analysis for censored-non-field parameters from 1989 through 2012:
 <<>>=
 plot.config <- ReadPlotConfig(file.path(path.in, "Config_Cen.tsv"))
 out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
                         sdate = "01/01/1989", edate = "01/01/2013", is.censored = TRUE,
                         path.out = file.path(path.out, "Stats_1989-2012_Cen"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
-Run trend analysis for uncensored-non-field parameters and POR:
+Run trend analysis for uncensored-non-field parameters from 1960 through 2012:
 <<>>=
 plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen.tsv"))
 out <- RunTrendAnalysis(d, par.config=par.config, plot.config=plot.config,
                         sdate = "01/01/1960", edate = "01/01/2013", is.censored = FALSE,
                         path.out = file.path(path.out, "Stats_1960-2012_Uncen"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
-Run trend analysis for uncensored-non-field parameters and designated time period:
+Run trend analysis for uncensored-non-field parameters from 1989 through 2012:
 <<>>=
 out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
                         sdate = "01/01/1989", edate = "01/01/2013", is.censored = FALSE,
                         path.out = file.path(path.out, "Stats_1989-2012_Uncen"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
-Run trend analysis for uncensored-field parameters and POR:
+Run trend analysis for uncensored-field parameters from 1960 through 2012:
 <<>>=
 plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen_Field.tsv"))
 out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
                         sdate = "01/01/1960", edate = "01/01/2013", is.censored = FALSE,
                         path.out = file.path(path.out, "Stats_1960-2012_Uncen_Field"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
-Run trend analysis for uncensored-field parameters and designated time period:
+Run trend analysis for uncensored-field parameters from 1989 through 2012:
 <<>>=
 out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
                         sdate = "01/01/1989", edate = "01/01/2013", is.censored = FALSE,
                         path.out = file.path(path.out, "Stats_1989-2012_Uncen_Field"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = TRUE)
+                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
 <<echo=FALSE>>=
