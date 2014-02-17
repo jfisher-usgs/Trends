@@ -55,7 +55,8 @@ install.packages(c("NADA", "rgdal"), repos = "http://cran.rstudio.com/")
 install.packages("Trends", repos = "http://jfisher-usgs.github.com/R/")
 @
 
-Load the \textbf{Trends} package into the current \textbf{R} session:
+Load the \href{https://github.com/jfisher-usgs/Trends}{Trends} package into the
+current \textbf{R} session:
 <<>>=
 library(Trends)
 @
@@ -68,7 +69,7 @@ this software. Determine if \textbf{pdftk} is accessible from \textbf{R}:
 print(merge.pdfs <- as.logical(nchar(Sys.which("pdftk"))))
 @
 
-Set the full path name to the directory containing input files; list the
+Set the full path name to the directory containing input files; list all
 files in this directory:
 <<>>=
 list.files(path.in <- system.file("extdata", "SIR2014", package = "Trends"))
@@ -91,12 +92,12 @@ Read observational data from a text file:
 d <- ReadObservations(file.path(path.in, "Data.tsv"))
 @
 
-Read parameter options from a text file:
+Read parameter configurations from a text file:
 <<>>=
 par.config <- ReadParConfig(file.path(path.in, "Config_Par.tsv"))
 @
 
-Read site locations from a shapefile:
+Read geo-referenced site locations from a point shapefile:
 <<>>=
 site.locs <- ReadSiteLocations(path.in, layer = "Site_Locations", verbose = FALSE)
 @
@@ -178,18 +179,18 @@ out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
                         gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
-View \textbf{R} code extracted from this vignette:
+To reprocess the 2014 water quality data, first view \textbf{R} code extracted
+from this vignette. Manually transfer the code into an \textbf{R} session via a
+copy and paste operation.
 <<eval=FALSE>>=
 browseURL(system.file("doc", "Trends-process.R", package = "Trends"))
 @
-Manually transfer this code into an \textbf{R} session via a copy and paste
-operation to reprocess the data.
 
 <<echo=FALSE>>=
 ptime <- format(round((proc.time() - ptime)["elapsed"] / 60, digits=0))
 @
 Total processing time for this vignette was \Sexpr{ptime} minutes.
-Version information about \textbf{R} and attached or loaded packages is as follows:
+Version information about \textbf{R} and loaded packages is as follows:
 <<echo=FALSE, results="asis">>=
 print(toLatex(sessionInfo(), locale=FALSE))
 @
