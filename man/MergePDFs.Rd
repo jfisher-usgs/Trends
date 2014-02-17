@@ -6,13 +6,15 @@
 
 \description{This function combines PDF files into a new file.}
 
-\usage{MergePDFs(path, open.pdf = FALSE)}
+\usage{MergePDFs(path, open.pdf = FALSE, retain.files = TRUE)}
 
 \arguments{
 \item{path}{character; the path name of the folder containing the PDF files to
   merge.}
 \item{open.pdf}{logical; if \code{TRUE}, the merged file is opened using the
   systems default PDF viewer.}
+\item{retain.files}{logical; if \code{FALSE}, all individual PDF files are
+  removed after a merge is completed.}
 }
 
 \details{
@@ -54,9 +56,8 @@ plot(x <- sort(rnorm(47)), type = "s", col = "green", main = "f3a")
 plot(x, main = "f3b")
 dev.off()
 
-MergePDFs(path, open.pdf = TRUE)
+MergePDFs(path, open.pdf = TRUE, retain.files = FALSE)
 
-unlink(path, recursive = TRUE)
 unlink(paste0(path, ".pdf"))
 }}
 

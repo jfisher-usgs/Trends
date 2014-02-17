@@ -1,8 +1,13 @@
+Changes in Version 0.1-5
+
+  o  Added argument in MergePDFs function to remove individual files after merge
+     is completed.
+
 Changes in Version 0.1-4
 
   o  Added package vignette describing 2014 water quality data processing.
 
-  o  Summary statistics are written to a ESRI Shapefile.
+  o  Summary statistics are written to a shapefile.
 
   o  Added new functions for reading configuration files (ReadParConfig and
      ReadPlotConfig) and a geo-referenced site location file

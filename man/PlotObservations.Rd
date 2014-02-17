@@ -29,14 +29,11 @@ PlotObservations(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
   plots are combined into a single PDF file, see \code{\link{MergePDFs}}.}
 }
 
-\format{
-Each row of \code{plot.config} represents a single plot with unique point
-symbols drawn for each parameter in its \code{"Parameters"} field.
-}
-
 \details{
-A new graphics device is opened for each site and after four plots have
-been drawn.
+Each row of \code{plot.config} represents a single plot with unique point
+symbols drawn for each parameter in its \code{"Parameters"} component.
+A new graphics device is opened for each site or after four consecutive plots
+have been drawn for the same site.
 }
 
 \value{

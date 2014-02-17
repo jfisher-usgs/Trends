@@ -118,7 +118,7 @@ variables:
   than 0.05 are specified as \code{"no trend"}.}
 
 This function is used for the side-effect of writing summary statistics to
-a text file and ESRI Shapefile (requires \code{site.locs}). Specifying a
+a text file and shapefile (requires \code{site.locs}). Specifying a
 \code{gr.type} other than \code{"windows"} saves plots to external files.
 }
 
