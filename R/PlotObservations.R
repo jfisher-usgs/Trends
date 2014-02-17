@@ -147,7 +147,7 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
   }
 
   if (gr.type == "pdf" && merge.pdfs)
-    MergePDFs(path.out)
+    MergePDFs(path.out, retain.files=FALSE)
 
   invisible()
 }
