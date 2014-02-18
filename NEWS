@@ -1,11 +1,13 @@
 Changes in Version 0.1-5
 
+  o  Added a package CITATION file and a LaTeX bibliography source file.
+
   o  Added argument in MergePDFs function to remove individual files after merge
      is completed.
 
 Changes in Version 0.1-4
 
-  o  Added package vignette describing 2014 water quality data processing.
+  o  Added a package vignette describing 2014 water quality data processing.
 
   o  Summary statistics are written to a shapefile.
 
