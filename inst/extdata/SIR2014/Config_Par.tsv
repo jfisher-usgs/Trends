@@ -33,3 +33,23 @@ HG	Mercury	micrograms per liter	5	#E31A1C	NA
 CD	Cadmium	micrograms per liter	6	#FDBF6F	NA
 TL	Thallium	micrograms per liter	7	#CAB2D6	NA
 AL	Aluminum	micrograms per liter	8	#000000	NA
+P34010	Toluene	micrograms per liter	0	#A6CEE3	NA
+P39180	Trichloroethene	micrograms per liter	1	#1F78B4	NA
+P32106	Trichloromethane	micrograms per liter	2	#B2DF8A	NA
+P34668	Dichlorodifluoromethane	micrograms per liter	3	#33A02C	NA
+P34475	Tetrachloroethene	micrograms per liter	4	#FB9A99	NA
+P32102	Tetrachloromethane	micrograms per liter	5	#E31A1C	NA
+P34506	1,1,1-Trichloroethane	micrograms per liter	6	#FDBF6F	NA
+P34496	1,1-Dichloroethane	micrograms per liter	7	#CAB2D6	NA
+P34501	1,1-Dichloroethene	micrograms per liter	8	#000000	NA
+P34030	Benzene	micrograms per liter	9	#458B74	NA
+P32101	Bromodichloromethane	micrograms per liter	10	#8B3E2F	NA
+P32105	Dibromochloromethane	micrograms per liter	11	#6495ED	NA
+P30217	Dibromomethane	micrograms per liter	12	#8B8378	NA
+P32104	Tribromomethane	micrograms per liter	13	#00008B	NA
+P34423	Dichloromethane	micrograms per liter	14	#8B7D6B	NA
+P34371	Ethylbenzene	micrograms per liter	15	#00CDCD	NA
+P77128	Styrene	micrograms per liter	16	#EE6A50	NA
+P77353	tert-Butylbenzene	micrograms per liter	17	#8A2BE2	NA
+P34546	trans 1,2-Dichloroethene	micrograms per liter	18	#556B2F	NA
+P81551	Xylene	micrograms per liter	19	#CD950C	NA

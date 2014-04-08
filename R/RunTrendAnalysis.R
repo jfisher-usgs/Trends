@@ -190,13 +190,13 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
         lst$min        <- min(dat)
         lst$max        <- max(dat)
         lst$len_record <- diff(range(d.id$Datetime))
-
+        
+        lst$mean    <- suppressWarnings(mean(ans)["mean"])
+        lst$std_dev <- suppressWarnings(sd(ans))
+        lst$median  <- suppressWarnings(median(ans))
+        
         # Compute trend if complete cenfit results
-        if (!is.na(median(ans))) {
-
-          lst$mean    <- mean(ans)["mean"]
-          lst$std_dev <- sd(ans)
-          lst$median  <- median(ans)
+        if (!is.na(lst$mean) && !is.na(lst$std_dev) && !is.na(lst$median)) {
 
           # Kendall's tau correlation coefficient and Akritas-Theil-Sen
           # nonparametric regression line, see ?cenken
@@ -385,7 +385,7 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
     if (any(is.na(idxs))) {
       warning("Site ids in 'site.locs' do not match those in 'd'")
     } else {
-      coords <- site.locs@coords[idxs, ]
+      coords <- site.locs@coords[idxs, , drop=FALSE]
       crs <- site.locs@proj4string
       obj.out$len_record <- format(obj.out$len_record)
       obj.out <- SpatialPointsDataFrame(coords, data=obj.out, proj4string=crs,

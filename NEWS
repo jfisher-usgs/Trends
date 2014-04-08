@@ -1,5 +1,11 @@
 Changes in Version 0.1-5
 
+  o  Fixed bug in RunTrendAnalysis function that dropped matrix class for 
+     spatial data frames with a single coordinate value.
+
+  o  Fixed bug in RunTrendAnalysis function that tried to compute trend when 
+     summary statistics returned from NADA::cenfit function were incomplete.
+
   o  Added a package CITATION file and a LaTeX bibliography source file.
 
   o  Added argument in MergePDFs function to remove individual files after merge
