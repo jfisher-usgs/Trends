@@ -171,20 +171,21 @@ out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
                         gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
-Run a trend analysis for censored volatile organic compond (VOC) parameters from 1960 through 2012:
+Run a trend analysis for censored VOC parameters from 1987 through 2012:
 <<>>=
 plot.config <- ReadPlotConfig(file.path(path.in, "Config_Cen_VOC.tsv"))
 out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
-                        sdate = "01/01/1960", edate = "01/01/2013", is.censored = TRUE,
-                        path.out = file.path(path.out, "Stats_1960-2012_Cen_VOC"),
+                        sdate = "01/01/1987", edate = "01/01/2013", is.censored = TRUE,
+                        path.out = file.path(path.out, "Stats_1987-2012_Cen_VOC"),
                         gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
-Run a trend analysis for censored VOC parameters from 1989 through 2012:
+Run a trend analysis for uncensored VOC parameters from 1987 through 2012:
 <<>>=
+plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen_VOC.tsv"))
 out <- RunTrendAnalysis(d, par.config = par.config, plot.config = plot.config,
-                        sdate = "01/01/1989", edate = "01/01/2013", is.censored = TRUE,
-                        path.out = file.path(path.out, "Stats_1989-2012_Cen_VOC"),
+                        sdate = "01/01/1987", edate = "01/01/2013", is.censored = FALSE,
+                        path.out = file.path(path.out, "Stats_1987-2012_Uncen_VOC"),
                         gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
 @
 
