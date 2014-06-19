@@ -17,7 +17,7 @@ computer, download and install the latest binary distribution from
 
 Open an R session and install required packages using the following commands:
 
-    > install.packages(c("NADA", "rgdal"))
+    > install.packages(c("survival", "NADA", "rgdal"))
     > install.packages("Trends", repos = "http://jfisher-usgs.github.com/R/")
 
 Support for merging PDF files into a new file requires
