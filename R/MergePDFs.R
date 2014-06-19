@@ -49,12 +49,12 @@ MergePDFs <- function(path, open.pdf=FALSE, retain.files=TRUE) {
   system(command=tmp.bat, show.output.on.console=FALSE)
 
   bookmarks <- sub("\\.pdf$", "", input.pdfs)
-  Fun <- function(i) {
+  FUN <- function(i) {
     bookmark <- c("BookmarkBegin", paste("BookmarkTitle:", bookmarks[i]),
                   "BookmarkLevel: 1", paste("BookmarkPageNumber:", pages[i]))
     return(paste(bookmark, collapse="\n"))
   }
-  bookmarks <- vapply(seq_along(bookmarks), Fun, "")
+  bookmarks <- vapply(seq_along(bookmarks), FUN, "")
   cat(bookmarks, file=tmp.txt, sep="\n", append=TRUE)
   cmd[2] <- paste("pdftk", shQuote(tmp.pdf), "update_info", shQuote(tmp.txt),
                   "output", shQuote(output.pdf))
