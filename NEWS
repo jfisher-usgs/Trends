@@ -1,3 +1,7 @@
+Changes in Version 0.1-6
+
+  o  ...
+
 Changes in Version 0.1-5
 
   o  Fixed bug in RunTrendAnalysis function that dropped matrix class for
