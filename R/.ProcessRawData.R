@@ -54,16 +54,20 @@
 
     d$is.event    <- !is.na(d$t1) & !is.na(d$t2) & d$t1 == d$t2
     d$is.left     <-  is.na(d$t1) & !is.na(d$t2)
-    d$is.interval <- !is.na(d$t1) & !is.na(d$t2) & d$t1 < d$t2
+    d$is.interval <- !is.na(d$t1) & !is.na(d$t2) & d$t1 != d$t2
 
-    att <- par.config[match(nam, par.config$Parameter), , drop=TRUE]
-    attr(d, "Name")  <- att$Name
-    attr(d, "Units") <- att$Units
-    attr(d, "pch")   <- att$pch
-    attr(d, "col")   <- att$col
-    attr(d, "bg")    <- att$bg
+    added.attr <- par.config[match(nam, par.config$Parameter), , drop=TRUE]
+    attributes(d) <- c(attributes(d), added.attr)
+
     lst[[nam]] <- d
   }
+
+  site.names <- raw.data[order(raw.data$Site_name), c("Site_name", "Site_id")]
+  site.names <- site.names[!duplicated(site.names$Site_id), ]
+  rownames(site.names) <- site.names$Site_id
+  site.names <- site.names[, "Site_name", drop=FALSE]
+  attr(lst, "site.names") <- site.names
+
   return(lst)
 }
 
