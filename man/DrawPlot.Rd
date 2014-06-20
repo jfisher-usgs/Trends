@@ -50,7 +50,7 @@ contains a single parameter.
 \seealso{\code{\link{legend}}}
 
 \examples{
-f <- system.file("extdata/ex.data.tsv", package = "Trends")
+f <- system.file("extdata/ex.raw.data.tsv", package = "Trends")
 d <- ReadObservations(f)
 d <- d[d$Site_id == 433657112563601, ]
 

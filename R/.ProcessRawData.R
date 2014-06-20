@@ -81,7 +81,7 @@
 
   path.in <- system.file("extdata", "SIR2014", package = "Trends")
 
-  file <- file.path(path.in, "Data.tsv")
+  file <- file.path(path.in, "Raw_Data.tsv")
   raw.data <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, strip.white = TRUE,
                          allowEscapes = TRUE, flush = TRUE, stringsAsFactors = FALSE)
 

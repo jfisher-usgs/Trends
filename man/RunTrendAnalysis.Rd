@@ -133,7 +133,7 @@ Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
 }
 
 \examples{
-f <- system.file("extdata/ex.data.tsv", package = "Trends")
+f <- system.file("extdata/ex.raw.data.tsv", package = "Trends")
 d <- ReadObservations(f)
 file.par <- system.file("extdata/ex.parameters.tsv", package = "Trends")
 parameters <- ReadParConfig(file.par)

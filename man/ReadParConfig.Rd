@@ -21,9 +21,9 @@ This function reads the symbol type and color for all possible parameters.
 \format{
 The imported parameter configuration table requires the following fields:
 \code{"Parameter"} (read as row names), \code{"Name"}, \code{"Units"},
-\code{"pch"}, \code{"col"}, and \code{"bg"}. Each line of the table represents a
-single unique parameter. The first line in the table must contain variable
-names. See \sQuote{Value} for field descriptions.
+\code{"pch"}, \code{"col"}, \code{"bg"}, and \code{"sd"}. Each line of the
+table represents a single unique parameter. The first line in the table must
+contain variable names. See \sQuote{Value} for field descriptions.
 }
 
 \value{
@@ -35,6 +35,8 @@ Returns a data frame with components:
 \item{col}{character; the color code.}
 \item{bg}{character; the background (fill) color for open plot symbols,
   \code{pch = 21:25.}}
+\item{sd}{character; column name in data table indicating standard deviation
+  for parameter.}
 and attribute:
 \item{row.names}{character; a unique identifier for each parameter.}
 }

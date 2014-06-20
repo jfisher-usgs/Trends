@@ -81,7 +81,7 @@ gr.type <- "pdf"
 
 Read observational data from a text file:
 <<>>=
-d <- ReadObservations(file.path(path.in, "Data.tsv"))
+d <- ReadObservations(file.path(path.in, "Raw_Data.tsv"))
 @
 
 Read parameter configurations from a text file:

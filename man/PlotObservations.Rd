@@ -46,7 +46,7 @@ for the side-effect of drawing plots to external files.
 \seealso{\code{\link{DrawPlot}}}
 
 \examples{
-f <- system.file("extdata/ex.data.tsv", package = "Trends")
+f <- system.file("extdata/ex.raw.data.tsv", package = "Trends")
 d <- ReadObservations(f)
 
 file.par <- system.file("extdata/ex.parameters.tsv", package = "Trends")
