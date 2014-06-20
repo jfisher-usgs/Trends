@@ -1,16 +1,5 @@
 
 
-path.in <- system.file("extdata", "SIR2014", package = "Trends")
-
-file <- file.path(path.in, "Data.tsv")
-raw.data <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, strip.white = TRUE,
-                       allowEscapes = TRUE, flush = TRUE, stringsAsFactors = FALSE)
-
-
-file <- file.path(path.in, "Config_Par.tsv")
-par.config <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, comment.char = "",
-                         flush = TRUE, stringsAsFactors = FALSE)
-
 
 .ProcessRawData <- function(raw.data, par.config, det.lim=NULL) {
 
@@ -79,8 +68,26 @@ par.config <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, comment.c
 }
 
 
-processed.data <- .ProcessRawData(raw.data, par.config)
 
+
+.TMP <- function() {
+
+
+  path.in <- system.file("extdata", "SIR2014", package = "Trends")
+
+  file <- file.path(path.in, "Data.tsv")
+  raw.data <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, strip.white = TRUE,
+                         allowEscapes = TRUE, flush = TRUE, stringsAsFactors = FALSE)
+
+
+  file <- file.path(path.in, "Config_Par.tsv")
+  par.config <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, comment.char = "",
+                           flush = TRUE, stringsAsFactors = FALSE)
+
+  processed.data <- .ProcessRawData(raw.data, par.config)
+
+
+}
 
 
 
