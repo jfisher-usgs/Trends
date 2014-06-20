@@ -9,7 +9,7 @@ This function performs a statistical analysis on censored and uncensored data.
 }
 
 \usage{
-RunTrendAnalysis(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
+RunTrendAnalysis(d, site.names, parameters, plot.config, sdate = NA, edate = NA,
                  is.censored = FALSE, path.out = tempfile(""), gr.type = "pdf",
                  cenken.tol = 1e-12, cenken.iter = 1e+6, dt.breaks = NULL,
                  xout = FALSE, draw.ci = FALSE, site.locs = NULL,
@@ -20,7 +20,7 @@ RunTrendAnalysis(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
 \item{d}{data.frame; trend data, see \code{\link{ReadObservations}}.}
 \item{site.names}{character; an array of local site names; if missing,
   all sites in the statistics configuration file are used.}
-\item{par.config}{data.frame; parameter configuration table, see
+\item{parameters}{data.frame; parameter configuration table, see
   \code{\link{ReadParConfig}}.}
 \item{plot.config}{data.frame; plot configuration table, see
   \code{\link{ReadPlotConfig}}. Note that the \code{Axis_title} variable is not
@@ -135,13 +135,13 @@ Release 4.0: U.S. Geological Survey Open-File Report 2011-1130.
 \examples{
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadObservations(f)
-file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
-par.config <- ReadParConfig(file.par)
+file.par <- system.file("extdata/ex.parameters.tsv", package = "Trends")
+parameters <- ReadParConfig(file.par)
 
 file.plot <- system.file("extdata/ex.config.censored.tsv", package = "Trends")
 plot.config <- ReadPlotConfig(file.plot)
 
-out <- RunTrendAnalysis(d, site.names = c("ANP 9", "HIGHWAY 3"), par.config = par.config,
+out <- RunTrendAnalysis(d, site.names = c("ANP 9", "HIGHWAY 3"), parameters = parameters,
                         plot.config = plot.config, sdate = "01/01/1980",
                         edate = "01/01/2010", is.censored = TRUE, gr.type = "windows")
 
@@ -149,7 +149,7 @@ file.plot <- system.file("extdata/ex.config.uncensored.tsv", package = "Trends")
 plot.config <- ReadPlotConfig(file.plot)
 
 out <- RunTrendAnalysis(d, site.names = c("ANP 6", "ATOMIC CITY"),
-                        par.config = par.config, plot.config = plot.config,
+                        parameters = parameters, plot.config = plot.config,
                         is.censored = FALSE, gr.type = "windows", draw.ci = TRUE)
 }
 

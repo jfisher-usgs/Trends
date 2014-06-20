@@ -20,9 +20,9 @@ ReadObservations <- function(file) {
 
   # For character class data columns (variables):
   #   - Covert to numeric after accounting for character codes
-  #   - Exclude first four variables: Site_id, Site_name, Dates, Times
+  #   - Exclude first four variables: Site_id, Site_name, Date, Time
 
-  col.idxs <- which(!names(d) %in% c("Site_id", "Site_name", "Dates", "Times"))
+  col.idxs <- which(!names(d) %in% c("Site_id", "Site_name", "Date", "Time"))
   for (j in col.idxs) {
 
     if (!is.character(d[, j]))
@@ -83,8 +83,8 @@ ReadObservations <- function(file) {
 
   # Add "Datetime" variable, calendar date and time of class POSIXct
   # Missing time values are replaced with 12:00 pm or 1200
-  d$Times[is.na(d$Times)] <- 1200
-  dt.string <- paste(d$Dates, sprintf("%04d", d$Times), sep=" ")
+  d$Time[is.na(d$Time)] <- 1200
+  dt.string <- paste(d$Date, sprintf("%04d", d$Time), sep=" ")
   d$Datetime <- as.POSIXct(dt.string, format="%m/%d/%Y %H%M", tz="")
 
   is.dt.na <- is.na(d$Datetime)
@@ -95,7 +95,7 @@ ReadObservations <- function(file) {
   }
 
   # Reorganize components in the data table
-  d <- d[, !names(d) %in% c("Dates", "Times")]
+  d <- d[, !names(d) %in% c("Date", "Time")]
   is.id <- names(d) %in% c("Site_id", "Site_name", "Datetime")
   d <- d[, c(which(is.id), which(!is.id))]
 

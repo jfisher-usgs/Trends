@@ -17,7 +17,7 @@ creates a data frame from it.
 
 \format{
 The imported data table requires the following field names:
-\code{"Site_id"}, \code{"Site_name"}, \code{"Dates"}, and \code{"Times"}.
+\code{"Site_id"}, \code{"Site_name"}, \code{"Date"}, and \code{"Time"}.
 The required date and time format is M/D/YYYY (\code{\%m/\%d/\%Y}) and
 HM (\code{\%H\%M}), respectively. Parameter field names are arbitrary; however,
 they must be consistent with names specified in the configuration files.

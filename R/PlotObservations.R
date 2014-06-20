@@ -1,4 +1,4 @@
-PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
+PlotObservations <- function(d, site.names, parameters, plot.config, sdate=NA,
                              edate=NA, path.out=tempfile(""), gr.type="pdf",
                              merge.pdfs=FALSE) {
 
@@ -51,20 +51,19 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
   }
   plot.config <- plot.config[is.valid.site.id, ]
 
-  # Determine parameters
-  parameters <- NULL
+  # Determine pars
+  pars <- NULL
   for (i in seq_len(nrow(plot.config)))
-    parameters <- c(parameters,
-                    unlist(strsplit(plot.config$Parameters[i], ",")))
-  parameters <- make.names(trim(unique(parameters)))
+    pars <- c(pars, unlist(strsplit(plot.config$Parameters[i], ",")))
+  pars <- make.names(trim(unique(pars)))
 
-  is.in.par <- parameters %in% row.names(par.config)
-  is.in.dat <- parameters %in% names(d)
+  is.in.par <- pars %in% row.names(parameters)
+  is.in.dat <- pars %in% names(d)
   if (!all(is.in.par) | !all(is.in.dat)) {
     idxs <- which(!is.in.par | !is.in.dat)
     txt <- paste("Inconsistent parameter names among tables:",
                  "table Config_Plots\nProblem is with converted string(s):",
-                 paste(parameters[idxs], collapse="; "))
+                 paste(pars[idxs], collapse="; "))
     stop(txt)
   }
 
@@ -91,7 +90,7 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
       next
 
     # Create a smaller data table that is temporary
-    d0 <- d[d$Site_id == id, c("Datetime", parameters)]
+    d0 <- d[d$Site_id == id, c("Datetime", pars)]
 
     # Set x-axis limits
     xlim <- c(sdate, edate)
@@ -113,7 +112,7 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
                                                  ","))))
       d1 <- d0[, c("Datetime", p.names)]
 
-      # Remove parameters with no data
+      # Remove pars with no data
       rm.idxs <- NULL
       for (index in seq_len(ncol(d1))) {
         is.no.lim <- all(is.na(d1[, index]))
@@ -137,7 +136,7 @@ PlotObservations <- function(d, site.names, par.config, plot.config, sdate=NA,
       } else {
         main <- NULL
       }
-      DrawPlot(d1, par.config, xlim=xlim, main=main,
+      DrawPlot(d1, parameters, xlim=xlim, main=main,
                ylab=plot.config[idx, "Axis_title"], leg.box.col=leg.box.col)
     }
 

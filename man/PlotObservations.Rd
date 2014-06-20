@@ -7,7 +7,7 @@
 \description{This function queries and plots trend data.}
 
 \usage{
-PlotObservations(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
+PlotObservations(d, site.names, parameters, plot.config, sdate = NA, edate = NA,
                  path.out = tempfile(""), gr.type = "pdf", merge.pdfs = FALSE)
 }
 
@@ -15,7 +15,7 @@ PlotObservations(d, site.names, par.config, plot.config, sdate = NA, edate = NA,
 \item{d}{data.frame; trend data, see \code{\link{ReadObservations}}.}
 \item{site.names}{character; an array of local site identifiers; if missing,
   all sites in the plots configuration file are used.}
-\item{par.config}{data.frame; parameter configuration table, see
+\item{parameters}{data.frame; parameter configuration table, see
   \code{\link{ReadParConfig}}.}
 \item{plot.config}{data.frame; plot configuration table, see
   \code{\link{ReadPlotConfig}}.}
@@ -49,13 +49,13 @@ for the side-effect of drawing plots to external files.
 f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadObservations(f)
 
-file.par <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
-par.config <- ReadParConfig(file.par)
+file.par <- system.file("extdata/ex.parameters.tsv", package = "Trends")
+parameters <- ReadParConfig(file.par)
 
 file.plot <- system.file("extdata/ex.config.plots.tsv", package = "Trends")
 plot.config <- ReadPlotConfig(file.plot)
 
-PlotObservations(d, site.names = c("ANP 6", "ARBOR TEST"), par.config = par.config,
+PlotObservations(d, site.names = c("ANP 6", "ARBOR TEST"), parameters = parameters,
                  plot.config = plot.config, sdate = "01/01/1990", edate = "01/01/2010",
                  gr.type = "windows")
 }

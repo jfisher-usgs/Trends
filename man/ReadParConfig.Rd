@@ -44,7 +44,7 @@ and attribute:
 \seealso{\code{\link{read.table}}, \code{\link{legend}}}
 
 \examples{
-f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
+f <- system.file("extdata/ex.parameters.tsv", package = "Trends")
 obj <- ReadParConfig(f, draw.legend = TRUE)
 str(obj)
 }

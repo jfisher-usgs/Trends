@@ -1,4 +1,4 @@
-RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
+RunTrendAnalysis <- function(d, site.names, parameters, plot.config, sdate=NA,
                              edate=NA, is.censored=FALSE, path.out=tempfile(""),
                              gr.type="pdf", cenken.tol=1e-12, cenken.iter=1e+6,
                              dt.breaks=NULL, xout=FALSE, draw.ci=FALSE,
@@ -97,7 +97,7 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
     site  <- plot.config[idx, "Site_name"]
 
     p.names <- Trim(unique(unlist(strsplit(plot.config[idx, "Parameters"], ","))))
-    parameters <- make.names(p.names)
+    pars <- make.names(p.names)
 
     # Initialize plot count
     if (is.null(plot.count[[site]]))
@@ -105,8 +105,8 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
 
     # Loop through parameters in record
 
-    for (j in seq_along(parameters)) {
-      parameter <- parameters[j]
+    for (j in seq_along(pars)) {
+      parameter <- pars[j]
       if (!parameter %in% d.names) {
         txt <- paste0("Parameter is not recognized and will be skipped:\n",
                       "Row index: ", idx, ", Column name: Parameters, ",
@@ -146,9 +146,9 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
                           ", Parameter: ", parameter, "\n")
 
       # y-axis label
-      ylab <- par.config[parameter, "Name"]
-      if (!is.na(par.config[parameter, "Units"]))
-        ylab <- paste(ylab, par.config[parameter, "Units"], sep=", in ")
+      ylab <- parameters[parameter, "Name"]
+      if (!is.na(parameters[parameter, "Units"]))
+        ylab <- paste(ylab, parameters[parameter, "Units"], sep=", in ")
 
       # Start statistical analysis
 
@@ -190,11 +190,11 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
         lst$min        <- min(dat)
         lst$max        <- max(dat)
         lst$len_record <- diff(range(d.id$Datetime))
-        
+
         lst$mean    <- suppressWarnings(mean(ans)["mean"])
         lst$std_dev <- suppressWarnings(sd(ans))
         lst$median  <- suppressWarnings(median(ans))
-        
+
         # Compute trend if complete cenfit results
         if (!is.na(lst$mean) && !is.na(lst$std_dev) && !is.na(lst$median)) {
 
@@ -242,7 +242,7 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
         } else {
           main <- NULL
         }
-        DrawPlot(d.id, par.config[parameter, ], cen.var=col.code.name,
+        DrawPlot(d.id, parameters[parameter, ], cen.var=col.code.name,
                  xlim=c(sdate, edate), regr=regr,
                  regr.type="Akritas-Theil-Sen line",
                  main=main, ylab=ylab, leg.box.col=leg.box.col, p.value=ans$p)
@@ -341,7 +341,7 @@ RunTrendAnalysis <- function(d, site.names, par.config, plot.config, sdate=NA,
           main <- NULL
         }
         DrawPlot(d.id[, c("Datetime", parameter)],
-                 par.config[parameter, ], xlim=c(sdate, edate),
+                 parameters[parameter, ], xlim=c(sdate, edate),
                  regr=regr, regr.lower=regr.lower, regr.upper=regr.upper,
                  regr.type="Theil-Sen line", main=main, ylab=ylab,
                  leg.box.col=leg.box.col, p.value=est$p)

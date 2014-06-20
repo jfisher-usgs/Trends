@@ -7,7 +7,7 @@
 \description{This function draws a single plot on a graphics device.}
 
 \usage{
-DrawPlot(d, par.config, cen.var = NULL,
+DrawPlot(d, parameters, cen.var = NULL,
          xlim = c(NA, NA), ylim = c(NA, NA),
          regr = NULL, regr.lower = NULL, regr.upper = NULL,
          regr.type = "Regression line",
@@ -19,7 +19,7 @@ DrawPlot(d, par.config, cen.var = NULL,
 \item{d}{data.frame; coordinate vectors of points to plot and a logical vector
   indicating those values that are censored. The first component contains
   date and time values of class \code{POSIXct}.}
-\item{par.config}{data.frame; parameter configuration table, see
+\item{parameters}{data.frame; parameter configuration table, see
   \code{\link{ReadParConfig}}.}
 \item{cen.var}{character or integer; the name or index number of the
   logical component in \code{d} indicating whether observations are censored.}
@@ -54,12 +54,12 @@ f <- system.file("extdata/ex.data.tsv", package = "Trends")
 d <- ReadObservations(f)
 d <- d[d$Site_id == 433657112563601, ]
 
-f <- system.file("extdata/ex.config.parameters.tsv", package = "Trends")
+f <- system.file("extdata/ex.parameters.tsv", package = "Trends")
 p <- read.table(file = f, header = TRUE, sep = "\t",
                 stringsAsFactors = FALSE, comment.char = "", row.names = 1)
 
 d1 <- d[, c("Datetime", "Temp", "AS")]
-DrawPlot(d1, par.config = p, main = "Uncensored Data with Multiple Parameters",
+DrawPlot(d1, parameters = p, main = "Uncensored Data with Multiple Parameters",
          ylab = "Concentration, in milligrams per liter",
          leg.box.col = "#FFFFFFBB")
 
@@ -70,7 +70,7 @@ m <- fit$coefficients[[2]]
 regr <- function(x) {m * as.numeric(x) + b}
 regr.lower <- function(x) {m * as.numeric(x) + b - 0.1 * b}
 regr.upper <- function(x) {m * as.numeric(x) + b + 0.1 * b}
-DrawPlot(d2, par.config = p, regr = regr,
+DrawPlot(d2, parameters = p, regr = regr,
          regr.lower = regr.lower, regr.upper = regr.upper,
          regr.type = "Simple linear regression",
          main = "Uncensored Data with Single Parameter and Trend Lines",
@@ -78,7 +78,7 @@ DrawPlot(d2, par.config = p, regr = regr,
 
 d3 <- d[, c("Datetime", "AS", "AS_code")]
 d3[, "AS_code"] <- d3[, "AS_code"] == 1
-DrawPlot(d3, par.config = p, cen.var = 3, xlim = c("1/1/1985", NA), regr = regr,
+DrawPlot(d3, parameters = p, cen.var = 3, xlim = c("1/1/1985", NA), regr = regr,
          main = "Censored Data with Single Parameter and Trend Line",
          ylab = "Arsenic, in micrograms per liter")
 }
