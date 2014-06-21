@@ -35,8 +35,21 @@
 
     d$conc[d$code %in% c("V", "U")] <- NA
 
-    d$sd <- as.numeric(NA)  # TODO
-    d$dl <- as.numeric(NA)  # TODO
+    col.name <- parameters$sd[parameters$Parameter %in% nam]
+    idx <- ifelse(!is.na(col.name), match(col.name, colnames(raw.data)), NA)
+    d$sd <- if (is.na(idx)) NA else as.numeric(raw.data[is.rec, idx])
+    
+    if (nam %in% colnames(det.lim)) {
+      dl <- det.lim[!is.na(det.lim[[nam]]), c("Date", nam)]
+      for (id in unique(d$Site_id)) {
+        idxs <- which(d$Site_id == id)
+        breaks <- findInterval(as.numeric(dl$Date), as.numeric(d$Date[idxs]))
+        breaks <- unique(c(breaks, length(idxs) + 1L))
+        d$dl[idxs] <- dl[as.integer(cut(seq_along(idxs), breaks)), nam]
+      }
+    } else {
+      d$dl <- NA
+    }
 
     is.event <- !d$code %in% "<" & (is.na(d$sd) | is.na(d$dl))
     d$t1[is.event] <- d$conc[is.event]
@@ -85,7 +98,6 @@
   raw.data <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, strip.white = TRUE,
                          allowEscapes = TRUE, flush = TRUE, stringsAsFactors = FALSE)
 
-
   file <- file.path(path.in, "Parameters.tsv")
   parameters <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, comment.char = "",
                            flush = TRUE, stringsAsFactors = FALSE)
@@ -98,6 +110,4 @@
 
 
 }
-
-
 
