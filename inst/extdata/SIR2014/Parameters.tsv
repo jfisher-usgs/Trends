@@ -1,57 +1,57 @@
 Parameter	Name	Units	pch	col	bg	sd
-pH	pH	NA	21	NA	#4DAF4A	NA
-Spec. Cond.	Specific Conductance	microsiemens per cm	22	NA	#377EB8	NA
-Temp	Temperature	degree celsius	23	NA	#E41A1C	NA
-TOC	Total Organic Carbon	milligrams per liter	24	NA	#33A02C	NA
-NO3+NO2	Nitrate plus Nitrite as N	milligrams per liter	25	NA	#FB9A99	NA
-O-PO4 as P	Orthophosphate as P	milligrams per liter	21	NA	#E31A1C	NA
-ZN	Zinc	micrograms per liter	22	NA	#FDBF6F	NA
-U	Uranium	micrograms per liter	23	NA	#1F78B4	NA
-SE	Selenium	micrograms per liter	24	NA	#6A3D9A	NA
-NI	Nickel	micrograms per liter	25	NA	#B15928	NA
-MO	Molybdenum	micrograms per liter	0	#1B9E77	NA	NA
-MN	Manganese	micrograms per liter	1	#D95F02	NA	NA
-PB	Lead	micrograms per liter	2	#7570B3	NA	NA
-CU	Copper	micrograms per liter	3	#E7298A	NA	NA
-CO	Cobalt	micrograms per liter	4	#66A61E	NA	NA
-BA	Barium	micrograms per liter	5	#E6AB02	NA	NA
-AS	Arsenic	micrograms per liter	6	#A6761D	NA	NA
-CR	Chromium	micrograms per liter	7	#666666	NA	NA
-CL	Chloride	milligrams per liter	8	#A6CEE3	NA	NA
-SO4	Sulfate	milligrams per liter	9	#000000	NA	NA
-F	Fluoride	milligrams per liter	10	#000000	NA	NA
-BR	Bromide	milligrams per liter	11	#000000	NA	NA
-Na	Sodium	milligrams per liter	12	#E31A1C	NA	NA
-CA	Calcium	milligrams per liter	13	#000000	NA	NA
-MG	Magnesium	micrograms per liter	14	#000000	NA	NA
-K	Potassium	micrograms per liter	0	#A6CEE3	NA	NA
-SI	Silica	micrograms per liter	1	#1F78B4	NA	NA
-NH3	Ammonia	milligrams per liter	2	#B2DF8A	NA	NA
-SB	Antimony	micrograms per liter	3	#33A02C	NA	NA
-AG	Silver	micrograms per liter	4	#FB9A99	NA	NA
-HG	Mercury	micrograms per liter	5	#E31A1C	NA	NA
-CD	Cadmium	micrograms per liter	6	#FDBF6F	NA	NA
-TL	Thallium	micrograms per liter	7	#CAB2D6	NA	NA
-AL	Aluminum	micrograms per liter	8	#000000	NA	NA
-P34010	Toluene	micrograms per liter	0	#A6CEE3	NA	NA
-P39180	Trichloroethene	micrograms per liter	1	#1F78B4	NA	NA
-P32106	Trichloromethane	micrograms per liter	2	#B2DF8A	NA	NA
-P34668	Dichlorodifluoromethane	micrograms per liter	3	#33A02C	NA	NA
-P34475	Tetrachloroethene	micrograms per liter	4	#FB9A99	NA	NA
-P32102	Carbon Tetrachloride	micrograms per liter	5	#E31A1C	NA	NA
-P34506	1,1,1-Trichloroethane	micrograms per liter	6	#FDBF6F	NA	NA
-P34496	1,1-Dichloroethane	micrograms per liter	7	#CAB2D6	NA	NA
-P34501	1,1-Dichloroethene	micrograms per liter	8	#000000	NA	NA
-P34030	Benzene	micrograms per liter	9	#458B74	NA	NA
-P32101	Bromodichloromethane	micrograms per liter	10	#8B3E2F	NA	NA
-P32105	Dibromochloromethane	micrograms per liter	11	#6495ED	NA	NA
-P30217	Dibromomethane	micrograms per liter	12	#8B8378	NA	NA
-P32104	Tribromomethane	micrograms per liter	13	#00008B	NA	NA
-P34423	Dichloromethane	micrograms per liter	14	#8B7D6B	NA	NA
-P34371	Ethylbenzene	micrograms per liter	15	#00CDCD	NA	NA
-P77128	Styrene	micrograms per liter	16	#EE6A50	NA	NA
-P77353	tert-Butylbenzene	micrograms per liter	17	#8A2BE2	NA	NA
-P34546	trans 1,2-Dichloroethene	micrograms per liter	18	#556B2F	NA	NA
-P81551	Xylene	micrograms per liter	19	#CD950C	NA	NA
-H3	Tritium	picocuries per liter	2	#B2DF8A	NA	H3_1s
-SR90	Strontium-90	picocuries per liter	4	#FB9A99	NA	SR90_1s
+pH	pH	NA	21		#4DAF4A	
+Spec. Cond.	Specific Conductance	microsiemens per cm	22		#377EB8	
+Temp	Temperature	degree celsius	23		#E41A1C	
+TOC	Total Organic Carbon	milligrams per liter	24		#33A02C	
+NO3+NO2	Nitrate plus Nitrite as N	milligrams per liter	25		#FB9A99	
+O-PO4 as P	Orthophosphate as P	milligrams per liter	21		#E31A1C	
+ZN	Zinc	micrograms per liter	22		#FDBF6F	
+U	Uranium	micrograms per liter	23		#1F78B4	
+SE	Selenium	micrograms per liter	24		#6A3D9A	
+NI	Nickel	micrograms per liter	25		#B15928	
+MO	Molybdenum	micrograms per liter	0	#1B9E77		
+MN	Manganese	micrograms per liter	1	#D95F02		
+PB	Lead	micrograms per liter	2	#7570B3		
+CU	Copper	micrograms per liter	3	#E7298A		
+CO	Cobalt	micrograms per liter	4	#66A61E		
+BA	Barium	micrograms per liter	5	#E6AB02		
+AS	Arsenic	micrograms per liter	6	#A6761D		
+CR	Chromium	micrograms per liter	7	#666666		
+CL	Chloride	milligrams per liter	8	#A6CEE3		
+SO4	Sulfate	milligrams per liter	9	#000000		
+F	Fluoride	milligrams per liter	10	#000000		
+BR	Bromide	milligrams per liter	11	#000000		
+Na	Sodium	milligrams per liter	12	#E31A1C		
+CA	Calcium	milligrams per liter	13	#000000		
+MG	Magnesium	micrograms per liter	14	#000000		
+K	Potassium	micrograms per liter	0	#A6CEE3		
+SI	Silica	micrograms per liter	1	#1F78B4		
+NH3	Ammonia	milligrams per liter	2	#B2DF8A		
+SB	Antimony	micrograms per liter	3	#33A02C		
+AG	Silver	micrograms per liter	4	#FB9A99		
+HG	Mercury	micrograms per liter	5	#E31A1C		
+CD	Cadmium	micrograms per liter	6	#FDBF6F		
+TL	Thallium	micrograms per liter	7	#CAB2D6		
+AL	Aluminum	micrograms per liter	8	#000000		
+P34010	Toluene	micrograms per liter	0	#A6CEE3		
+P39180	Trichloroethene	micrograms per liter	1	#1F78B4		
+P32106	Trichloromethane	micrograms per liter	2	#B2DF8A		
+P34668	Dichlorodifluoromethane	micrograms per liter	3	#33A02C		
+P34475	Tetrachloroethene	micrograms per liter	4	#FB9A99		
+P32102	Carbon Tetrachloride	micrograms per liter	5	#E31A1C		
+P34506	1,1,1-Trichloroethane	micrograms per liter	6	#FDBF6F		
+P34496	1,1-Dichloroethane	micrograms per liter	7	#CAB2D6		
+P34501	1,1-Dichloroethene	micrograms per liter	8	#000000		
+P34030	Benzene	micrograms per liter	9	#458B74		
+P32101	Bromodichloromethane	micrograms per liter	10	#8B3E2F		
+P32105	Dibromochloromethane	micrograms per liter	11	#6495ED		
+P30217	Dibromomethane	micrograms per liter	12	#8B8378		
+P32104	Tribromomethane	micrograms per liter	13	#00008B		
+P34423	Dichloromethane	micrograms per liter	14	#8B7D6B		
+P34371	Ethylbenzene	micrograms per liter	15	#00CDCD		
+P77128	Styrene	micrograms per liter	16	#EE6A50		
+P77353	tert-Butylbenzene	micrograms per liter	17	#8A2BE2		
+P34546	trans 1,2-Dichloroethene	micrograms per liter	18	#556B2F		
+P81551	Xylene	micrograms per liter	19	#CD950C		
+H3	Tritium	picocuries per liter	2	#B2DF8A		H3_1s
+SR90	Strontium-90	picocuries per liter	4	#FB9A99		SR90_1s

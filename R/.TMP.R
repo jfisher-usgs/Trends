@@ -11,6 +11,12 @@
   raw.data$Site_name <- as.factor(raw.data$Site_name)
   raw.data$Date <- as.Date(raw.data$Date, format="%m/%d/%Y")
   raw.data <- raw.data[!is.na(raw.data$Date), ]
+  
+  hm <- as.integer(raw.data$Time)
+  is.missing <- is.na(hm)
+  hm <- formatC(hm, width=4, format="d", flag="0")
+  raw.data$Time <- paste(substr(hm, 1, 2), substr(hm, 3, 4), sep=":")
+  raw.data$Time[is.missing] <- NA
 
   detection.limits$Date <- as.Date(detection.limits$Date, format="%m/%d/%Y")
 
@@ -21,7 +27,7 @@
     if (all(!is.rec))
       next
 
-    d <- raw.data[is.rec, c("Site_name", "Site_id", "Date")]
+    d <- raw.data[is.rec, c("Site_name", "Site_id", "Date", "Time")]
     d <- data.frame(d, code=NA, conc=NA, sd=NA, dl=NA, t1=NA, t2=NA,
                     is.event=NA, is.left=NA, is.interval=NA)
 
@@ -95,16 +101,21 @@
   path.in <- system.file("extdata", "SIR2014", package = "Trends")
 
   file <- file.path(path.in, "Raw_Data.tsv")
-  raw.data <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, strip.white = TRUE,
-                         allowEscapes = TRUE, flush = TRUE, stringsAsFactors = FALSE)
+  raw.data <- read.table(file, header = TRUE, sep = "\t", na.strings = "", colClasses = "character", fill = TRUE, 
+                         strip.white = TRUE, comment.char = "", flush = TRUE, stringsAsFactors = FALSE)
+
+
+
 
   file <- file.path(path.in, "Parameters.tsv")
-  parameters <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, comment.char = "",
-                           flush = TRUE, stringsAsFactors = FALSE)
+  parameters <- read.table(file, header = TRUE, sep = "\t", na.strings = "", fill = TRUE, 
+                           strip.white = TRUE, comment.char = "", flush = TRUE, stringsAsFactors = FALSE)
+
+
 
   file <- file.path(path.in, "Detection_Limits.tsv")
-  detection.limits <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, 
-                                 flush = TRUE, stringsAsFactors = FALSE)
+  detection.limits <- read.table(file, header = TRUE, sep = "\t", na.strings = "", fill = TRUE, 
+                                 strip.white = TRUE, comment.char = "", flush = TRUE, stringsAsFactors = FALSE)
 
   processed.data <- .ProcessRawData(raw.data, parameters, detection.limits)
 

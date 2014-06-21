@@ -55,7 +55,7 @@ d <- ReadObservations(f)
 d <- d[d$Site_id == 433657112563601, ]
 
 f <- system.file("extdata/ex.parameters.tsv", package = "Trends")
-p <- read.table(file = f, header = TRUE, sep = "\t",
+p <- read.table(file = f, header = TRUE, sep = "\t", na.strings="",
                 stringsAsFactors = FALSE, comment.char = "", row.names = 1)
 
 d1 <- d[, c("Datetime", "Temp", "AS")]

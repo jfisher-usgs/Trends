@@ -2,10 +2,11 @@ ReadParConfig <- function(file, sep="\t", draw.legend=FALSE) {
 
   col.names <- c("Parameter", "Name", "Units", "pch", "col", "bg", "sd")
   col.classes <- c("character", "character", "factor", "integer", "character",
-                   "character")
+                   "character", "character")
   obj <- read.table(file=file, header=TRUE, sep=sep, col.names=col.names,
-                    colClasses=col.classes, flush=TRUE, fill=TRUE,
-                    stringsAsFactors=FALSE, comment.char="", row.names=1)
+                    na.strings="", colClasses=col.classes, flush=TRUE, 
+                    fill=TRUE, stringsAsFactors=FALSE, comment.char="", 
+                    row.names=1)
 
   if (draw.legend) {
     dev.new(width=5, height=10, pointsize=12)
