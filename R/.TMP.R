@@ -1,7 +1,7 @@
 
 
 
-.ProcessRawData <- function(raw.data, parameters, det.lim=NULL) {
+.ProcessRawData <- function(raw.data, parameters, detection.limits=NULL) {
 
   parameters$Parameter <- make.names(parameters$Parameter)
   par.names <- parameters$Parameter
@@ -12,7 +12,7 @@
   raw.data$Date <- as.Date(raw.data$Date, format="%m/%d/%Y")
   raw.data <- raw.data[!is.na(raw.data$Date), ]
 
-  det.lim$Date <- as.Date(det.lim$Date, format="%m/%d/%Y")
+  detection.limits$Date <- as.Date(detection.limits$Date, format="%m/%d/%Y")
 
   lst <- list()
   for (i in seq_along(par.names)) {
@@ -39,8 +39,8 @@
     idx <- ifelse(!is.na(col.name), match(col.name, colnames(raw.data)), NA)
     d$sd <- if (is.na(idx)) NA else as.numeric(raw.data[is.rec, idx])
     
-    if (nam %in% colnames(det.lim)) {
-      dl <- det.lim[!is.na(det.lim[[nam]]), c("Date", nam)]
+    if (nam %in% colnames(detection.limits)) {
+      dl <- detection.limits[!is.na(detection.limits[[nam]]), c("Date", nam)]
       for (id in unique(d$Site_id)) {
         idxs <- which(d$Site_id == id)
         breaks <- findInterval(as.numeric(dl$Date), as.numeric(d$Date[idxs]))
@@ -103,10 +103,10 @@
                            flush = TRUE, stringsAsFactors = FALSE)
 
   file <- file.path(path.in, "Detection_Limits.tsv")
-  det.lim <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, flush = TRUE,
-                        stringsAsFactors = FALSE)
+  detection.limits <- read.table(file, header = TRUE, sep = "\t", fill = TRUE, 
+                                 flush = TRUE, stringsAsFactors = FALSE)
 
-  processed.data <- .ProcessRawData(raw.data, parameters, det.lim)
+  processed.data <- .ProcessRawData(raw.data, parameters, detection.limits)
 
 
 }
