@@ -1,25 +1,18 @@
 
 
-.RunAnalysis <- function(d, site.id, sdate=NA, edate=NA) {
-  
-  
-  
-}
-
 
 .ProcessRawData <- function(raw.data, parameters, detection.limits=NULL, 
                             date.fmt="%Y-%m-%d") {
 
-  parameters$Parameter <- make.names(parameters$Parameter)
-  par.names <- parameters$Parameter
-  par.names <- sort(par.names[par.names %in% colnames(raw.data)])
-
-  raw.data$Site_id <- as.factor(raw.data$Site_id)
-  raw.data$Site_name <- as.factor(raw.data$Site_name)
   raw.data$Date <- as.Date(raw.data$Date, format=date.fmt)
   raw.data <- raw.data[!is.na(raw.data$Date), ]
 
+  parameters$pch <- as.integer(parameters$pch)
+  par.names <- make.names(parameters$Parameter)
+  par.names <- sort(par.names[par.names %in% colnames(raw.data)])
+
   detection.limits$Date <- as.Date(detection.limits$Date, format=date.fmt)
+  detection.limits[, -1] <- apply(detection.limits[, -1], 2, as.numeric)
 
   lst <- list()
   for (i in seq_along(par.names)) {
@@ -31,6 +24,8 @@
     d <- raw.data[is.rec, c("Site_name", "Site_id", "Date")]
     d <- data.frame(d, code=NA, conc=NA, sd=NA, dl=NA, t1=NA, t2=NA,
                     is.event=NA, is.left=NA, is.interval=NA)
+    d$Site_id   <- as.factor(d$Site_id)
+    d$Site_name <- as.factor(d$Site_name)
 
     d$conc <- as.character(raw.data[is.rec, par.names[i]])
     d$code <- substr(d$conc, 1, 1)
@@ -41,13 +36,14 @@
     d$conc <- as.numeric(d$conc)
     d$conc[d$code %in% c("V", "U")] <- NA
 
-    col.name <- parameters$sd[parameters$Parameter %in% nam]
-    idx <- ifelse(!is.na(col.name), match(col.name, colnames(raw.data)), NA)
+    p <- parameters[match(nam, make.names(parameters$Parameter)), , drop=TRUE]
+    sd.col <- p$sd
+    idx <- ifelse(!is.na(sd.col), match(sd.col, colnames(raw.data)), NA)
     d$sd <- if (is.na(idx)) NA else as.numeric(raw.data[is.rec, idx])
     
     if (nam %in% colnames(detection.limits)) {
       dl <- detection.limits[!is.na(detection.limits[[nam]]), c("Date", nam)]
-      for (id in unique(d$Site_id)) {
+      for (id in levels(d$Site_id)) {
         idxs <- which(d$Site_id == id)
         breaks <- findInterval(as.numeric(dl$Date), as.numeric(d$Date[idxs]))
         breaks <- unique(c(breaks, length(idxs) + 1L))
@@ -82,11 +78,9 @@
     d$is.interval <-  is.t1 & is.t2 & d$t1 != d$t2
 
     d <- d[order(d$Site_name, d$Date), ]
+    attributes(d) <- c(attributes(d), p)
 
-    attrs <- parameters[match(nam, parameters$Parameter), , drop=TRUE]
-    attributes(d) <- c(attributes(d), attrs)
-
-    lst[[nam]] <- d
+    lst[[p$Parameter]] <- d
   }
 
   return(lst)
@@ -94,17 +88,51 @@
 
 
 
+.ProcessConfig <- function(config, processed.data) {
+
+  ids <- unique(unlist(lapply(processed.data, function(i) levels(i$Site_id))))
+  config <- config[config$Site_id %in% ids, ]
+
+  FUN <- function(i) {
+    d <- config[i, , drop=FALSE]
+    p <- strsplit(d$Parameters, ",")[[1]]
+    p <- unique(sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", p, perl=TRUE))
+    d <- data.frame(d, Parameter=p, plot.group=i, row.names=NULL, 
+                    stringsAsFactors=FALSE)
+    d$Parameters <- NULL
+    return(d)
+  }
+  d <- do.call(rbind, lapply(seq_len(nrow(config)), FUN))
+  
+  d <- d[d$Parameter %in% names(processed.data), ]
+  
+  d$Site_id    <- as.factor(d$Site_id)
+  d$Site_name  <- as.factor(d$Site_name)
+  d$Axis_title <- as.factor(d$Axis_title)
+  d$Parameter  <- as.factor(d$Parameter)
+  
+  return(d)
+}
+
+
+
+.RunAnalysis <- function(processed.data, config, sdate=NA, edate=NA) {
+  print("notyet")
+  
+}
+
+
 
 .TMP <- function() {
 
 
   path.in <- system.file("extdata", "SIR2014", package = "Trends")
-  read.args <- list(header = TRUE, sep = "\t", na.strings = "", fill = TRUE, 
-                    strip.white = TRUE, comment.char = "", flush = TRUE, 
+  read.args <- list(header = TRUE, sep = "\t", colClasses = "character", na.strings = "", 
+                    fill = TRUE, strip.white = TRUE, comment.char = "", flush = TRUE, 
                     stringsAsFactors = FALSE)
 
   file <- file.path(path.in, "Raw_Data.tsv")
-  raw.data <- do.call(read.table, c(list(file, colClasses = "character"), read.args))
+  raw.data <- do.call(read.table, c(list(file), read.args))
 
   file <- file.path(path.in, "Parameters.tsv")
   parameters <- do.call(read.table, c(list(file), read.args))
@@ -114,7 +142,18 @@
 
   processed.data <- .ProcessRawData(raw.data, parameters, detection.limits, 
                                     date.fmt = "%m/%d/%Y")
+  
+  ##
+  
+  file <- file.path(path.in, "Config_Plots.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  
+  
+  
+  processed.config <- .ProcessConfig(config, processed.data)
 
 
 }
+
+
 
