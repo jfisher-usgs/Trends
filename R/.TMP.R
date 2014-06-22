@@ -1,8 +1,14 @@
 
 
+.RunAnalysis <- function(d, site.id, sdate=NA, edate=NA) {
+  
+  
+  
+}
+
 
 .ProcessRawData <- function(raw.data, parameters, detection.limits=NULL, 
-                            date.fmt="%m/%d/%Y") {
+                            date.fmt="%Y-%m-%d") {
 
   parameters$Parameter <- make.names(parameters$Parameter)
   par.names <- parameters$Parameter
@@ -12,13 +18,6 @@
   raw.data$Site_name <- as.factor(raw.data$Site_name)
   raw.data$Date <- as.Date(raw.data$Date, format=date.fmt)
   raw.data <- raw.data[!is.na(raw.data$Date), ]
-  
-  hr.min <- as.integer(raw.data$Time)
-  is.na.time <- is.na(hr.min)
-  hr.min <- formatC(hr.min, width=4, format="d", flag="0")
-  hr.min <- paste(substr(hr.min, 1, 2), substr(hr.min, 3, 4), "00", sep=":")
-  hr.min[is.na.time] <- NA
-  raw.data$Time <- hr.min
 
   detection.limits$Date <- as.Date(detection.limits$Date, format=date.fmt)
 
@@ -29,7 +28,7 @@
     if (all(!is.rec))
       next
 
-    d <- raw.data[is.rec, c("Site_name", "Site_id", "Date", "Time")]
+    d <- raw.data[is.rec, c("Site_name", "Site_id", "Date")]
     d <- data.frame(d, code=NA, conc=NA, sd=NA, dl=NA, t1=NA, t2=NA,
                     is.event=NA, is.left=NA, is.interval=NA)
 
@@ -37,10 +36,9 @@
     d$code <- substr(d$conc, 1, 1)
     d$code[!d$code %in% c("<", "E", "V", "U")] <- ""
     d$code <- as.factor(d$code)
-    is.coded <- d$code != ""
-    d$conc[is.coded] <- substr(d$conc[is.coded], 2, nchar(d$conc[is.coded]))
+    is.code <- d$code != ""
+    d$conc[is.code] <- substr(d$conc[is.code], 2, nchar(d$conc[is.code]))
     d$conc <- as.numeric(d$conc)
-
     d$conc[d$code %in% c("V", "U")] <- NA
 
     col.name <- parameters$sd[parameters$Parameter %in% nam]
@@ -55,8 +53,6 @@
         breaks <- unique(c(breaks, length(idxs) + 1L))
         d$dl[idxs] <- dl[as.integer(cut(seq_along(idxs), breaks)), nam]
       }
-    } else {
-      d$dl <- NA
     }
 
     is.left <- d$code %in% "<"
@@ -85,7 +81,7 @@
     d$is.left     <- !is.t1 & is.t2
     d$is.interval <-  is.t1 & is.t2 & d$t1 != d$t2
 
-    d <- d[order(d$Site_name, d$Date, d$Time), ]
+    d <- d[order(d$Site_name, d$Date), ]
 
     attrs <- parameters[match(nam, parameters$Parameter), , drop=TRUE]
     attributes(d) <- c(attributes(d), attrs)
@@ -116,7 +112,8 @@
   file <- file.path(path.in, "Detection_Limits.tsv")
   detection.limits <- do.call(read.table, c(list(file), read.args))
 
-  processed.data <- .ProcessRawData(raw.data, parameters, detection.limits)
+  processed.data <- .ProcessRawData(raw.data, parameters, detection.limits, 
+                                    date.fmt = "%m/%d/%Y")
 
 
 }
