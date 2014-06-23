@@ -68,8 +68,8 @@
     d$t1[are.interval] <- lower.conc[are.interval]
     d$t2[are.interval] <- upper.conc[are.interval]
 
-    d$t2[which(d$t2 < 0)] <- 0
-    d$t1[which(d$t1 < 0 | d$t2 == 0)] <- 0
+    d$t2[which(d$t2 <= 0)] <- NA  # zero is invalid for 'lognormal' distribution
+    d$t1[which(d$t1 <= 0 | is.na(d$t2))] <- NA
 
     is.t1 <- !is.na(d$t1)
     is.t2 <- !is.na(d$t2)
@@ -97,7 +97,7 @@
     d <- config[i, , drop=FALSE]
     p <- strsplit(d$Parameters, ",")[[1]]
     p <- unique(sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", p, perl=TRUE))
-    d <- data.frame(d, Parameter=p, plot.group=i, row.names=NULL, 
+    d <- data.frame(d, Parameter=p, rec=i, row.names=NULL, 
                     stringsAsFactors=FALSE)
     d$Parameters <- NULL
     return(d)
@@ -106,24 +106,76 @@
   
   d <- d[d$Parameter %in% names(processed.data), ]
   
-  d$Site_id    <- as.factor(d$Site_id)
-  d$Site_name  <- as.factor(d$Site_name)
-  d$Axis_title <- as.factor(d$Axis_title)
-  d$Parameter  <- as.factor(d$Parameter)
-  
   return(d)
 }
 
 
 
-.RunAnalysis <- function(processed.data, config, sdate=NA, edate=NA) {
-  print("notyet")
+.RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA, 
+                         gr.type=c("pdf", "eps"), plot.path=NULL) {
+  
+  
+  if (!is.na(sdate) && !inherits(sdate, "Date"))
+    stop("incorrect class for argument 'sdate'")
+  if (!is.na(edate) && !inherits(edate, "Date"))
+    stop("incorrect class for argument 'edate'")
+  
+  
+  
+  models <- list()
+  
+  d <- processed.config[, c("Site_id", "Site_name", "Parameter")]
+  stats <- data.frame(d, "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA, 
+                      "0.95LCL"=NA, "0.95UCL"=NA, check.names=FALSE)
+  
+  for (i in seq_len(nrow(processed.config))) {
+    
+    d <- processed.data[[processed.config[i, "Parameter"]]]
+    d <- d[d$Site_id == processed.config[i, "Site_id"], ]
+    
+    d <- d[d$Date >= if(is.na(sdate)) min(d$Date) else sdate & 
+           d$Date <= if(is.na(edate)) max(d$Date) else edate, ]
+    
+    d$surv <- Surv(time=d$t1, time2=d$t2, type="interval2")
+    
+    models[[i]] <- survreg(surv ~ Date, data=d, dist="lognormal")
+    
+    if (any(d$is.interval)) {
+      fit <- summary(survfit(d$surv ~ 1))$table
+      vars <- c("median", "0.95LCL", "0.95UCL")
+      stats[i, vars] <- fit[vars]
+      
+    } else if (any(d$is.left)) {
+      fit <- cenfit(d$t2, d$is.left)
+      vars <- c("mean", "0.95LCL", "0.95UCL")
+      stats[i, vars] <- mean(fit)[vars]
+      stats[i, c("median", "sd")] <- c(median(fit), sd(fit))
+      
+    } else {
+      vars <- c("min", "max", "median", "mean", "sd")
+      stats[i, vars] <- c(min(d$t1), max(d$t1), median(d$t1), mean(d$t1), sd(d$t1))
+    }
+    
+  }
+  
+  
+  # x <- seq(sdate, edate, "days")
+  # y <- predict(model, newdata=list(date=x), type="quantile", p=c(0.1, 0.9, 0.5))
+    
+  
   
 }
 
 
 
+
+
+
+
 .TMP <- function() {
+  
+  library(survival)
+  library(NADA)
 
 
   path.in <- system.file("extdata", "SIR2014", package = "Trends")
@@ -145,13 +197,19 @@
   
   ##
   
-  file <- file.path(path.in, "Config_Plots.tsv")
+  file <- file.path(path.in, "Config_RADS.tsv")
   config <- do.call(read.table, c(list(file), read.args))
-  
-  
   
   processed.config <- .ProcessConfig(config, processed.data)
 
+  ##
+  
+  stats <- .RunAnalysis(processed.data, processed.config)
+  
+  
+  
+  
+  
 
 }
 
