@@ -1,7 +1,7 @@
 
 
 
-.ProcessRawData <- function(raw.data, parameters, detection.limits=NULL, 
+.ProcessRawData <- function(raw.data, parameters, detection.limits=NULL,
                             date.fmt="%Y-%m-%d") {
 
   raw.data$Date <- as.Date(raw.data$Date, format=date.fmt)
@@ -23,7 +23,7 @@
 
     d <- raw.data[is.rec, c("Site_name", "Site_id", "Date")]
     d <- data.frame(d, code=NA, conc=NA, sd=NA, dl=NA, t1=NA, t2=NA,
-                    is.event=NA, is.left=NA, is.interval=NA)
+                    is.exact=NA, is.left=NA, is.interval=NA)
     d$Site_id   <- as.factor(d$Site_id)
     d$Site_name <- as.factor(d$Site_name)
 
@@ -40,7 +40,7 @@
     sd.col <- p$sd
     idx <- ifelse(!is.na(sd.col), match(sd.col, colnames(raw.data)), NA)
     d$sd <- if (is.na(idx)) NA else as.numeric(raw.data[is.rec, idx])
-    
+
     if (nam %in% colnames(detection.limits)) {
       dl <- detection.limits[!is.na(detection.limits[[nam]]), c("Date", nam)]
       for (id in levels(d$Site_id)) {
@@ -52,28 +52,28 @@
     }
 
     is.left <- d$code %in% "<"
-    is.event <- !is.left & (is.na(d$sd) | is.na(d$dl))
-    d$t1[is.event] <- d$conc[is.event]
-    d$t2[is.event] <- d$conc[is.event]
+    is.exact <- !is.left & (is.na(d$sd) | is.na(d$dl))
+    d$t1[is.exact] <- d$conc[is.exact]
+    d$t2[is.exact] <- d$conc[is.exact]
     d$t2[is.left]  <- d$conc[is.left]
     lower.conc <- d$conc - 3 * d$sd
     upper.conc <- d$conc + 3 * d$sd
 
-    are.left <- which(!is.event & upper.conc <= d$dl)
+    are.left <- which(!is.exact & upper.conc <= d$dl)
     d$t2[are.left] <- d$dl[are.left]
-    are.left <- which(!is.event & lower.conc <= d$dl & upper.conc > d$dl)
+    are.left <- which(!is.exact & lower.conc <= d$dl & upper.conc > d$dl)
     d$t2[are.left] <- upper.conc[are.left]
 
-    are.interval <- which(!is.event & lower.conc > d$dl)
+    are.interval <- which(!is.exact & lower.conc > d$dl)
     d$t1[are.interval] <- lower.conc[are.interval]
     d$t2[are.interval] <- upper.conc[are.interval]
 
-    d$t2[which(d$t2 <= 0)] <- NA  # zero is invalid for 'lognormal' distribution
+    d$t2[which(d$t2 <= 0)] <- NA  # TODO(jfisher): zero is invalid for 'lognormal' distribution
     d$t1[which(d$t1 <= 0 | is.na(d$t2))] <- NA
 
     is.t1 <- !is.na(d$t1)
     is.t2 <- !is.na(d$t2)
-    d$is.event    <-  is.t1 & is.t2 & d$t1 == d$t2
+    d$is.exact    <-  is.t1 & is.t2 & d$t1 == d$t2
     d$is.left     <- !is.t1 & is.t2
     d$is.interval <-  is.t1 & is.t2 & d$t1 != d$t2
 
@@ -97,73 +97,88 @@
     d <- config[i, , drop=FALSE]
     p <- strsplit(d$Parameters, ",")[[1]]
     p <- unique(sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", p, perl=TRUE))
-    d <- data.frame(d, Parameter=p, rec=i, row.names=NULL, 
+    d <- data.frame(d, Parameter=p, rec=i, row.names=NULL,
                     stringsAsFactors=FALSE)
     d$Parameters <- NULL
     return(d)
   }
   d <- do.call(rbind, lapply(seq_len(nrow(config)), FUN))
-  
+
   d <- d[d$Parameter %in% names(processed.data), ]
-  
+
   return(d)
 }
 
 
 
-.RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA, 
-                         gr.type=c("pdf", "eps"), plot.path=NULL) {
-  
-  
+.RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
+                         plot.path=NULL, gr.type=c("pdf", "eps")) {
+
   if (!is.na(sdate) && !inherits(sdate, "Date"))
     stop("incorrect class for argument 'sdate'")
   if (!is.na(edate) && !inherits(edate, "Date"))
     stop("incorrect class for argument 'edate'")
-  
-  
-  
+
   models <- list()
-  
+
   d <- processed.config[, c("Site_id", "Site_name", "Parameter")]
-  stats <- data.frame(d, "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA, 
-                      "0.95LCL"=NA, "0.95UCL"=NA, check.names=FALSE)
-  
+  stats <- data.frame(d, "sdate"=sdate, "edate"=edate, "n"=NA, "nmissing"=NA,
+                      "nexact"=NA, "nleft"=NA, "ninterval"=NA, "nbelow.dl"=NA,
+                      "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA,
+                      "0.95LCL"=NA, "0.95UCL"=NA, "c1"=NA, "c2"=NA, "scale"=NA,
+                      "p"=NA, "slope"=NA, "trend"=NA, check.names=FALSE)
+
   for (i in seq_len(nrow(processed.config))) {
-    
+
     d <- processed.data[[processed.config[i, "Parameter"]]]
     d <- d[d$Site_id == processed.config[i, "Site_id"], ]
-    
-    d <- d[d$Date >= if(is.na(sdate)) min(d$Date) else sdate & 
+
+    d <- d[d$Date >= if(is.na(sdate)) min(d$Date) else sdate &
            d$Date <= if(is.na(edate)) max(d$Date) else edate, ]
-    
+
     d$surv <- Surv(time=d$t1, time2=d$t2, type="interval2")
-    
-    models[[i]] <- survreg(surv ~ Date, data=d, dist="lognormal")
-    
+    is.missing <- is.na(d$surv)
+
+    stats[i, c("n", "nmissing")] <- c(nrow(d), sum(is.missing))
+    vars <- c("nexact", "nleft", "ninterval")
+    stats[i, vars] <- c(sum(d$is.exact), sum(d$is.left), sum(d$is.interval))
+    stats[i, "nbelow.dl"] <- sum(d$code == "<" | (!is.na(d$dl) & d$t2 <= d$dl))
+
+    stats[i, c("min", "max")] <- c(min(d$t1), max(d$t2))
+
+    model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
+                              control=survreg.control(maxiter=100)))
+    models[[i]] <- model
+
+    stats[i, c("c1", "c2", "scale")] <- with(model, c(coefficients, scale))
+
+    p <- with(model, 1 - pchisq(2 * diff(loglik), sum(df) - idf))
+    slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # % change per year
+    stats[i, c("p", "slope")] <- c(p, slope)
+
+    is.trend <- !anyNA(c(p, slope)) & p <= 0.05 & slope > 1
+    stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
+
     if (any(d$is.interval)) {
       fit <- summary(survfit(d$surv ~ 1))$table
       vars <- c("median", "0.95LCL", "0.95UCL")
       stats[i, vars] <- fit[vars]
-      
+
     } else if (any(d$is.left)) {
-      fit <- cenfit(d$t2, d$is.left)
+      fit <- cenfit(d$t2[!is.missing], d$is.left[!is.missing])
       vars <- c("mean", "0.95LCL", "0.95UCL")
-      stats[i, vars] <- mean(fit)[vars]
-      stats[i, c("median", "sd")] <- c(median(fit), sd(fit))
-      
+      stats[i, vars] <- suppressWarnings(mean(fit)[vars])
+      stats[i, c("median", "sd")] <- suppressWarnings(c(median(fit), sd(fit)))
+
     } else {
-      vars <- c("min", "max", "median", "mean", "sd")
-      stats[i, vars] <- c(min(d$t1), max(d$t1), median(d$t1), mean(d$t1), sd(d$t1))
+      x <- na.omit(d$t1)
+      stats[i, c("median", "mean", "sd")] <- c(median(x), mean(x), sd(x))
     }
-    
   }
-  
-  
-  # x <- seq(sdate, edate, "days")
-  # y <- predict(model, newdata=list(date=x), type="quantile", p=c(0.1, 0.9, 0.5))
-    
-  
-  
+
+
+
+  return(stats)
 }
 
 
@@ -172,15 +187,17 @@
 
 
 
-.TMP <- function() {
-  
-  library(survival)
-  library(NADA)
+
+
+.tmp <- function() {
+
+  require(survival)
+  require(NADA)
 
 
   path.in <- system.file("extdata", "SIR2014", package = "Trends")
-  read.args <- list(header = TRUE, sep = "\t", colClasses = "character", na.strings = "", 
-                    fill = TRUE, strip.white = TRUE, comment.char = "", flush = TRUE, 
+  read.args <- list(header = TRUE, sep = "\t", colClasses = "character", na.strings = "",
+                    fill = TRUE, strip.white = TRUE, comment.char = "", flush = TRUE,
                     stringsAsFactors = FALSE)
 
   file <- file.path(path.in, "Raw_Data.tsv")
@@ -192,24 +209,22 @@
   file <- file.path(path.in, "Detection_Limits.tsv")
   detection.limits <- do.call(read.table, c(list(file), read.args))
 
-  processed.data <- .ProcessRawData(raw.data, parameters, detection.limits, 
+  processed.data <- .ProcessRawData(raw.data, parameters, detection.limits,
                                     date.fmt = "%m/%d/%Y")
-  
-  ##
-  
-  file <- file.path(path.in, "Config_RADS.tsv")
-  config <- do.call(read.table, c(list(file), read.args))
-  
-  processed.config <- .ProcessConfig(config, processed.data)
 
   ##
-  
+
+  file <- file.path(path.in, "Config_RADS.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+
+  processed.config <- .ProcessConfig(config, processed.data)
+
   stats <- .RunAnalysis(processed.data, processed.config)
-  
-  
-  
-  
-  
+
+
+
+
+
 
 }
 
