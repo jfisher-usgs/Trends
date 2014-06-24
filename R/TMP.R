@@ -133,8 +133,8 @@
 
 
 .RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
-                         graphics.type="pdf", path=NULL, id=NULL,
-                         site.locations=NULL) {
+                         graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
+                         id=NULL, site.locations=NULL) {
 
   if (!is.na(sdate) && !inherits(sdate, "Date"))
     stop("incorrect class for argument 'sdate'")
@@ -169,7 +169,7 @@
     stats[i, c("min", "max")] <- c(min(d$t1), max(d$t2))
 
     model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
-                              control=survreg.control(maxiter=100)))
+                                      control=survreg.control(maxiter=100)))
     models[[i]] <- model
 
     stats[i, c("c1", "c2", "scale")] <- with(model, c(coefficients, scale))
@@ -223,34 +223,41 @@
 
 
 
-  if (is.character(path)) {
-    dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
-    file <- file.path(path, paste0(id, ".tsv"))
-    write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
-    if (inherits(site.locations, "SpatialPointsDataFrame")) {
-      idxs <- match(stats$Site_id, site.locations@data$Site_id)
-      if (anyNA(idxs)) {
-        stop("site id(s) not found in 'spatial.locations'")
-      } else {
-        coords <- site.locations@coords[idxs, , drop=FALSE]
-        crs <- site.locations@proj4string
-        obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
-        writeOGR(obj, path, id, "ESRI Shapefile")
-      }
+
+  if (graphics.type == "pdf" && merge.pdfs)
+    .MergePDFs(path, id)
+
+
+
+
+  dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
+  file <- file.path(path, paste0(id, ".tsv"))
+  write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
+  if (inherits(site.locations, "SpatialPointsDataFrame")) {
+    idxs <- match(stats$Site_id, site.locations@data$Site_id)
+    if (anyNA(idxs)) {
+      stop("site id(s) not found in 'spatial.locations'")
+    } else {
+      coords <- site.locations@coords[idxs, , drop=FALSE]
+      crs <- site.locations@proj4string
+      obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
+      writeOGR(obj, path, id, "ESRI Shapefile")
     }
   }
-  return(stats)
+
+  invisible(stats)
 }
 
 
 
 .DrawPlot <- function(obj, model=NULL, xlim=NULL, main=NULL, ylab=NULL,
                       pch=21, col="#107FC9", bg="#107FC9", legend=NULL) {
-  xlim <- extendrange(obj$Date, f=0.02)
+
+  obj$t1[is.na(obj$t1)] <- 0
+
+  xlim <- extendrange(obj$Date, f=0.04)
   ylim <- c(min(obj$t1), max(obj$t2, na.rm=TRUE))
-  if (is.na(ylim[1]) | ylim[1] < 0)
-    ylim[1] <- 0
-  ylim <- extendrange(pretty(ylim), f=0.02)
+  ylim <- extendrange(pretty(ylim), f=0.04)
 
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
@@ -330,6 +337,74 @@
 
 
 
+}
 
 
+
+
+
+.MergePDFs <- function(path, file, retain.files=FALSE) {
+
+  if (Sys.which("pdftk") == "")
+    stop("pdftk can not be run, check that PDFtk Server is installed")
+  if (missing(path) || !is.character(path))
+    stop("argument 'path' is missing or not a character string")
+
+  pdfs <- list.files(path, pattern=".pdf$")
+  if (length(pdfs) == 0 || pdfs == "")
+    stop("path does not exist or input pdf files are missing")
+
+  out.pdf <- file.path(path, paste0(id, ".pdf"))
+  if(file.exists(out.pdf))
+    file.remove(out.pdf)
+
+  tmp.txt <- tempfile(pattern="tmp", fileext=".txt")
+  tmp.bat <- tempfile(pattern="tmp", fileext=".bat")
+  tmp.pdf <- tempfile(pattern="tmp", fileext=".pdf")
+
+  cmd <- paste("cd", shQuote(path))
+
+  cat("", file=tmp.bat)
+  Sys.chmod(tmp.bat, mode="755")
+
+  npages <- NULL
+  for (i in pdfs) {
+    cmd[2] <- paste("pdftk", shQuote(i), "dump_data output", shQuote(tmp.txt))
+    cat(cmd, file=tmp.bat, sep="\n")
+    system(command=tmp.bat, show.output.on.console=FALSE)
+    txt <- scan(tmp.txt, what=character(), quiet=TRUE)
+    npages <- c(npages, as.integer(txt[which(txt == "NumberOfPages:") + 1L]))
+  }
+  pages <- cumsum(npages) - (npages - 1L)
+
+  cmd[2] <- paste("pdftk *.pdf cat output", shQuote(tmp.pdf))
+  cat(cmd, file=tmp.bat, sep="\n")
+  system(command=tmp.bat, show.output.on.console=FALSE)
+
+  cmd[2] <- paste("pdftk", shQuote(tmp.pdf), "dump_data output",
+                  shQuote(tmp.txt))
+  cat(cmd, file=tmp.bat, sep="\n")
+  system(command=tmp.bat, show.output.on.console=FALSE)
+
+  bookmarks <- sub("\\.pdf$", "", pdfs)
+  FUN <- function(i) {
+    bookmark <- c("BookmarkBegin", paste("BookmarkTitle:", bookmarks[i]),
+                  "BookmarkLevel: 1", paste("BookmarkPageNumber:", pages[i]))
+    return(paste(bookmark, collapse="\n"))
+  }
+  bookmarks <- vapply(seq_along(bookmarks), FUN, "")
+  cat(bookmarks, file=tmp.txt, sep="\n", append=TRUE)
+  cmd[2] <- paste("pdftk", shQuote(tmp.pdf), "update_info", shQuote(tmp.txt),
+                  "output", shQuote(out.pdf))
+  cat(cmd, file=tmp.bat, sep="\n")
+  system(command=tmp.bat, show.output.on.console=FALSE)
+
+  if (!retain.files)
+    unlink(pdfs, force=TRUE)
+
+  unlink(tmp.txt)
+  unlink(tmp.bat)
+  unlink(tmp.pdf)
+
+  invisible(out.pdf)
 }
