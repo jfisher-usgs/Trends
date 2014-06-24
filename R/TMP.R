@@ -1,22 +1,20 @@
 
 
 
-.OpenDevice <- function(path, id, graphics.type, w=8.5, h=11, p=12) {
+.OpenDevice <- function(path, id, graphics.type, w=8.5, h=11) {
   if (missing(graphics.type) || !graphics.type %in% c("pdf", "eps")) {
-    dev.new(width=w, height=h, pointsize=p)
+    dev.new(width=w, height=h)
   } else {
     file <- file.path(path, paste(id, graphics.type, sep="."))
     if (file.access(file, mode=0) == 0)
-      stop(paste(sQuote(file), "already exists and will not be overwritten"))
+      stop(paste("file already exists and will not be overwritten:", file))
     if (graphics.type == "pdf") {
-      pdf(file=file, width=w, height=h, pointsize=p, version="1.6",
-          colormodel="cmyk")
+      pdf(file=file, width=w, height=h, version="1.6", colormodel="cmyk")
     } else if (graphics.type == "eps") {
-      postscript(file=file, width=w, height=h, pointsize=p,
-                 horizontal=FALSE, paper="letter")
+      postscript(file=file, width=w, height=h, horizontal=FALSE, paper="letter")
     }
   }
-  par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
+  par(mfrow=c(4, 1), omi=c(4, 3.5, 6, 4.5) * 0.166667, mar=c(2, 5, 2, 1))
 }
 
 
@@ -126,13 +124,16 @@
 
   d <- d[d$Parameter %in% names(processed.data), ]
 
+  ids <- config$Site_id
+  d <- d[order(as.integer(factor(ids, levels=unique(ids)))), ]
+
   return(d)
 }
 
 
 
 .RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
-                         graphics.type=c("pdf", "eps"), path=NULL, id=NULL,
+                         graphics.type="pdf", path=NULL, id=NULL,
                          site.locations=NULL) {
 
   if (!is.na(sdate) && !inherits(sdate, "Date"))
@@ -140,6 +141,7 @@
   if (!is.na(edate) && !inherits(edate, "Date"))
     stop("incorrect class for argument 'edate'")
 
+  obs <- list()
   models <- list()
 
   d <- processed.config[, c("Site_id", "Site_name", "Parameter")]
@@ -150,15 +152,14 @@
                       "p"=NA, "slope"=NA, "trend"=NA, check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
-
     d <- processed.data[[processed.config[i, "Parameter"]]]
     d <- d[d$Site_id == processed.config[i, "Site_id"], ]
-
     d <- d[d$Date >= if(is.na(sdate)) min(d$Date) else sdate &
            d$Date <= if(is.na(edate)) max(d$Date) else edate, ]
-
     d$surv <- Surv(time=d$t1, time2=d$t2, type="interval2")
     is.missing <- is.na(d$surv)
+
+    obs[[i]] <-  d
 
     stats[i, c("n", "nmissing")] <- c(nrow(d), sum(is.missing))
     vars <- c("nexact", "nleft", "ninterval")
@@ -174,7 +175,7 @@
     stats[i, c("c1", "c2", "scale")] <- with(model, c(coefficients, scale))
 
     p <- with(model, 1 - pchisq(2 * diff(loglik), sum(df) - idf))
-    slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # percent change per year
+    slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # in percent change per year
     stats[i, c("p", "slope")] <- c(p, slope)
 
     is.trend <- !anyNA(c(p, slope)) & p <= 0.05 & slope > 1  # TODO: question slope criteria
@@ -184,22 +185,41 @@
       fit <- summary(survfit(d$surv ~ 1))$table
       vars <- c("median", "0.95LCL", "0.95UCL")
       stats[i, vars] <- fit[vars]
-
     } else if (any(d$is.left)) {
       fit <- cenfit(d$t2[!is.missing], d$is.left[!is.missing])
       vars <- c("mean", "0.95LCL", "0.95UCL")
       stats[i, vars] <- suppressWarnings(mean(fit)[vars])
       stats[i, c("median", "sd")] <- suppressWarnings(c(median(fit), sd(fit)))
-
     } else {
-      x <- na.omit(d$t1)
-      stats[i, c("median", "mean", "sd")] <- c(median(x), mean(x), sd(x))
+      t1 <- na.omit(d$t1)
+      stats[i, c("median", "mean", "sd")] <- c(median(t1), mean(t1), sd(t1))
     }
   }
 
 
 
-  # TODO: draw plots
+  plot.count <- list()
+  for (i in seq_len(nrow(processed.config))) {
+    site.id <- processed.config$Site_id[i]
+    site.name <- processed.config$Site_name[i]
+    if (is.null(plot.count[[site.id]]))
+      plot.count[[site.id]] <- 0L
+    if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
+      if (graphics.type %in% c("pdf", "eps"))
+        graphics.off()
+      letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
+      .OpenDevice(path, paste0(site.name, "_", letter), graphics.type)
+      main <- paste0(site.name, " (", site.id, ")")
+    } else {
+      main <- NULL
+    }
+    a <- attributes(processed.data[[processed.config$Parameter[i]]])
+    ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", ", a$Units))
+    .DrawPlot(obs[[i]], models[[i]], xlim=c(sdate, edate), main=main, ylab=ylab)
+    plot.count[[site.id]] <- plot.count[[site.id]] + 1L
+  }
+  if (graphics.type %in% c("pdf", "eps"))
+    graphics.off()
 
 
 
@@ -207,7 +227,6 @@
     dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
     file <- file.path(path, paste0(id, ".tsv"))
     write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
-
     if (inherits(site.locations, "SpatialPointsDataFrame")) {
       idxs <- match(stats$Site_id, site.locations@data$Site_id)
       if (anyNA(idxs)) {
@@ -220,12 +239,54 @@
       }
     }
   }
-
   return(stats)
 }
 
 
 
+.DrawPlot <- function(obj, model=NULL, xlim=NULL, main=NULL, ylab=NULL,
+                      pch=21, col="#107FC9", bg="#107FC9", legend=NULL) {
+  xlim <- extendrange(obj$Date, f=0.02)
+  ylim <- c(min(obj$t1), max(obj$t2, na.rm=TRUE))
+  if (is.na(ylim[1]) | ylim[1] < 0)
+    ylim[1] <- 0
+  ylim <- extendrange(pretty(ylim), f=0.02)
+
+  plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
+       xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
+
+  x <- seq(xlim[1], xlim[2], "days")
+  y <- predict(model, list(Date=x), type="quantile", p=c(0.1, 0.9, 0.5))
+  polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
+  matlines(x, y, lty=c(2, 2, 1), lwd=c(0.75, 0.75, 1), col="#303030")
+
+  bar.col <- ifelse(is.na(col), bg, col)
+
+  if (any(obj$is.interval)) {
+    x  <- obj$Date[obj$is.interval]
+    y1 <- obj$t1[obj$is.interval]
+    y2 <- obj$t2[obj$is.interval]
+    suppressWarnings(arrows(x, y1, x, y2, 0.01, 90, 3, col=bar.col))
+  }
+  if (any(obj$is.left)) {
+    x <- obj$Date[obj$is.left]
+    y <- obj$conc[obj$is.left]
+    suppressWarnings(arrows(x, y, x, 0, 0.01, 90, 3, col=bar.col))
+  }
+  if (any(obj$is.exact)) {
+    x <- obj$Date[obj$is.exact]
+    y <- obj$conc[obj$is.exact]
+    points(x, y, pch=pch, col=col, bg=bg, cex=0.7)
+  }
+
+  axis.Date(1, xlim, tcl=0.5, lwd=0.5)
+  axis.Date(3, xlim, tcl=0.5, lwd=0.5, labels=FALSE)
+  axis(2, tcl=0.5, lwd=0.5)
+  axis(4, tcl=0.5, lwd=0.5, labels=FALSE)
+
+  box(lwd=0.5)
+
+}
 
 
 
@@ -263,8 +324,8 @@
 
   site.locations <- readOGR(path.in, layer = "Site_Locations", verbose = FALSE)
 
-  stats <- .RunAnalysis(processed.data, processed.config,
-                        path = "C:/Users/jfisher/Desktop/Trends", id = "tmp",
+  path.out <- "C:/Users/jfisher/Desktop/Trends"
+  stats <- .RunAnalysis(processed.data, processed.config, path = path.out, id = "tmp",
                         site.locations = site.locations)
 
 
