@@ -1,6 +1,26 @@
 
 
 
+.OpenDevice <- function(path, id, graphics.type, w=8.5, h=11, p=12) {
+  if (missing(graphics.type) || !graphics.type %in% c("pdf", "eps")) {
+    dev.new(width=w, height=h, pointsize=p)
+  } else {
+    file <- file.path(path, paste(id, graphics.type, sep="."))
+    if (file.access(file, mode=0) == 0)
+      stop(paste(sQuote(file), "already exists and will not be overwritten"))
+    if (graphics.type == "pdf") {
+      pdf(file=file, width=w, height=h, pointsize=p, version="1.6",
+          colormodel="cmyk")
+    } else if (graphics.type == "eps") {
+      postscript(file=file, width=w, height=h, pointsize=p,
+                 horizontal=FALSE, paper="letter")
+    }
+  }
+  par(mfrow=c(4, 1), oma=c(5, 5, 5, 5), mar=c(2, 5, 2, 2))
+}
+
+
+
 .ProcessRawData <- function(raw.data, parameters, detection.limits=NULL,
                             date.fmt="%Y-%m-%d") {
 
@@ -68,7 +88,7 @@
     d$t1[are.interval] <- lower.conc[are.interval]
     d$t2[are.interval] <- upper.conc[are.interval]
 
-    d$t2[which(d$t2 <= 0)] <- NA  # TODO(jfisher): zero is invalid for 'lognormal' distribution
+    d$t2[which(d$t2 <= 0)] <- NA  # TODO: zero is invalid for 'lognormal' distribution
     d$t1[which(d$t1 <= 0 | is.na(d$t2))] <- NA
 
     is.t1 <- !is.na(d$t1)
@@ -112,7 +132,8 @@
 
 
 .RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
-                         plot.path=NULL, gr.type=c("pdf", "eps")) {
+                         graphics.type=c("pdf", "eps"), path=NULL, id=NULL,
+                         site.locations=NULL) {
 
   if (!is.na(sdate) && !inherits(sdate, "Date"))
     stop("incorrect class for argument 'sdate'")
@@ -153,10 +174,10 @@
     stats[i, c("c1", "c2", "scale")] <- with(model, c(coefficients, scale))
 
     p <- with(model, 1 - pchisq(2 * diff(loglik), sum(df) - idf))
-    slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # % change per year
+    slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # percent change per year
     stats[i, c("p", "slope")] <- c(p, slope)
 
-    is.trend <- !anyNA(c(p, slope)) & p <= 0.05 & slope > 1
+    is.trend <- !anyNA(c(p, slope)) & p <= 0.05 & slope > 1  # TODO: question slope criteria
     stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
 
     if (any(d$is.interval)) {
@@ -178,6 +199,28 @@
 
 
 
+  # TODO: draw plots
+
+
+
+  if (is.character(path)) {
+    dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
+    file <- file.path(path, paste0(id, ".tsv"))
+    write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
+
+    if (inherits(site.locations, "SpatialPointsDataFrame")) {
+      idxs <- match(stats$Site_id, site.locations@data$Site_id)
+      if (anyNA(idxs)) {
+        stop("site id(s) not found in 'spatial.locations'")
+      } else {
+        coords <- site.locations@coords[idxs, , drop=FALSE]
+        crs <- site.locations@proj4string
+        obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
+        writeOGR(obj, path, id, "ESRI Shapefile")
+      }
+    }
+  }
+
   return(stats)
 }
 
@@ -189,10 +232,9 @@
 
 
 
-.tmp <- function() {
+.tmp <- function() {  # TODO: move to vignette
 
-  require(survival)
-  require(NADA)
+  require(NADA); require(rgdal)
 
 
   path.in <- system.file("extdata", "SIR2014", package = "Trends")
@@ -219,14 +261,14 @@
 
   processed.config <- .ProcessConfig(config, processed.data)
 
-  stats <- .RunAnalysis(processed.data, processed.config)
+  site.locations <- readOGR(path.in, layer = "Site_Locations", verbose = FALSE)
 
+  stats <- .RunAnalysis(processed.data, processed.config,
+                        path = "C:/Users/jfisher/Desktop/Trends", id = "tmp",
+                        site.locations = site.locations)
 
 
 
 
 
 }
-
-
-

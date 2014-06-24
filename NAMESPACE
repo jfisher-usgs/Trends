@@ -1,4 +1,4 @@
-import(MASS, NADA)
+import(MASS, NADA, survival)
 
 importFrom(sp, SpatialPointsDataFrame)
 importFrom(rgdal, readOGR, writeOGR)
