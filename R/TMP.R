@@ -1,6 +1,71 @@
 
 
 
+
+.MergePDFs <- function(path, retain.files=FALSE) {
+  if (Sys.which("pdftk") == "")
+    stop("pdftk not found, check that PDFtk Server is installed")
+
+  pdfs <- list.files(path, pattern=".pdf$")
+  if (length(pdfs) == 0 || pdfs == "")
+    stop("path does not exist or input files are missing")
+
+  out.pdf <- file.path(dirname(path), paste0(basename(path), ".pdf"))
+  if(file.exists(out.pdf))
+    file.remove(out.pdf)
+
+  tmp.txt <- tempfile(fileext=".txt")
+  tmp.bat <- tempfile(fileext=".bat")
+  tmp.pdf <- tempfile(fileext=".pdf")
+
+  cmd <- paste("cd", shQuote(path))
+
+  cat("", file=tmp.bat)
+  Sys.chmod(tmp.bat, mode="755")
+
+  npages <- NULL
+  for (i in pdfs) {
+    cmd[2] <- paste("pdftk", shQuote(i), "dump_data output", shQuote(tmp.txt))
+    cat(cmd, file=tmp.bat, sep="\n")
+    system(command=tmp.bat, show.output.on.console=FALSE)
+    txt <- scan(tmp.txt, what=character(), quiet=TRUE)
+    npages <- c(npages, as.integer(txt[which(txt == "NumberOfPages:") + 1L]))
+  }
+  pages <- cumsum(npages) - (npages - 1L)
+
+  cmd[2] <- paste("pdftk *.pdf cat output", shQuote(tmp.pdf))
+  cat(cmd, file=tmp.bat, sep="\n")
+  system(command=tmp.bat, show.output.on.console=FALSE)
+
+  cmd[2] <- paste("pdftk", shQuote(tmp.pdf), "dump_data output",
+                  shQuote(tmp.txt))
+  cat(cmd, file=tmp.bat, sep="\n")
+  system(command=tmp.bat, show.output.on.console=FALSE)
+
+  bookmarks <- sub("\\.pdf$", "", pdfs)
+  FUN <- function(i) {
+    bookmark <- c("BookmarkBegin", paste("BookmarkTitle:", bookmarks[i]),
+                  "BookmarkLevel: 1", paste("BookmarkPageNumber:", pages[i]))
+    return(paste(bookmark, collapse="\n"))
+  }
+  bookmarks <- vapply(seq_along(bookmarks), FUN, "")
+  cat(bookmarks, file=tmp.txt, sep="\n", append=TRUE)
+  cmd[2] <- paste("pdftk", shQuote(tmp.pdf), "update_info", shQuote(tmp.txt),
+                  "output", shQuote(out.pdf))
+  cat(cmd, file=tmp.bat, sep="\n")
+  system(command=tmp.bat, show.output.on.console=FALSE)
+
+  unlink(tmp.txt)
+  unlink(tmp.bat)
+  unlink(tmp.pdf)
+  if (!retain.files)
+    unlink(path, recursive=TRUE, force=TRUE)
+
+  invisible(out.pdf)
+}
+
+
+
 .OpenDevice <- function(path, id, graphics.type, w=8.5, h=11) {
   if (missing(graphics.type) || !graphics.type %in% c("pdf", "eps")) {
     dev.new(width=w, height=h)
@@ -107,7 +172,6 @@
 
 
 .ProcessConfig <- function(config, processed.data) {
-
   ids <- unique(unlist(lapply(processed.data, function(i) levels(i$Site_id))))
   config <- config[config$Site_id %in% ids, ]
 
@@ -121,12 +185,9 @@
     return(d)
   }
   d <- do.call(rbind, lapply(seq_len(nrow(config)), FUN))
-
   d <- d[d$Parameter %in% names(processed.data), ]
-
   ids <- config$Site_id
   d <- d[order(as.integer(factor(ids, levels=unique(ids)))), ]
-
   return(d)
 }
 
@@ -196,7 +257,7 @@
     }
   }
 
-
+  dir.create(path=file.path(path, id), showWarnings=FALSE, recursive=TRUE)
 
   plot.count <- list()
   for (i in seq_len(nrow(processed.config))) {
@@ -204,15 +265,18 @@
     site.name <- processed.config$Site_name[i]
     if (is.null(plot.count[[site.id]]))
       plot.count[[site.id]] <- 0L
+
     if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
       if (graphics.type %in% c("pdf", "eps"))
         graphics.off()
       letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
-      .OpenDevice(path, paste0(site.name, "_", letter), graphics.type)
+      .OpenDevice(file.path(path, id), paste0(site.name, "_", letter),
+                  graphics.type)
       main <- paste0(site.name, " (", site.id, ")")
     } else {
       main <- NULL
     }
+
     a <- attributes(processed.data[[processed.config$Parameter[i]]])
     ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", ", a$Units))
     .DrawPlot(obs[[i]], models[[i]], xlim=c(sdate, edate), main=main, ylab=ylab)
@@ -221,16 +285,9 @@
   if (graphics.type %in% c("pdf", "eps"))
     graphics.off()
 
-
-
-
   if (graphics.type == "pdf" && merge.pdfs)
-    .MergePDFs(path, id)
+    .MergePDFs(file.path(path, id))
 
-
-
-
-  dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
   file <- file.path(path, paste0(id, ".tsv"))
   write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
   if (inherits(site.locations, "SpatialPointsDataFrame")) {
@@ -253,11 +310,12 @@
 .DrawPlot <- function(obj, model=NULL, xlim=NULL, main=NULL, ylab=NULL,
                       pch=21, col="#107FC9", bg="#107FC9", legend=NULL) {
 
+  obj <- obj[!is.na(obj$surv), ]
   obj$t1[is.na(obj$t1)] <- 0
 
-  xlim <- extendrange(obj$Date, f=0.04)
+  xlim <- extendrange(obj$Date, f=0.02)
   ylim <- c(min(obj$t1), max(obj$t2, na.rm=TRUE))
-  ylim <- extendrange(pretty(ylim), f=0.04)
+  ylim <- extendrange(pretty(ylim))
 
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
@@ -269,20 +327,17 @@
 
   bar.col <- ifelse(is.na(col), bg, col)
 
-  if (any(obj$is.interval)) {
-    x  <- obj$Date[obj$is.interval]
-    y1 <- obj$t1[obj$is.interval]
-    y2 <- obj$t2[obj$is.interval]
+  is.int <- obj$is.left | obj$is.interval
+  if (any(is.int)) {
+    x  <- obj$Date[is.int]
+    y1 <- obj$t1[is.int]
+    y2 <- obj$t2[is.int]
     suppressWarnings(arrows(x, y1, x, y2, 0.01, 90, 3, col=bar.col))
   }
-  if (any(obj$is.left)) {
-    x <- obj$Date[obj$is.left]
-    y <- obj$conc[obj$is.left]
-    suppressWarnings(arrows(x, y, x, 0, 0.01, 90, 3, col=bar.col))
-  }
-  if (any(obj$is.exact)) {
-    x <- obj$Date[obj$is.exact]
-    y <- obj$conc[obj$is.exact]
+  is.pnt <- obj$is.exact
+  if (any(is.pnt)) {
+    x <- obj$Date[is.pnt]
+    y <- obj$t2[is.pnt]
     points(x, y, pch=pch, col=col, bg=bg, cex=0.7)
   }
 
@@ -294,9 +349,6 @@
   box(lwd=0.5)
 
 }
-
-
-
 
 
 
@@ -332,8 +384,8 @@
   site.locations <- readOGR(path.in, layer = "Site_Locations", verbose = FALSE)
 
   path.out <- "C:/Users/jfisher/Desktop/Trends"
-  stats <- .RunAnalysis(processed.data, processed.config, path = path.out, id = "tmp",
-                        site.locations = site.locations)
+  stats <- .RunAnalysis(processed.data, processed.config, path = path.out,
+                        id = "tmp", site.locations = site.locations)
 
 
 
@@ -342,69 +394,3 @@
 
 
 
-
-.MergePDFs <- function(path, file, retain.files=FALSE) {
-
-  if (Sys.which("pdftk") == "")
-    stop("pdftk can not be run, check that PDFtk Server is installed")
-  if (missing(path) || !is.character(path))
-    stop("argument 'path' is missing or not a character string")
-
-  pdfs <- list.files(path, pattern=".pdf$")
-  if (length(pdfs) == 0 || pdfs == "")
-    stop("path does not exist or input pdf files are missing")
-
-  out.pdf <- file.path(path, paste0(id, ".pdf"))
-  if(file.exists(out.pdf))
-    file.remove(out.pdf)
-
-  tmp.txt <- tempfile(pattern="tmp", fileext=".txt")
-  tmp.bat <- tempfile(pattern="tmp", fileext=".bat")
-  tmp.pdf <- tempfile(pattern="tmp", fileext=".pdf")
-
-  cmd <- paste("cd", shQuote(path))
-
-  cat("", file=tmp.bat)
-  Sys.chmod(tmp.bat, mode="755")
-
-  npages <- NULL
-  for (i in pdfs) {
-    cmd[2] <- paste("pdftk", shQuote(i), "dump_data output", shQuote(tmp.txt))
-    cat(cmd, file=tmp.bat, sep="\n")
-    system(command=tmp.bat, show.output.on.console=FALSE)
-    txt <- scan(tmp.txt, what=character(), quiet=TRUE)
-    npages <- c(npages, as.integer(txt[which(txt == "NumberOfPages:") + 1L]))
-  }
-  pages <- cumsum(npages) - (npages - 1L)
-
-  cmd[2] <- paste("pdftk *.pdf cat output", shQuote(tmp.pdf))
-  cat(cmd, file=tmp.bat, sep="\n")
-  system(command=tmp.bat, show.output.on.console=FALSE)
-
-  cmd[2] <- paste("pdftk", shQuote(tmp.pdf), "dump_data output",
-                  shQuote(tmp.txt))
-  cat(cmd, file=tmp.bat, sep="\n")
-  system(command=tmp.bat, show.output.on.console=FALSE)
-
-  bookmarks <- sub("\\.pdf$", "", pdfs)
-  FUN <- function(i) {
-    bookmark <- c("BookmarkBegin", paste("BookmarkTitle:", bookmarks[i]),
-                  "BookmarkLevel: 1", paste("BookmarkPageNumber:", pages[i]))
-    return(paste(bookmark, collapse="\n"))
-  }
-  bookmarks <- vapply(seq_along(bookmarks), FUN, "")
-  cat(bookmarks, file=tmp.txt, sep="\n", append=TRUE)
-  cmd[2] <- paste("pdftk", shQuote(tmp.pdf), "update_info", shQuote(tmp.txt),
-                  "output", shQuote(out.pdf))
-  cat(cmd, file=tmp.bat, sep="\n")
-  system(command=tmp.bat, show.output.on.console=FALSE)
-
-  if (!retain.files)
-    unlink(pdfs, force=TRUE)
-
-  unlink(tmp.txt)
-  unlink(tmp.bat)
-  unlink(tmp.pdf)
-
-  invisible(out.pdf)
-}
