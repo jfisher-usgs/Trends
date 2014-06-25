@@ -193,6 +193,17 @@
 
 
 
+.GetModelInfo <- function(model) {
+  x <- c()
+  x[c("c1", "c2")] <- model$coefficients
+  x["scale"] <- model$scale
+  x["p"] <- with(model, 1 - pchisq(2 * diff(loglik), sum(df) - idf))
+  x["slope"] <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # in percent change per year
+  return(x)
+}
+
+
+
 .RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
                          graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
                          id=NULL, site.locations=NULL) {
@@ -215,8 +226,11 @@
   for (i in seq_len(nrow(processed.config))) {
     d <- processed.data[[processed.config[i, "Parameter"]]]
     d <- d[d$Site_id == processed.config[i, "Site_id"], ]
-    d <- d[d$Date >= if(is.na(sdate)) min(d$Date) else sdate &
-           d$Date <= if(is.na(edate)) max(d$Date) else edate, ]
+
+    date1 <- if (is.na(sdate)) min(d$Date) else sdate
+    date2 <- if (is.na(edate)) max(d$Date) else edate
+    d <- d[d$Date >= date1 & d$Date <= date2, ]
+
     d$surv <- Surv(time=d$t1, time2=d$t2, type="interval2")
     is.missing <- is.na(d$surv)
 
@@ -232,14 +246,12 @@
     model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
                                       control=survreg.control(maxiter=100)))
     models[[i]] <- model
+    model.info <- .GetModelInfo(model)
 
-    stats[i, c("c1", "c2", "scale")] <- with(model, c(coefficients, scale))
-
-    p <- with(model, 1 - pchisq(2 * diff(loglik), sum(df) - idf))
-    slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # in percent change per year
-    stats[i, c("p", "slope")] <- c(p, slope)
-
-    is.trend <- !anyNA(c(p, slope)) & p <= 0.05 & slope > 1  # TODO: question slope criteria
+    stats[i, names(model.info)] <- model.info
+    p     <- model.info["p"]
+    slope <- model.info["slope"]
+    is.trend <- !anyNA(c(p, slope)) & p <= 0.05
     stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
 
     if (any(d$is.interval)) {
@@ -265,7 +277,6 @@
     site.name <- processed.config$Site_name[i]
     if (is.null(plot.count[[site.id]]))
       plot.count[[site.id]] <- 0L
-
     if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
       if (graphics.type %in% c("pdf", "eps"))
         graphics.off()
@@ -276,10 +287,10 @@
     } else {
       main <- NULL
     }
-
     a <- attributes(processed.data[[processed.config$Parameter[i]]])
     ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", ", a$Units))
-    .DrawPlot(obs[[i]], models[[i]], xlim=c(sdate, edate), main=main, ylab=ylab)
+    xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
+    .DrawSurvRegPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab)
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
   }
   if (graphics.type %in% c("pdf", "eps"))
@@ -307,15 +318,22 @@
 
 
 
-.DrawPlot <- function(obj, model=NULL, xlim=NULL, main=NULL, ylab=NULL,
-                      pch=21, col="#107FC9", bg="#107FC9", legend=NULL) {
-
+.DrawSurvRegPlot <- function(obj, model, xlim=NULL, ylim=NULL, main=NULL,
+                             ylab=NULL) {
   obj <- obj[!is.na(obj$surv), ]
-  obj$t1[is.na(obj$t1)] <- 0
+  obj$t1[is.na(obj$t1) & obj$is.left] <- 0
 
-  xlim <- extendrange(obj$Date, f=0.02)
-  ylim <- c(min(obj$t1), max(obj$t2, na.rm=TRUE))
-  ylim <- extendrange(pretty(ylim))
+  xran <- extendrange(obj$Date, f=0.02)
+  if (inherits(xlim, "Date")) {
+    xlim[1] <- if (is.na(xlim[1])) xran[1] else xlim[1]
+    xlim[2] <- if (is.na(xlim[2])) xran[2] else xlim[2]
+  } else {
+    xlim <- xran
+  }
+  if (is.null(ylim)) {
+    ylim <- c(min(obj$t1), max(obj$t2, na.rm=TRUE))
+    ylim <- extendrange(pretty(ylim))
+  }
 
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
@@ -323,31 +341,39 @@
   x <- seq(xlim[1], xlim[2], "days")
   y <- predict(model, list(Date=x), type="quantile", p=c(0.1, 0.9, 0.5))
   polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
-  matlines(x, y, lty=c(2, 2, 1), lwd=c(0.75, 0.75, 1), col="#303030")
-
-  bar.col <- ifelse(is.na(col), bg, col)
+  lines(x, y[, 3], lty=1, lwd=1, col="#050505")
 
   is.int <- obj$is.left | obj$is.interval
   if (any(is.int)) {
     x  <- obj$Date[is.int]
     y1 <- obj$t1[is.int]
     y2 <- obj$t2[is.int]
-    suppressWarnings(arrows(x, y1, x, y2, 0.01, 90, 3, col=bar.col))
+    suppressWarnings(arrows(x, y1, x, y2, 0.01, 90, 3, col="#107FC9"))
   }
   is.pnt <- obj$is.exact
   if (any(is.pnt)) {
     x <- obj$Date[is.pnt]
     y <- obj$t2[is.pnt]
-    points(x, y, pch=pch, col=col, bg=bg, cex=0.7)
+    points(x, y, pch=21, col="#107FC9", bg="#107FC9", cex=0.7)
   }
 
-  axis.Date(1, xlim, tcl=0.5, lwd=0.5)
-  axis.Date(3, xlim, tcl=0.5, lwd=0.5, labels=FALSE)
+  at <- pretty(xlim, n=10)
+  axis.Date(1, xlim, at, tcl=0.5, lwd=0.5)
+  axis.Date(3, xlim, at, tcl=0.5, lwd=0.5, labels=FALSE)
   axis(2, tcl=0.5, lwd=0.5)
   axis(4, tcl=0.5, lwd=0.5, labels=FALSE)
 
   box(lwd=0.5)
 
+  model.info <- .GetModelInfo(model)
+  p <- model.info["p"]
+  if (!is.na(p) && p < 0.001)
+    p <- "p-value < 0.001"
+  else
+    p <- paste("p-value =", sprintf("%.3f", p))
+  txt <- c("Regression model", p)
+  legend("topright", txt, lty=c(1, NA), col=c("#050505", NA), xpd=NA,
+         bg="#FFFFFFBB", box.lwd=0.5)
 }
 
 
@@ -374,18 +400,60 @@
   processed.data <- .ProcessRawData(raw.data, parameters, detection.limits,
                                     date.fmt = "%m/%d/%Y")
 
-  ##
-
-  file <- file.path(path.in, "Config_RADS.tsv")
-  config <- do.call(read.table, c(list(file), read.args))
-
-  processed.config <- .ProcessConfig(config, processed.data)
-
   site.locations <- readOGR(path.in, layer = "Site_Locations", verbose = FALSE)
 
   path.out <- "C:/Users/jfisher/Desktop/Trends"
-  stats <- .RunAnalysis(processed.data, processed.config, path = path.out,
-                        id = "tmp", site.locations = site.locations)
+
+  ##
+
+
+  file <- file.path(path.in, "Config_Cen.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+                        sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
+                        path = path.out, id = "Stats_1989-2012_Cen",
+                        site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_Uncen.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+                        sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
+                        path = path.out, id = "Stats_1989-2012_Uncen",
+                        site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_Uncen_VOC.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+                        sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
+                        path = path.out, id = "Stats_1987-2012_Uncen_VOC",
+                        site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_Uncen_Field.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+                        sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
+                        path = path.out, id = "Stats_1989-2012_Uncen_Field",
+                        site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_Cen_VOC.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+                        sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
+                        path = path.out, id = "Stats_1987-2012_Cen_VOC",
+                        site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_RADS.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+                        sdate = as.Date("1981-01-01"), edate = as.Date("2013-12-31"),
+                        path = path.out, id = "Stats_1981-2012_RAD",
+                        site.locations = site.locations)
+
 
 
 
