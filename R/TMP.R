@@ -71,15 +71,17 @@
     dev.new(width=w, height=h)
   } else {
     file <- file.path(path, paste(id, graphics.type, sep="."))
-    if (file.access(file, mode=0) == 0)
-      stop(paste("file already exists and will not be overwritten:", file))
+    if (file.access(file, mode=0) == 0) {
+      warning(paste("file already exists and will be overwritten:", file))
+      remove.file(file)
+    }
     if (graphics.type == "pdf") {
       pdf(file=file, width=w, height=h, version="1.6", colormodel="cmyk")
     } else if (graphics.type == "eps") {
       postscript(file=file, width=w, height=h, horizontal=FALSE, paper="letter")
     }
   }
-  par(mfrow=c(4, 1), omi=c(4, 3.5, 6, 4.5) * 0.166667, mar=c(2, 5, 2, 1))
+  par(mfrow=c(4, 1), omi=c(4, 3.5, 6, 4.5) * 0.166667)
 }
 
 
@@ -288,7 +290,9 @@
     a <- attributes(processed.data[[processed.config$Parameter[i]]])
     ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
-    .DrawSurvRegPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab)
+    box.bg <- ifelse(graphics.type == "eps", "#FFFFFF", "#FFFFFFBB")
+    .DrawSurvRegPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab,
+                     box.bg=box.bg)
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
   }
   if (graphics.type %in% c("pdf", "eps"))
@@ -307,7 +311,8 @@
       coords <- site.locations@coords[idxs, , drop=FALSE]
       crs <- site.locations@proj4string
       obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
-      writeOGR(obj, path, id, "ESRI Shapefile")
+      writeOGR(obj, path, id, "ESRI Shapefile", check_exists=TRUE,
+               overwrite_layer=TRUE)
     }
   }
 
@@ -317,7 +322,7 @@
 
 
 .DrawSurvRegPlot <- function(obj, model, xlim=NULL, ylim=NULL, main=NULL,
-                             ylab=NULL) {
+                             ylab=NULL, box.bg="#FFFFFF") {
   obj <- obj[!is.na(obj$surv), ]
   obj$t1[is.na(obj$t1) & obj$is.left] <- 0
 
@@ -330,9 +335,10 @@
   }
   if (is.null(ylim)) {
     ylim <- c(min(obj$t1), max(obj$t2, na.rm=TRUE))
-    ylim <- extendrange(pretty(ylim))
+    ylim <- extendrange(pretty(ylim), f=0.06)
   }
 
+  par(mar=c(1, 3, 2, 1) + 0.1, mgp=c(2, 0.5, 0))
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
@@ -355,25 +361,25 @@
     points(x, y, pch=21, col="#107FC9", bg="#107FC9", cex=0.7)
   }
 
-  at <- pretty(xlim, n=10)
-  axis.Date(1, xlim, at, tcl=0.5, lwd=0.5)
-  axis.Date(3, xlim, at, tcl=0.5, lwd=0.5, labels=FALSE)
-  axis(2, tcl=0.5, lwd=0.5)
-  axis(4, tcl=0.5, lwd=0.5, labels=FALSE)
+  lwd <- 0.5 * (96 / (6 * 12))
+  tcl <- 0.50 / (6 * par("csi"))
 
-  box(lwd=0.5)
+  at <- pretty(xlim, n=10)
+  axis.Date(1, xlim, at, tcl=tcl, lwd=-1, lwd.ticks=lwd)
+  axis.Date(3, xlim, at, tcl=tcl, lwd=-1, lwd.ticks=lwd, labels=FALSE)
+  axis(2, tcl=tcl, lwd=-1, lwd.ticks=lwd)
+  axis(4, tcl=tcl, lwd=-1, lwd.ticks=lwd, labels=FALSE)
+
+  box(lwd=lwd)
 
   p <- .GetModelInfo(model)["p"]
   if (is.na(p))
     return()
-  
-  if (!is.na(p) && p < 0.001)
-    p <- "p-value < 0.001"
-  else
-    p <- paste("p-value =", sprintf("%.3f", p))
+  p <- ifelse(p < 0.001, "< 0.001", paste("=", sprintf("%.3f", p)))
+  p <- paste("p-value", p)
   txt <- c("Regression model", p)
   legend("topright", txt, lty=c(1, NA), col=c("#F02311", NA), xpd=NA,
-         bg="#FFFFFFBB", box.lwd=0.5)
+         bg=box.bg, box.lwd=lwd)
 }
 
 
@@ -455,10 +461,4 @@
                         site.locations = site.locations)
 
 
-
-
 }
-
-
-
-
