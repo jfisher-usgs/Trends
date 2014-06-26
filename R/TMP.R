@@ -197,7 +197,7 @@
   x <- c()
   x[c("c1", "c2")] <- model$coefficients
   x["scale"] <- model$scale
-  x["p"] <- with(model, 1 - pchisq(2 * diff(loglik), sum(df) - idf))
+  x["p"] <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
   x["slope"] <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # in percent change per year
   return(x)
 }
@@ -249,7 +249,7 @@
     model.info <- .GetModelInfo(model)
 
     stats[i, names(model.info)] <- model.info
-    p     <- model.info["p"]
+    p <- model.info["p"]
     slope <- model.info["slope"]
     is.trend <- !anyNA(c(p, slope)) & p <= 0.05
     stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
@@ -288,7 +288,7 @@
       main <- NULL
     }
     a <- attributes(processed.data[[processed.config$Parameter[i]]])
-    ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", ", a$Units))
+    ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
     .DrawSurvRegPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab)
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
