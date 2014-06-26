@@ -174,7 +174,6 @@
 .ProcessConfig <- function(config, processed.data) {
   ids <- unique(unlist(lapply(processed.data, function(i) levels(i$Site_id))))
   config <- config[config$Site_id %in% ids, ]
-
   FUN <- function(i) {
     d <- config[i, , drop=FALSE]
     p <- strsplit(d$Parameters, ",")[[1]]
@@ -186,8 +185,7 @@
   }
   d <- do.call(rbind, lapply(seq_len(nrow(config)), FUN))
   d <- d[d$Parameter %in% names(processed.data), ]
-  ids <- config$Site_id
-  d <- d[order(as.integer(factor(ids, levels=unique(ids)))), ]
+  d <- d[order(as.integer(factor(d$Site_id, levels=unique(d$Site_id)))), ]
   return(d)
 }
 
@@ -341,7 +339,7 @@
   x <- seq(xlim[1], xlim[2], "days")
   y <- predict(model, list(Date=x), type="quantile", p=c(0.1, 0.9, 0.5))
   polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
-  lines(x, y[, 3], lty=1, lwd=1, col="#050505")
+  lines(x, y[, 3], lty=1, lwd=1, col="#F02311")
 
   is.int <- obj$is.left | obj$is.interval
   if (any(is.int)) {
@@ -365,14 +363,16 @@
 
   box(lwd=0.5)
 
-  model.info <- .GetModelInfo(model)
-  p <- model.info["p"]
+  p <- .GetModelInfo(model)["p"]
+  if (is.na(p))
+    return()
+  
   if (!is.na(p) && p < 0.001)
     p <- "p-value < 0.001"
   else
     p <- paste("p-value =", sprintf("%.3f", p))
   txt <- c("Regression model", p)
-  legend("topright", txt, lty=c(1, NA), col=c("#050505", NA), xpd=NA,
+  legend("topright", txt, lty=c(1, NA), col=c("#F02311", NA), xpd=NA,
          bg="#FFFFFFBB", box.lwd=0.5)
 }
 
@@ -423,19 +423,19 @@
                         site.locations = site.locations)
 
 
-  file <- file.path(path.in, "Config_Uncen_VOC.tsv")
-  config <- do.call(read.table, c(list(file), read.args))
-  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
-                        sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
-                        path = path.out, id = "Stats_1987-2012_Uncen_VOC",
-                        site.locations = site.locations)
-
-
   file <- file.path(path.in, "Config_Uncen_Field.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
                         sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
                         path = path.out, id = "Stats_1989-2012_Uncen_Field",
+                        site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_Uncen_VOC.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+                        sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
+                        path = path.out, id = "Stats_1987-2012_Uncen_VOC",
                         site.locations = site.locations)
 
 
