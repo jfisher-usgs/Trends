@@ -58,8 +58,11 @@
   unlink(tmp.txt)
   unlink(tmp.bat)
   unlink(tmp.pdf)
-  if (!retain.files)
-    unlink(path, recursive=TRUE, force=TRUE)
+  if (!retain.files) {
+    unlink(file.path(path, "*.pdf"))
+    if (length(list.files(path)) == 0)
+      unlink(path, recursive=TRUE, force=TRUE)
+  }
 
   invisible(out.pdf)
 }
@@ -71,9 +74,8 @@
     dev.new(width=w, height=h)
   } else {
     file <- file.path(path, paste(id, graphics.type, sep="."))
-    if (file.access(file, mode=0) == 0) {
+    if (file.access(file) == 0) {
       warning(paste("file already exists and will be overwritten:", file))
-      remove.file(file)
     }
     if (graphics.type == "pdf") {
       pdf(file=file, width=w, height=h, version="1.6", colormodel="cmyk")
@@ -269,7 +271,12 @@
     }
   }
 
-  dir.create(path=file.path(path, id), showWarnings=FALSE, recursive=TRUE)
+  dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
+  id.path <- file.path(path, id)
+  if (file.exists(id.path))
+    unlink(file.path(id.path, paste0("*.", graphics.type)))
+
+  dir.create(path=id.path, showWarnings=FALSE, recursive=TRUE)
 
   plot.count <- list()
   for (i in seq_len(nrow(processed.config))) {
@@ -281,8 +288,7 @@
       if (graphics.type %in% c("pdf", "eps"))
         graphics.off()
       letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
-      .OpenDevice(file.path(path, id), paste0(site.name, "_", letter),
-                  graphics.type)
+      .OpenDevice(id.path, paste0(site.name, "_", letter), graphics.type)
       main <- paste0(site.name, " (", site.id, ")")
     } else {
       main <- NULL
@@ -299,7 +305,7 @@
     graphics.off()
 
   if (graphics.type == "pdf" && merge.pdfs)
-    .MergePDFs(file.path(path, id))
+    .MergePDFs(id.path)
 
   file <- file.path(path, paste0(id, ".tsv"))
   write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
