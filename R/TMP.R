@@ -338,7 +338,7 @@
     ylim <- extendrange(pretty(ylim), f=0.06)
   }
 
-  par(mar=c(1, 3, 2, 1) + 0.1, mgp=c(2, 0.5, 0))
+  par(mar=c(1, 3, 2, 0.5) + 0.1, mgp=c(2, 0.5, 0))
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
@@ -375,11 +375,10 @@
   p <- .GetModelInfo(model)["p"]
   if (is.na(p))
     return()
-  p <- ifelse(p < 0.001, "< 0.001", paste("=", sprintf("%.3f", p)))
-  p <- paste("p-value", p)
-  txt <- c("Regression model", p)
-  legend("topright", txt, lty=c(1, NA), col=c("#F02311", NA), xpd=NA,
-         bg=box.bg, box.lwd=lwd)
+  p <- ifelse(p < 0.001, "p < 0.001", paste("p =", sprintf("%.3f", p)))
+  inset <- c(0.02, 0.02 * do.call("/", as.list(par("pin"))))
+  legend("topright", paste0("Regression, ", p), lty=1, col="#F02311", xpd=NA,
+         bg=box.bg, box.lwd=lwd, inset=inset)
 }
 
 
