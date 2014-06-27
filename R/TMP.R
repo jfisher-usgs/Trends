@@ -164,9 +164,8 @@
     d$is.exact    <-  is.t1 & is.t2 & d$t1 == d$t2
     d$is.left     <- !is.t1 & is.t2
     d$is.interval <-  is.t1 & is.t2 & d$t1 != d$t2
-
     d <- d[order(d$Site_name, d$Date), ]
-    attributes(d) <- c(attributes(d), p)
+    attributes(d) <- c(attributes(d), p[c("Parameter", "Name", "Units", "sd")])
 
     lst[[p$Parameter]] <- d
   }
@@ -191,6 +190,10 @@
   d <- do.call(rbind, lapply(seq_len(nrow(config)), FUN))
   d <- d[d$Parameter %in% names(processed.data), ]
   d <- d[order(as.integer(factor(d$Site_id, levels=unique(d$Site_id)))), ]
+
+  if (is.null(d$Axis_title))
+    d$Axis_title <- NA
+
   return(d)
 }
 
@@ -236,7 +239,7 @@
 
   d <- processed.config[, c("Site_id", "Site_name", "Parameter")]
   stats <- data.frame(d, "sdate"=sdate, "edate"=edate, "n"=NA, "nmissing"=NA,
-                      "nexact"=NA, "nleft"=NA, "ninterval"=NA, "nbelow.dl"=NA,
+                      "nexact"=NA, "nleft"=NA, "ninterval"=NA, "nbelow.rl"=NA,
                       "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA,
                       "0.95LCL"=NA, "0.95UCL"=NA, "c1"=NA, "c2"=NA, "scale"=NA,
                       "p"=NA, "slope"=NA, "trend"=NA, check.names=FALSE)
@@ -257,7 +260,7 @@
     stats[i, c("n", "nmissing")] <- c(nrow(d), sum(is.missing))
     vars <- c("nexact", "nleft", "ninterval")
     stats[i, vars] <- c(sum(d$is.exact), sum(d$is.left), sum(d$is.interval))
-    stats[i, "nbelow.dl"] <- sum(d$code == "<" | (!is.na(d$dl) & d$t2 <= d$dl))
+    stats[i, "nbelow.rl"] <- sum(d$code == "<")
 
     stats[i, c("min", "max")] <- c(min(d$t1), max(d$t2))
 
@@ -306,7 +309,9 @@
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
 
     a <- attributes(processed.data[[processed.config$Parameter[i]]])
-    ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
+    ylab <- processed.config$Axis_title[i]
+    if (is.na(ylab))
+      ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
     .DrawPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab)
   }
@@ -356,8 +361,7 @@
 
     FUN <- function(i) {
       return(data.frame(lst[[i]], Name=attr(lst[[i]], "Name"),
-                        pch=attr(lst[[i]], "pch"), col=attr(lst[[i]], "col"),
-                        bg=attr(lst[[i]], "bg"), stringsAsFactors=FALSE))
+                        stringsAsFactors=FALSE))
     }
     d <- do.call(rbind, lapply(seq_along(lst), FUN))
     d <- d[d$Site_id == site.id, ]
@@ -378,6 +382,8 @@
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
 
     ylab <- processed.config[idx, "Axis_title"]
+    if (is.na(ylab))
+      ylab <- "Unknown"
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
 
     .DrawPlot(d, xlim=xlim, main=main, ylab=ylab)
@@ -411,30 +417,31 @@
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
-  if (!missing(model)) {
+  if (missing(model)) {
+    cols <- c("#A80000", "#7FAF1B", "#050505", "#107FC9", "#543511")
+    obj$col <- cols[as.integer(factor(obj$Name, levels=unique(obj$Name)))]
+  } else {
     x <- seq(xlim[1], xlim[2], "days")
     y <- predict(model, list(Date=x), type="quantile", p=c(0.1, 0.9, 0.5))
     polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
     lines(x, y[, 3], lty=1, lwd=1, col="#F02311")
-
-    obj$pch <- 21L
-    obj[, c("col", "bg")] <- "#107FC9"
+    obj$col <- "#107FC9"
   }
 
   lwd <- 0.5 * (96 / (6 * 12))
   tcl <- 0.50 / (6 * par("csi"))
-  pt.cex <- 0.8
+  pt.cex <- 0.7
+  pch <- 21
 
   is.int <- obj$is.left | obj$is.interval
   if (any(is.int)) {
     o <- obj[is.int, ]
-    o$col[is.na(o$col)] <- o$bg[is.na(o$col)]
     suppressWarnings(arrows(x0=o$Date, y0=o$t1, y1=o$t2, length=0.01, angle=90,
                             code=3, col=o$col, lwd=1))
   }
   if (any(obj$is.exact)) {
     o <- obj[obj$is.exact, ]
-    points(x=o$Date, y=o$t2, pch=o$pch, col=o$col, bg=o$bg, cex=pt.cex, lwd=lwd)
+    points(x=o$Date, y=o$t2, pch=pch, col=o$col, bg=o$col, cex=pt.cex, lwd=lwd)
   }
 
   at <- pretty(xlim, n=10)
@@ -448,8 +455,8 @@
   inset <- c(0.02, 0.02 * do.call("/", as.list(par("pin"))))
   if (missing(model)) {
     o <- obj[!duplicated(obj$Name), ]
-    suppressWarnings(legend("topleft", o$Name, pch=o$pch, col=o$col,
-                            pt.bg=o$bg, pt.cex=pt.cex, pt.lwd=lwd, xpd=NA,
+    suppressWarnings(legend("topleft", o$Name, pch=pch, col=o$col,
+                            pt.bg=o$col, pt.cex=pt.cex, pt.lwd=lwd, xpd=NA,
                             bg="#FFFFFFBB", box.lwd=lwd, inset=inset))
   } else {
     p <- .GetModelInfo(model)["p"]
@@ -496,6 +503,13 @@
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   .PlotObs(processed.data, processed.config, id = "Data_1960-2012",
+           sdate = as.Date("1960-01-01"), edate = as.Date("2012-12-31"), path = path.out)
+
+
+  file <- file.path(path.in, "Config_Plots_Field.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  processed.config <- .ProcessConfig(config, processed.data)
+  .PlotObs(processed.data, processed.config, id = "Data_1960-2012_Field",
            sdate = as.Date("1960-01-01"), edate = as.Date("2012-12-31"), path = path.out)
 
 
