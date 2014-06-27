@@ -73,6 +73,7 @@
   if (missing(graphics.type) || !graphics.type %in% c("pdf", "eps")) {
     dev.new(width=w, height=h)
   } else {
+    graphics.off()
     file <- file.path(path, paste(id, graphics.type, sep="."))
     if (file.access(file) == 0) {
       warning(paste("file already exists and will be overwritten:", file))
@@ -205,15 +206,30 @@
 }
 
 
+.CreateDir <- function(path, id, graphics.type) {
+  dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
+  if (!graphics.type %in% c("pdf", "eps"))
+    return()
+  id.path <- file.path(path, id)
+  if (file.exists(id.path))
+    unlink(file.path(id.path, paste0("*.", graphics.type)))
+  dir.create(path=id.path, showWarnings=FALSE, recursive=TRUE)
+  return(id.path)
+}
 
-.RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
-                         graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
-                         id=NULL, site.locations=NULL) {
-
+.CheckDateArgs <- function(sdate, edate) {
   if (!is.na(sdate) && !inherits(sdate, "Date"))
     stop("incorrect class for argument 'sdate'")
   if (!is.na(edate) && !inherits(edate, "Date"))
     stop("incorrect class for argument 'edate'")
+}
+
+
+.RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
+                         graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
+                         id=format(Sys.time(), "%Y%m%d%H%M%S"),
+                         site.locations=NULL) {
+  .CheckDateArgs(sdate, edate)
 
   obs <- list()
   models <- list()
@@ -271,39 +287,31 @@
     }
   }
 
-  dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
-  id.path <- file.path(path, id)
-  if (file.exists(id.path))
-    unlink(file.path(id.path, paste0("*.", graphics.type)))
-
-  dir.create(path=id.path, showWarnings=FALSE, recursive=TRUE)
+  id.path <- .CreateDir(path, id, graphics.type)
 
   plot.count <- list()
   for (i in seq_len(nrow(processed.config))) {
     site.id <- processed.config$Site_id[i]
     site.name <- processed.config$Site_name[i]
+
     if (is.null(plot.count[[site.id]]))
       plot.count[[site.id]] <- 0L
     if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
-      if (graphics.type %in% c("pdf", "eps"))
-        graphics.off()
       letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
       .OpenDevice(id.path, paste0(site.name, "_", letter), graphics.type)
       main <- paste0(site.name, " (", site.id, ")")
     } else {
       main <- NULL
     }
+    plot.count[[site.id]] <- plot.count[[site.id]] + 1L
+
     a <- attributes(processed.data[[processed.config$Parameter[i]]])
     ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
-    box.bg <- ifelse(graphics.type == "eps", "#FFFFFF", "#FFFFFFBB")
-    .DrawSurvRegPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab,
-                     box.bg=box.bg)
-    plot.count[[site.id]] <- plot.count[[site.id]] + 1L
+    .DrawPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab)
   }
   if (graphics.type %in% c("pdf", "eps"))
     graphics.off()
-
   if (graphics.type == "pdf" && merge.pdfs)
     .MergePDFs(id.path)
 
@@ -326,11 +334,66 @@
 }
 
 
+.PlotObs <- function(processed.data, processed.config, sdate=NA, edate=NA,
+                     graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
+                     id=format(Sys.time(), "%Y%m%d%H%M%S")) {
 
-.DrawSurvRegPlot <- function(obj, model, xlim=NULL, ylim=NULL, main=NULL,
-                             ylab=NULL, box.bg="#FFFFFF") {
-  obj <- obj[!is.na(obj$surv), ]
+  .CheckDateArgs(sdate, edate)
+
+  id.path <- .CreateDir(path, id, graphics.type)
+
+  plot.count <- list()
+  rec <- processed.config$rec
+  for (i in sort(unique(rec))) {
+
+    idx <- match(i, rec)
+    site.id   <- processed.config[idx, "Site_id"]
+    site.name <- processed.config[idx, "Site_name"]
+
+    pars <- processed.config[rec == i, "Parameter"]
+    lst <- lapply(pars, function(i) processed.data[[i]])
+    names(lst) <- pars
+
+    FUN <- function(i) {
+      return(data.frame(lst[[i]], Name=attr(lst[[i]], "Name"),
+                        pch=attr(lst[[i]], "pch"), col=attr(lst[[i]], "col"),
+                        bg=attr(lst[[i]], "bg"), stringsAsFactors=FALSE))
+    }
+    d <- do.call(rbind, lapply(seq_along(lst), FUN))
+    d <- d[d$Site_id == site.id, ]
+
+    date1 <- if (is.na(sdate)) min(d$Date) else sdate
+    date2 <- if (is.na(edate)) max(d$Date) else edate
+    d <- d[d$Date >= date1 & d$Date <= date2, ]
+
+    if (is.null(plot.count[[site.id]]))
+      plot.count[[site.id]] <- 0L
+    if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
+      letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
+      .OpenDevice(id.path, paste0(site.name, "_", letter), graphics.type)
+      main <- paste0(site.name, " (", site.id, ")")
+    } else {
+      main <- NULL
+    }
+    plot.count[[site.id]] <- plot.count[[site.id]] + 1L
+
+    ylab <- processed.config[idx, "Axis_title"]
+    xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
+
+    .DrawPlot(d, xlim=xlim, main=main, ylab=ylab)
+  }
+  if (graphics.type %in% c("pdf", "eps"))
+    graphics.off()
+  if (graphics.type == "pdf" && merge.pdfs)
+    .MergePDFs(id.path)
+}
+
+
+.DrawPlot <- function(obj, model, xlim=NULL, ylim=NULL, main=NULL, ylab=NULL) {
+
   obj$t1[is.na(obj$t1) & obj$is.left] <- 0
+  if (!missing(model))
+    obj <- obj[!is.na(obj$surv), ]
 
   xran <- extendrange(obj$Date, f=0.02)
   if (inherits(xlim, "Date")) {
@@ -348,27 +411,31 @@
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
-  x <- seq(xlim[1], xlim[2], "days")
-  y <- predict(model, list(Date=x), type="quantile", p=c(0.1, 0.9, 0.5))
-  polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
-  lines(x, y[, 3], lty=1, lwd=1, col="#F02311")
+  if (!missing(model)) {
+    x <- seq(xlim[1], xlim[2], "days")
+    y <- predict(model, list(Date=x), type="quantile", p=c(0.1, 0.9, 0.5))
+    polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
+    lines(x, y[, 3], lty=1, lwd=1, col="#F02311")
 
-  is.int <- obj$is.left | obj$is.interval
-  if (any(is.int)) {
-    x  <- obj$Date[is.int]
-    y1 <- obj$t1[is.int]
-    y2 <- obj$t2[is.int]
-    suppressWarnings(arrows(x, y1, x, y2, 0.01, 90, 3, col="#107FC9"))
-  }
-  is.pnt <- obj$is.exact
-  if (any(is.pnt)) {
-    x <- obj$Date[is.pnt]
-    y <- obj$t2[is.pnt]
-    points(x, y, pch=21, col="#107FC9", bg="#107FC9", cex=0.7)
+    obj$pch <- 21L
+    obj[, c("col", "bg")] <- "#107FC9"
   }
 
   lwd <- 0.5 * (96 / (6 * 12))
   tcl <- 0.50 / (6 * par("csi"))
+  pt.cex <- 0.8
+
+  is.int <- obj$is.left | obj$is.interval
+  if (any(is.int)) {
+    o <- obj[is.int, ]
+    o$col[is.na(o$col)] <- o$bg[is.na(o$col)]
+    suppressWarnings(arrows(x0=o$Date, y0=o$t1, y1=o$t2, length=0.01, angle=90,
+                            code=3, col=o$col, lwd=1))
+  }
+  if (any(obj$is.exact)) {
+    o <- obj[obj$is.exact, ]
+    points(x=o$Date, y=o$t2, pch=o$pch, col=o$col, bg=o$bg, cex=pt.cex, lwd=lwd)
+  }
 
   at <- pretty(xlim, n=10)
   axis.Date(1, xlim, at, tcl=tcl, lwd=-1, lwd.ticks=lwd)
@@ -378,15 +445,22 @@
 
   box(lwd=lwd)
 
-  p <- .GetModelInfo(model)["p"]
-  if (is.na(p))
-    return()
-  p <- ifelse(p < 0.001, "p < 0.001", paste("p =", sprintf("%.3f", p)))
   inset <- c(0.02, 0.02 * do.call("/", as.list(par("pin"))))
-  legend("topright", paste0("Regression, ", p), lty=1, col="#F02311", xpd=NA,
-         bg=box.bg, box.lwd=lwd, inset=inset)
+  if (missing(model)) {
+    o <- obj[!duplicated(obj$Name), ]
+    suppressWarnings(legend("topleft", o$Name, pch=o$pch, col=o$col,
+                            pt.bg=o$bg, pt.cex=pt.cex, pt.lwd=lwd, xpd=NA,
+                            bg="#FFFFFFBB", box.lwd=lwd, inset=inset))
+  } else {
+    p <- .GetModelInfo(model)["p"]
+    if (is.na(p))
+      return()
+    p <- ifelse(p < 0.001, "p < 0.001", paste("p =", sprintf("%.3f", p)))
+    txt <- paste0("Regression, ", p)
+    suppressWarnings(legend("topleft", txt, lty=1, col="#F02311", xpd=NA,
+                            bg="#FFFFFFBB", box.lwd=lwd, inset=inset))
+  }
 }
-
 
 
 .tmp <- function() {  # TODO: move to vignette
@@ -418,52 +492,62 @@
   ##
 
 
+  file <- file.path(path.in, "Config_Plots.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  processed.config <- .ProcessConfig(config, processed.data)
+  .PlotObs(processed.data, processed.config, id = "Data_1960-2012",
+           sdate = as.Date("1960-01-01"), edate = as.Date("2012-12-31"), path = path.out)
+
+
   file <- file.path(path.in, "Config_Cen.tsv")
   config <- do.call(read.table, c(list(file), read.args))
-  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Cen",
                         sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
-                        path = path.out, id = "Stats_1989-2012_Cen",
-                        site.locations = site.locations)
+                        path = path.out, site.locations = site.locations)
 
 
   file <- file.path(path.in, "Config_Uncen.tsv")
   config <- do.call(read.table, c(list(file), read.args))
-  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Uncen",
                         sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
-                        path = path.out, id = "Stats_1989-2012_Uncen",
-                        site.locations = site.locations)
+                        path = path.out, site.locations = site.locations)
 
 
   file <- file.path(path.in, "Config_Uncen_Field.tsv")
   config <- do.call(read.table, c(list(file), read.args))
-  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Uncen_Field",
                         sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
-                        path = path.out, id = "Stats_1989-2012_Uncen_Field",
-                        site.locations = site.locations)
+                        path = path.out, site.locations = site.locations)
 
 
   file <- file.path(path.in, "Config_Uncen_VOC.tsv")
   config <- do.call(read.table, c(list(file), read.args))
-  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1987-2012_Uncen_VOC",
                         sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
-                        path = path.out, id = "Stats_1987-2012_Uncen_VOC",
-                        site.locations = site.locations)
+                        path = path.out, site.locations = site.locations)
 
 
   file <- file.path(path.in, "Config_Cen_VOC.tsv")
   config <- do.call(read.table, c(list(file), read.args))
-  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1987-2012_Cen_VOC",
                         sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
-                        path = path.out, id = "Stats_1987-2012_Cen_VOC",
-                        site.locations = site.locations)
+                        path = path.out, site.locations = site.locations)
 
 
   file <- file.path(path.in, "Config_RADS.tsv")
   config <- do.call(read.table, c(list(file), read.args))
-  stats <- .RunAnalysis(processed.data, .ProcessConfig(config, processed.data),
-                        sdate = as.Date("1981-01-01"), edate = as.Date("2013-12-31"),
-                        path = path.out, id = "Stats_1981-2012_RAD",
-                        site.locations = site.locations)
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1981-2012_RAD",
+                        sdate = as.Date("1981-01-01"), edate = as.Date("2012-12-31"),
+                        path = path.out, site.locations = site.locations)
+
+
+
 
 
 }
