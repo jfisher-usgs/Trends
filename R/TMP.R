@@ -220,19 +220,16 @@
   return(id.path)
 }
 
-.CheckDateArgs <- function(sdate, edate) {
-  if (!is.na(sdate) && !inherits(sdate, "Date"))
-    stop("incorrect class for argument 'sdate'")
-  if (!is.na(edate) && !inherits(edate, "Date"))
-    stop("incorrect class for argument 'edate'")
-}
-
 
 .RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
                          graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
                          id=format(Sys.time(), "%Y%m%d%H%M%S"),
                          site.locations=NULL) {
-  .CheckDateArgs(sdate, edate)
+
+  if(inherits(sdate <- try(as.Date(sdate)), "ty-error"))
+    sdate <- NA
+  if(inherits(edate <- try(as.Date(edate)), "ty-error"))
+    edate <- NA
 
   obs <- list()
   models <- list()
@@ -343,7 +340,10 @@
                      graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
                      id=format(Sys.time(), "%Y%m%d%H%M%S")) {
 
-  .CheckDateArgs(sdate, edate)
+  if(inherits(sdate <- try(as.Date(sdate)), "ty-error"))
+    sdate <- NA
+  if(inherits(edate <- try(as.Date(edate)), "ty-error"))
+    edate <- NA
 
   id.path <- .CreateDir(path, id, graphics.type)
 
@@ -434,7 +434,7 @@
   is.int <- obj$is.left | obj$is.interval
   if (any(is.int)) {
     o <- obj[is.int, ]
-    suppressWarnings(arrows(x0=o$Date, y0=o$t1, y1=o$t2, length=0.01, angle=90,
+    suppressWarnings(arrows(x0=o$Date, y0=o$t1, y1=o$t2, length=0.015, angle=90,
                             code=3, col=o$col, lwd=1))
   }
   if (any(obj$is.exact)) {
@@ -495,26 +495,25 @@
 
   ##
 
-
   file <- file.path(path.in, "Config_Plots.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   .PlotObs(processed.data, processed.config, id = "Data_1960-2012",
-           sdate = as.Date("1960-01-01"), edate = as.Date("2012-12-31"), path = path.out)
+           sdate = "1960-01-01", edate = "2012-12-31", path = path.out)
 
 
   file <- file.path(path.in, "Config_Plots_Field.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   .PlotObs(processed.data, processed.config, id = "Data_1960-2012_Field",
-           sdate = as.Date("1960-01-01"), edate = as.Date("2012-12-31"), path = path.out)
+           sdate = "1960-01-01", edate = "2012-12-31", path = path.out)
 
 
   file <- file.path(path.in, "Config_Cen.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Cen",
-                        sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
+                        sdate = "1989-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -522,7 +521,7 @@
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Uncen",
-                        sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
+                        sdate = "1989-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -530,7 +529,7 @@
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Uncen_Field",
-                        sdate = as.Date("1989-01-01"), edate = as.Date("2012-12-31"),
+                        sdate = "1989-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -538,7 +537,7 @@
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1987-2012_Uncen_VOC",
-                        sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
+                        sdate = "1987-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -546,7 +545,7 @@
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1987-2012_Cen_VOC",
-                        sdate = as.Date("1987-01-01"), edate = as.Date("2012-12-31"),
+                        sdate = "1987-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -554,7 +553,7 @@
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1981-2012_RAD",
-                        sdate = as.Date("1981-01-01"), edate = as.Date("2012-12-31"),
+                        sdate = "1981-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -562,3 +561,12 @@
 
 
 }
+
+
+
+
+
+
+
+
+
