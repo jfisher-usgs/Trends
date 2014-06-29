@@ -100,7 +100,8 @@
   par.names <- sort(par.names[par.names %in% colnames(raw.data)])
 
   detection.limits$Date <- as.Date(detection.limits$Date, format=date.fmt)
-  detection.limits[, -1] <- apply(detection.limits[, -1], 2, as.numeric)
+  idx <- which(names(detection.limits) %in% "Date")
+  detection.limits[, -idx] <- apply(detection.limits[, -idx], 2, as.numeric)
 
   lst <- list()
   for (i in seq_along(par.names)) {
@@ -418,7 +419,7 @@
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
   if (missing(model)) {
-    cols <- c("#A80000", "#7FAF1B", "#107FC9", "#543511", "#050505")
+    cols <- c("#F02311", "#C3FF68", "#107FC9", "#BE80FF", "#050505")
     obj$col <- cols[as.integer(factor(obj$Name, levels=unique(obj$Name)))]
   } else {
     x <- seq(xlim[1], xlim[2], "days")
@@ -502,6 +503,13 @@
            sdate = "1960-01-01", edate = "2012-12-31", path = path.out)
 
 
+  file <- file.path(path.in, "Config_Plots.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  processed.config <- .ProcessConfig(config, processed.data)
+  .PlotObs(processed.data, processed.config, id = "Data_1989-2012",
+           sdate = "1989-01-01", edate = "2012-12-31", path = path.out)
+
+
   file <- file.path(path.in, "Config_Plots_Field.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
@@ -509,11 +517,26 @@
            sdate = "1960-01-01", edate = "2012-12-31", path = path.out)
 
 
+  file <- file.path(path.in, "Config_Plots_Field.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  processed.config <- .ProcessConfig(config, processed.data)
+  .PlotObs(processed.data, processed.config, id = "Data_1989-2012_Field",
+           sdate = "1989-01-01", edate = "2012-12-31", path = path.out)
+
+
   file <- file.path(path.in, "Config_Cen.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Cen",
                         sdate = "1989-01-01", edate = "2012-12-31",
+                        path = path.out, site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_Uncen.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1960-2012_Uncen",
+                        sdate = "1960-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -528,16 +551,16 @@
   file <- file.path(path.in, "Config_Uncen_Field.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
-  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Uncen_Field",
-                        sdate = "1989-01-01", edate = "2012-12-31",
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1960-2012_Uncen_Field",
+                        sdate = "1960-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
-  file <- file.path(path.in, "Config_Uncen_VOC.tsv")
+  file <- file.path(path.in, "Config_Uncen_Field.tsv")
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
-  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1987-2012_Uncen_VOC",
-                        sdate = "1987-01-01", edate = "2012-12-31",
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1989-2012_Uncen_Field",
+                        sdate = "1989-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
 
@@ -545,6 +568,14 @@
   config <- do.call(read.table, c(list(file), read.args))
   processed.config <- .ProcessConfig(config, processed.data)
   stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1987-2012_Cen_VOC",
+                        sdate = "1987-01-01", edate = "2012-12-31",
+                        path = path.out, site.locations = site.locations)
+
+
+  file <- file.path(path.in, "Config_Uncen_VOC.tsv")
+  config <- do.call(read.table, c(list(file), read.args))
+  processed.config <- .ProcessConfig(config, processed.data)
+  stats <- .RunAnalysis(processed.data, processed.config, id = "Stats_1987-2012_Uncen_VOC",
                         sdate = "1987-01-01", edate = "2012-12-31",
                         path = path.out, site.locations = site.locations)
 
@@ -561,12 +592,5 @@
 
 
 }
-
-
-
-
-
-
-
 
 
