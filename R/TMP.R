@@ -1,6 +1,5 @@
 
-
-
+################################################################################
 
 .MergePDFs <- function(path, retain.files=FALSE) {
   if (Sys.which("pdftk") == "")
@@ -67,7 +66,7 @@
   invisible(out.pdf)
 }
 
-
+################################################################################
 
 .OpenDevice <- function(path, id, graphics.type, w=8.5, h=11) {
   if (missing(graphics.type) || !graphics.type %in% c("pdf", "eps")) {
@@ -87,7 +86,7 @@
   par(mfrow=c(4, 1), omi=c(4, 3.5, 6, 4.5) * 0.166667)
 }
 
-
+################################################################################
 
 .ProcessRawData <- function(raw.data, parameters, detection.limits=NULL,
                             date.fmt="%Y-%m-%d") {
@@ -174,7 +173,7 @@
   return(lst)
 }
 
-
+################################################################################
 
 .ProcessConfig <- function(config, processed.data) {
   ids <- unique(unlist(lapply(processed.data, function(i) levels(i$Site_id))))
@@ -198,7 +197,7 @@
   return(d)
 }
 
-
+################################################################################
 
 .GetModelInfo <- function(model) {
   x <- c()
@@ -209,6 +208,7 @@
   return(x)
 }
 
+################################################################################
 
 .CreateDir <- function(path, id, graphics.type) {
   dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
@@ -221,6 +221,7 @@
   return(id.path)
 }
 
+################################################################################
 
 .RunAnalysis <- function(processed.data, processed.config, sdate=NA, edate=NA,
                          graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
@@ -336,6 +337,7 @@
   invisible(stats)
 }
 
+################################################################################
 
 .PlotObs <- function(processed.data, processed.config, sdate=NA, edate=NA,
                      graphics.type="pdf", merge.pdfs=TRUE, path=getwd(),
@@ -395,6 +397,7 @@
     .MergePDFs(id.path)
 }
 
+################################################################################
 
 .DrawPlot <- function(obj, model, xlim=NULL, ylim=NULL, main=NULL, ylab=NULL) {
 
@@ -467,6 +470,7 @@
   }
 }
 
+################################################################################
 
 .tmp <- function() {  # TODO: move to vignette
 
@@ -494,7 +498,6 @@
 
   path.out <- "C:/Users/jfisher/Desktop/Trends"
 
-  ##
 
   file <- file.path(path.in, "Config_Plots.tsv")
   config <- do.call(read.table, c(list(file), read.args))
