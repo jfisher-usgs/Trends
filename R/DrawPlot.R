@@ -1,188 +1,70 @@
-DrawPlot <- function(d, parameters, cen.var=NULL, xlim=c(NA, NA), ylim=c(NA, NA),
-                     regr=NULL, regr.lower=NULL, regr.upper=NULL,
-                     regr.type="Regression line", main=NULL, ylab=NULL,
-                     leg.box.col="#FFFFFF", tick.lines=TRUE, p.value=NULL) {
+DrawPlot <- function(obj, model, xlim=NULL, ylim=NULL, main=NULL, ylab=NULL) {
 
-  # Data and time
-  dt.name <- names(d)[1]
-  if (!inherits(d[[dt.name]], "POSIXct"))
-    stop("Date-time values must be of class POSIXct")
+  obj$t1[is.na(obj$t1) & obj$is.left] <- 0
+  if (!missing(model))
+    obj <- obj[!is.na(obj$surv), ]
 
-  # Determine code variable for censored data
-  cen.code <- NULL
-  if (!is.null(cen.var)) {
-    if (inherits(cen.var, "character"))
-      cen.var <- which(names(d) == cen.var)
-    if (!inherits(cen.var, c("numeric", "integer")) || length(cen.var) != 1) {
-      stop("Censor code variable index is not valid")
-    } else {
-      cen.code <- d[, cen.var]
-      if (!inherits(cen.code, "logical"))
-        stop("Censor code variable is not of class logical")
-    }
+  xran <- extendrange(obj$Date, f=0.02)
+  if (inherits(xlim, "Date")) {
+    xlim[1] <- if (is.na(xlim[1])) xran[1] else xlim[1]
+    xlim[2] <- if (is.na(xlim[2])) xran[2] else xlim[2]
+  } else {
+    xlim <- xran
+  }
+  if (is.null(ylim)) {
+    ylim <- c(min(obj$t1, na.rm=TRUE), max(obj$t2, na.rm=TRUE))
+    ylim <- extendrange(pretty(ylim), f=0.06)
   }
 
-  # Parameters
-  p.names <- names(d)[-c(1, cen.var)]
+  par(mar=c(1, 3, 2, 0.5) + 0.1, mgp=c(2, 0.5, 0))
+  plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
+       xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
-  # Set x-axis limits
-  xlim <- as.POSIXct(xlim, "%m/%d/%Y", tz="")
-  xlim.default <- extendrange(d[[dt.name]])
-  if (is.na(xlim[1]))
-    xlim[1] <- xlim.default[1]
-  if (is.na(xlim[2]))
-    xlim[2] <- xlim.default[2]
+  if (missing(model)) {
+    cols <- c("#F02311", "#107FC9", "#C3FF68", "#BE80FF", "#050505")
+    obj$col <- cols[as.integer(factor(obj$Name, levels=unique(obj$Name)))]
+  } else {
+    x <- seq(xlim[1], xlim[2], "days")
+    y <- predict(model, list(Date=x), type="quantile", p=c(0.1, 0.9, 0.5))
+    polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
+    lines(x, y[, 3], lty=1, lwd=1, col="#F02311")
+    obj$col <- "#107FC9"
+  }
 
-  # Regression
-  is.regr    <- inherits(regr, "function")
-  is.regr[2] <- inherits(regr.lower, "function")
-  is.regr[3] <- inherits(regr.upper, "function")
-
-  # Set y-axis limits
-  y <- d[, p.names]
-  if (is.regr[1])
-    y <- c(y, regr(xlim))
-  if (is.regr[2])
-    y <- c(y, regr.lower(xlim))
-  if (is.regr[3])
-    y <- c(y, regr.upper(xlim))
-  ylim.default <- extendrange(y)
-  if (ylim.default[1] < 0)
-    ylim.default[1] <- 0
-  if (is.na(ylim[1]))
-    ylim[1] <- ylim.default[1]
-  if (is.na(ylim[2]))
-    ylim[2] <- ylim.default[2]
-
-  # Initialize plot
-  plot.new()
-  plot.window(xlim=xlim, ylim=ylim, xaxs="i", yaxs="i")
-
-  # Line width and length of tick marks
   lwd <- 0.5 * (96 / (6 * 12))
-  tcl.major <- 0.50 / (6 * par("csi"))
-  tcl.minor <- 0.25 / (6 * par("csi"))
+  tcl <- 0.50 / (6 * par("csi"))
 
-  # Draw uncertainty as a polygon
-  if (inherits(regr.lower, "function") & inherits(regr.upper, "function")) {
-    x <- c(xlim, rev(xlim))
-    y <- c(regr.lower(xlim), regr.upper(rev(xlim)))
-    polygon(x, y, border=NA, col="#FFFFDD")
+  is.int <- obj$is.left | obj$is.interval
+  if (any(is.int)) {
+    o <- obj[is.int, ]
+    suppressWarnings(arrows(x0=o$Date, y0=o$t1, y1=o$t2, length=0.015, angle=90,
+                            code=3, col=o$col, lwd=1))
+  }
+  if (any(obj$is.exact)) {
+    o <- obj[obj$is.exact, ]
+    points(x=o$Date, y=o$t2, pch=20, col=o$col)
   }
 
-  # Draw horizontal and vertical lines at major tick marks
-  if (tick.lines) {
-    h <- seq(par("yaxp")[1], par("yaxp")[2], length.out=par("yaxp")[3] + 1)
-    v <- pretty(xlim)
-    abline(h=h, v=v, col="lightgray", lwd=lwd)
-  }
+  at <- pretty(xlim, n=10)
+  axis.Date(1, xlim, at, tcl=tcl, lwd=-1, lwd.ticks=lwd)
+  axis.Date(3, xlim, at, tcl=tcl, lwd=-1, lwd.ticks=lwd, labels=FALSE)
+  axis(2, tcl=tcl, lwd=-1, lwd.ticks=lwd)
+  axis(4, tcl=tcl, lwd=-1, lwd.ticks=lwd, labels=FALSE)
 
-  # Draw y-axis
-  axis(2, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
-  axis(4, tcl=tcl.major, lwd=-1, lwd.ticks=lwd, labels=FALSE)
-
-  # Draw major x-axis
-  at.major <- pretty(xlim)
-  axis.POSIXct(1, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd)
-  axis.POSIXct(3, at=at.major, tcl=tcl.major, lwd=-1, lwd.ticks=lwd,
-               labels=FALSE)
-
-  # Draw minor x-axis
-  mult <- 12
-  num.at.major <- length(at.major) - 1
-  no.match <- TRUE
-  while (no.match) {
-    at.minor <- pretty(xlim, n=num.at.major * mult)
-    if (all(at.major %in% at.minor)) {
-      at.minor <- at.minor[!at.minor %in% at.major]
-      no.match <- FALSE
-    } else if (mult > 1000) {
-      warning("Problem with minor-tick marks on x-axis")
-      break
-    } else {
-      mult <- mult + 1
-    }
-  }
-  if (!no.match) {
-    axis.POSIXct(1, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
-                 labels=FALSE)
-    axis.POSIXct(3, at=at.minor, tcl=tcl.minor, lwd=-1, lwd.ticks=lwd,
-                 labels=FALSE)
-  }
-
-  # Draw y-axis label
-  if (!is.null(ylab))
-    title(ylab=ylab, cex.lab=1, line=3)
-
-  # Draw main title
-  if (!is.null(main))
-    mtext(main, side=3, line=1)
-
-  # Draw regression lines
-  if (is.regr[1])
-    lines(xlim, regr(xlim), lty=1, lwd=lwd)
-  if (is.regr[2])
-    lines(xlim, regr.lower(xlim), lty=2, lwd=lwd)
-  if (is.regr[3])
-    lines(xlim, regr.upper(xlim), lty=2, lwd=lwd)
-
-  # Draw data points for each parameter and build legend
-
-  leg.name <- leg.lty <- leg.pch <- leg.col <- leg.bg <- NULL
-  for (p in p.names) {
-    pch  <- parameters[p, "pch"]
-    col  <- parameters[p, "col"]
-    bg   <- parameters[p, "bg"]
-    name <- parameters[p, "Name"]
-
-    x <- d[, dt.name]
-    y <- d[, p]
-
-    if (is.null(cen.code) || all(!cen.code)) {
-      points(x, y, pch=pch, col=col, bg=bg, lwd=lwd)
-    } else {
-      idxs <- which(cen.code)
-      for (i in idxs) {
-        lines(rep(x[i], 2), c(ylim[1], y[i]), lty=3, lwd=1.5)
-      }
-      points(x[-idxs], y[-idxs], pch=pch, col=col, bg=bg, lwd=lwd)
-    }
-
-    leg.name <- c(leg.name, name)
-    leg.pch  <- c(leg.pch, pch)
-    leg.col  <- c(leg.col, col)
-    leg.bg   <- c(leg.bg, bg)
-  }
-
-  # Draw box around plot
   box(lwd=lwd)
 
-  # Alter legend content
-  if (!is.null(cen.code) && all(cen.code))
-    return()
-  if (length(leg.name) == 1L && is.regr[1]) {
-    leg.pch <- leg.bg <- NULL
-    leg.col <- "#000000"
-    leg.name <- regr.type
-    leg.lty <- 1
-    if (is.regr[2] || is.regr[3]) {
-      leg.col[2] <- "#000000"
-      leg.name[2] <- "95 percent confidence interval"
-      leg.lty[2] <- 2
-    }
-    if (is.numeric(p.value)) {
-      n <- length(leg.name) + 1L
-      leg.col[n] <- "#FFFFFF"
-      if (p.value < 0.001)
-        leg.name[n] <- "p-value < 0.001"
-      else
-        leg.name[n] <- paste("p-value =", sprintf("%.3f", p.value))
-      leg.lty[n] <- 1
-    }
+  inset <- c(0.02, 0.02 * do.call("/", as.list(par("pin"))))
+  if (missing(model)) {
+    o <- obj[!duplicated(obj$Name), ]
+    suppressWarnings(legend("topleft", o$Name, fill=o$col, border=NA, xpd=NA,
+                            bg="#FFFFFFBB", box.lwd=lwd, inset=inset))
+  } else {
+    p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
+    if (is.na(p))
+      return()
+    p <- ifelse(p < 0.001, "p < 0.001", paste("p =", sprintf("%.3f", p)))
+    txt <- paste0("Regression, ", p)
+    suppressWarnings(legend("topleft", txt, lty=1, col="#F02311", xpd=NA,
+                            bg="#FFFFFFBB", box.lwd=lwd, inset=inset))
   }
-
-  # Draw legend
-  legend(x=grconvertX(0.01, "npc"), y=grconvertY(0.95, "npc"),
-         leg.name, lty=leg.lty, pch=leg.pch, col=leg.col, pt.bg=leg.bg,
-         xpd=NA, bg=leg.box.col, bty="o", box.lwd=lwd, pt.lwd=lwd)
 }

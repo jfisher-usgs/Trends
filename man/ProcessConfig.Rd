@@ -1,20 +1,20 @@
-\name{ReadPlotConfig}
+\name{ProcessConfig}
 
-\alias{ReadPlotConfig}
+\alias{ProcessConfig}
 
-\title{Read Plot Configuration File}
+\title{Process Configuration}
 
-\description{This functions reads a plot configuration file.}
+\description{This functions processes a configuration table.}
 
-\usage{ReadPlotConfig(file, sep = "\t")}
+\usage{ProcessConfig(config, processed.obs)}
 
 \arguments{
-\item{file}{character; path name for the plot configuration file.}
-\item{sep}{character; the field separator character.}
+\item{config}{something...}
+\item{processed.obs}{something...}
 }
 
 \format{
-The imported plot configuration table requires the following fields:
+The \code{config} table requires the following fields:
 \code{"Site_id"}, \code{"Site_name"}, \code{"Parameters"}, and
 \code{"Axis_title"}. The first line in the data table must contain variable
 names. See \sQuote{Value} for field descriptions.
@@ -34,9 +34,7 @@ Returns a data frame with components:
 \seealso{\code{\link{read.table}}}
 
 \examples{
-f <- system.file("extdata/ex.config.plots.tsv", package = "Trends")
-obj <- ReadPlotConfig(f)
-str(obj)
+print("notyet")
 }
 
 \keyword{IO}

@@ -5,11 +5,9 @@ importFrom(rgdal, readOGR, writeOGR)
 
 export(DrawPlot,
        MergePDFs,
-       OpenDevice,
-       PlotObservations,
-       ReadObservations,
-       ReadParConfig,
-       ReadPlotConfig,
-       ReadSiteLocations,
-       RunTheilSen,
-       RunTrendAnalysis)
+       PlotObs,
+       ProcessConfig,
+       ProcessObs,
+       RunAnalysis,
+       .CreateDir,
+       .OpenDevice)

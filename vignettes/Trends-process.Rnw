@@ -1,6 +1,6 @@
 % \VignetteIndexEntry{Processing 2014 Water Quality Data}
 % \VignetteEngine{knitr::knitr}
-% \VignetteDepends{Trends, MASS, NADA, sp, rgdal}
+% \VignetteDepends{Trends, MASS, survival, NADA, sp, rgdal}
 
 \documentclass{article}
 
@@ -45,7 +45,7 @@ ptime <- proc.time()
 
 \maketitle
 
-If \href{http://www.r-project.org/}{R} is not already installed on your computer, download and install the latest binary distribution from \href{http://cran.r-project.org/}{CRAN}.
+If R (version $\geq$ 3.1) is not already installed on your computer, download and install the latest binary distribution from the Comprehenisive R Archive Network (\href{http://cran.r-project.org/}{CRAN}).
 Open an \textbf{R} session and install required packages with the following commands:
 <<eval=FALSE>>=
 install.packages(c("NADA", "rgdal"))
@@ -60,7 +60,7 @@ library(Trends)
 Support for merging PDF files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.
 Determine if \textbf{pdftk} is accessible from \textbf{R}:
 <<>>=
-print(merge.pdfs <- as.logical(nchar(Sys.which("pdftk"))))
+merge.pdfs <- as.logical(nchar(Sys.which("pdftk")))
 @
 
 Set the full path name to the directory containing input files; list all files in this directory:
@@ -76,123 +76,119 @@ dir.create(path = path.out, showWarnings = FALSE)
 
 Set the graphics type for output figures to a PDF file format:
 <<>>=
-gr.type <- "pdf"
+graphics.type <- "pdf"
+@
+
+Specify global arguments for reading table formatted data from a text file:
+<<>>=
+read.args <- list(header = TRUE, sep = "\t", colClasses = "character", na.strings = "",
+                  fill = TRUE, strip.white = TRUE, comment.char = "", flush = TRUE,
+                  stringsAsFactors = FALSE)
 @
 
 Read observational data from a text file:
 <<>>=
-d <- ReadObservations(file.path(path.in, "Raw_Data.tsv"))
+file <- file.path(path.in, "Observations.tsv")
+observations <- do.call(read.table, c(list(file), read.args))
 @
 
-Read parameter configurations from a text file:
+Read parameter descriptions from a text file:
 <<>>=
-parameters <- ReadParConfig(file.path(path.in, "Parameters.tsv"))
+file <- file.path(path.in, "Parameters.tsv")
+parameters <- do.call(read.table, c(list(file), read.args))
+@
+
+Read detection limits from a text file:
+<<>>=
+file <- file.path(path.in, "Detection_Limits.tsv")
+detection.limits <- do.call(read.table, c(list(file), read.args))
 @
 
 Read geo-referenced site locations from a point shapefile:
 <<>>=
-site.locs <- ReadSiteLocations(path.in, layer = "Site_Locations", verbose = FALSE)
+site.locations <- rgdal::readOGR(path.in, layer = "Site_Locations", verbose = FALSE)
 @
 
-Plot non-field parameters from 1960 through 2012, that is, the period-of-record:
+Process observational data:
 <<>>=
-plot.config <- ReadPlotConfig(file.path(path.in, "Config_Plots.tsv"))
-PlotObservations(d, parameters = parameters, plot.config = plot.config,
-                 sdate = "01/01/1960", edate = "01/01/2013", gr.type = gr.type,
-                 path.out = file.path(path.out, "Data_1960-2012"),
-                 merge.pdfs = merge.pdfs)
+processed.obs <- ProcessObs(observations, parameters, detection.limits,
+                            date.fmt = "%m/%d/%Y")
 @
 
-Plot non-field parameters from 1989 through 2012:
+Plot National Water Quality Laboratory (NWQL) parameters from 1989 through 2012:
 <<>>=
-PlotObservations(d, parameters = parameters, plot.config = plot.config,
-                 sdate = "01/01/1989", edate = "01/01/2013", gr.type = gr.type,
-                 path.out = file.path(path.out, "Data_1989-2012"),
-                 merge.pdfs = merge.pdfs)
-@
-
-Plot field parameters from 1960 through 2012:
-<<>>=
-plot.config <- ReadPlotConfig(file.path(path.in, "Config_Plots_Field.tsv"))
-PlotObservations(d, parameters = parameters, plot.config = plot.config,
-                 sdate = "01/01/1960", edate = "01/01/2013", gr.type = gr.type,
-                 path.out = file.path(path.out, "Data_1960-2012_Field"),
-                 merge.pdfs = merge.pdfs)
+file <- file.path(path.in, "Config_Plots_NWQL.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+PlotObs(processed.obs, processed.config, path = path.out, 
+        id = "Plots_NWQL_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
+        merge.pdfs = merge.pdfs)
 @
 
 Plot field parameters from 1989 through 2012:
 <<>>=
-PlotObservations(d, parameters = parameters, plot.config = plot.config,
-                 sdate = "01/01/1989", edate = "01/01/2013", gr.type = gr.type,
-                 path.out = file.path(path.out, "Data_1989-2012_Field"),
-                 merge.pdfs = merge.pdfs)
+file <- file.path(path.in, "Config_Plots_Field.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+PlotObs(processed.obs, processed.config, path = path.out, 
+        id = "Plots_Field_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
+        merge.pdfs = merge.pdfs)
 @
 
-Run a trend analysis for censored-non-field parameters from 1989 through 2012:
+Plot radioactive (RAD) parameters from 1962 through 2012:
 <<>>=
-plot.config <- ReadPlotConfig(file.path(path.in, "Config_Cen.tsv"))
-out <- RunTrendAnalysis(d, parameters = parameters, plot.config = plot.config,
-                        sdate = "01/01/1989", edate = "01/01/2013", is.censored = TRUE,
-                        path.out = file.path(path.out, "Stats_1989-2012_Cen"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
+file <- file.path(path.in, "Config_Plots_RAD.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+PlotObs(processed.obs, processed.config, path = path.out, 
+        id = "Plots_RAD_1962-2012", sdate = "1962-01-01", edate = "2012-12-31", 
+        merge.pdfs = merge.pdfs)
 @
 
-Run a trend analysis for uncensored-non-field parameters from 1960 through 2012:
+Run a trend analysis for NWQL parameters from 1989 through 2012:
 <<>>=
-plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen.tsv"))
-out <- RunTrendAnalysis(d, parameters=parameters, plot.config=plot.config,
-                        sdate = "01/01/1960", edate = "01/01/2013", is.censored = FALSE,
-                        path.out = file.path(path.out, "Stats_1960-2012_Uncen"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
+file <- file.path(path.in, "Config_Stats_NWQL.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out, 
+            id = "Stats_NWQL_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
+            site.locations = site.locations, merge.pdfs = merge.pdfs)
 @
 
-Run a trend analysis for uncensored-non-field parameters from 1989 through 2012:
+Run a trend analysis for field parameters from 1989 through 2012:
 <<>>=
-out <- RunTrendAnalysis(d, parameters = parameters, plot.config = plot.config,
-                        sdate = "01/01/1989", edate = "01/01/2013", is.censored = FALSE,
-                        path.out = file.path(path.out, "Stats_1989-2012_Uncen"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
+file <- file.path(path.in, "Config_Stats_Field.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out, 
+            id = "Stats_Field_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
+            site.locations = site.locations, merge.pdfs = merge.pdfs)
 @
 
-Run a trend analysis for uncensored-field parameters from 1960 through 2012:
+Run a trend analysis for VOC parameters from 1987 through 2012:
 <<>>=
-plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen_Field.tsv"))
-out <- RunTrendAnalysis(d, parameters = parameters, plot.config = plot.config,
-                        sdate = "01/01/1960", edate = "01/01/2013", is.censored = FALSE,
-                        path.out = file.path(path.out, "Stats_1960-2012_Uncen_Field"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
+file <- file.path(path.in, "Config_Stats_VOC.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out,
+            id = "Stats_VOC_1987-2012", sdate = "1987-01-01", edate = "2012-12-31", 
+            site.locations = site.locations, merge.pdfs = merge.pdfs)
 @
 
-Run a trend analysis for uncensored-field parameters from 1989 through 2012:
+Run a trend analysis for RAD parameters from 1981 through 2012:
 <<>>=
-out <- RunTrendAnalysis(d, parameters = parameters, plot.config = plot.config,
-                        sdate = "01/01/1989", edate = "01/01/2013", is.censored = FALSE,
-                        path.out = file.path(path.out, "Stats_1989-2012_Uncen_Field"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
-@
-
-Run a trend analysis for censored VOC parameters from 1987 through 2012:
-<<>>=
-plot.config <- ReadPlotConfig(file.path(path.in, "Config_Cen_VOC.tsv"))
-out <- RunTrendAnalysis(d, parameters = parameters, plot.config = plot.config,
-                        sdate = "01/01/1987", edate = "01/01/2013", is.censored = TRUE,
-                        path.out = file.path(path.out, "Stats_1987-2012_Cen_VOC"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
-@
-
-Run a trend analysis for uncensored VOC parameters from 1987 through 2012:
-<<>>=
-plot.config <- ReadPlotConfig(file.path(path.in, "Config_Uncen_VOC.tsv"))
-out <- RunTrendAnalysis(d, parameters = parameters, plot.config = plot.config,
-                        sdate = "01/01/1987", edate = "01/01/2013", is.censored = FALSE,
-                        path.out = file.path(path.out, "Stats_1987-2012_Uncen_VOC"),
-                        gr.type = gr.type, site.locs = site.locs, merge.pdfs = merge.pdfs)
+file <- file.path(path.in, "Config_Stats_RAD.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out,
+            id = "Stats_RAD_1981-2012", sdate = "1981-01-01", edate = "2012-12-31", 
+            site.locations = site.locations, merge.pdfs = merge.pdfs)
 @
 
 To reprocess the 2014 water quality data, evaluate R code extracted from this vignette using the following command:
 <<eval=FALSE>>=
 source(system.file("doc", "Trends-process.R", package = "Trends"), echo = TRUE)
-list.files(path.out, full.names = TRUE, recursive = TRUE) # path names of output files
+list.files(path.out, full.names = TRUE, recursive = TRUE)  # path names of output files
 @
 
 Total processing time for this vignette was \Sexpr{format(round((proc.time() - ptime)["elapsed"] / 60, digits=0))} minutes.
