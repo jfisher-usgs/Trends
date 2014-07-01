@@ -31,10 +31,6 @@ Returns a data frame with components:
 
 \author{J.C. Fisher}
 
-\seealso{\code{\link{read.table}}}
-
-\examples{
-print("notyet")
-}
+\seealso{\code{\link{RunAnalysis}}}
 
 \keyword{IO}

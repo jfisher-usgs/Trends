@@ -115,74 +115,48 @@ processed.obs <- ProcessObs(observations, parameters, detection.limits,
                             date.fmt = "%m/%d/%Y")
 @
 
-Plot National Water Quality Laboratory (NWQL) parameters from 1989 through 2012:
-<<>>=
-file <- file.path(path.in, "Config_Plots_NWQL.tsv")
-config <- do.call(read.table, c(list(file), read.args))
-processed.config <- ProcessConfig(config, processed.obs)
-PlotObs(processed.obs, processed.config, path = path.out, 
-        id = "Plots_NWQL_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
-        merge.pdfs = merge.pdfs)
-@
-
-Plot field parameters from 1989 through 2012:
-<<>>=
-file <- file.path(path.in, "Config_Plots_Field.tsv")
-config <- do.call(read.table, c(list(file), read.args))
-processed.config <- ProcessConfig(config, processed.obs)
-PlotObs(processed.obs, processed.config, path = path.out, 
-        id = "Plots_Field_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
-        merge.pdfs = merge.pdfs)
-@
-
-Plot radioactive (RAD) parameters from 1962 through 2012:
-<<>>=
-file <- file.path(path.in, "Config_Plots_RAD.tsv")
-config <- do.call(read.table, c(list(file), read.args))
-processed.config <- ProcessConfig(config, processed.obs)
-PlotObs(processed.obs, processed.config, path = path.out, 
-        id = "Plots_RAD_1962-2012", sdate = "1962-01-01", edate = "2012-12-31", 
-        merge.pdfs = merge.pdfs)
-@
-
-Run a trend analysis for NWQL parameters from 1989 through 2012:
+Run trend analysis for NWQL parameters from 1989 through 2012:
 <<>>=
 file <- file.path(path.in, "Config_Stats_NWQL.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out, 
             id = "Stats_NWQL_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
-            site.locations = site.locations, merge.pdfs = merge.pdfs)
+            site.locations = site.locations, merge.pdfs = merge.pdfs, 
+            graphics.type = graphics.type)
 @
 
-Run a trend analysis for field parameters from 1989 through 2012:
+Run trend analysis for field parameters from 1989 through 2012:
 <<>>=
 file <- file.path(path.in, "Config_Stats_Field.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out, 
             id = "Stats_Field_1989-2012", sdate = "1989-01-01", edate = "2012-12-31", 
-            site.locations = site.locations, merge.pdfs = merge.pdfs)
+            site.locations = site.locations, merge.pdfs = merge.pdfs, 
+            graphics.type = graphics.type)
 @
 
-Run a trend analysis for VOC parameters from 1987 through 2012:
+Run trend analysis for VOC parameters from 1987 through 2012:
 <<>>=
 file <- file.path(path.in, "Config_Stats_VOC.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
             id = "Stats_VOC_1987-2012", sdate = "1987-01-01", edate = "2012-12-31", 
-            site.locations = site.locations, merge.pdfs = merge.pdfs)
+            site.locations = site.locations, merge.pdfs = merge.pdfs, 
+            graphics.type = graphics.type)
 @
 
-Run a trend analysis for RAD parameters from 1981 through 2012:
+Run trend analysis for RAD parameters from 1981 through 2012:
 <<>>=
 file <- file.path(path.in, "Config_Stats_RAD.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
             id = "Stats_RAD_1981-2012", sdate = "1981-01-01", edate = "2012-12-31", 
-            site.locations = site.locations, merge.pdfs = merge.pdfs)
+            site.locations = site.locations, merge.pdfs = merge.pdfs, 
+            graphics.type = graphics.type)
 @
 
 To reprocess the 2014 water quality data, evaluate R code extracted from this vignette using the following command:

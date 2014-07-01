@@ -1,8 +1,11 @@
 
 
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
-                        edate=NA, graphics.type="pdf", merge.pdfs=TRUE,
+                        edate=NA, graphics.type="", merge.pdfs=TRUE,
                         site.locations=NULL) {
+
+  if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
+    stop("arguments 'path' and 'id' required for selected graphics type")
 
   if(inherits(sdate <- try(as.Date(sdate)), "ty-error"))
     sdate <- NA
@@ -101,8 +104,10 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   if (graphics.type == "pdf" && merge.pdfs)
     MergePDFs(id.path)
 
-  file <- file.path(path, paste0(id, ".tsv"))
-  write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
+  if (!missing(path) & !missing(id)) {
+    file <- file.path(path, paste0(id, ".tsv"))
+    write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
+  }
   if (inherits(site.locations, "SpatialPointsDataFrame")) {
     idxs <- match(stats$Site_id, site.locations@data$Site_id)
     if (anyNA(idxs)) {
@@ -121,7 +126,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
 
 PlotObs <- function(processed.obs, processed.config, path, id, sdate=NA,
-                    edate=NA, graphics.type="pdf", merge.pdfs=TRUE) {
+                    edate=NA, graphics.type="", merge.pdfs=TRUE) {
 
   if(inherits(sdate <- try(as.Date(sdate)), "ty-error"))
     sdate <- NA
@@ -182,13 +187,15 @@ PlotObs <- function(processed.obs, processed.config, path, id, sdate=NA,
     graphics.off()
   if (graphics.type == "pdf" && merge.pdfs)
     MergePDFs(id.path)
+  
+  invisible()
 }
 
 
 .CreateDir <- function(path, id, graphics.type) {
-  dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
   if (!graphics.type %in% c("pdf", "postscript"))
     return()
+  dir.create(path=path, showWarnings=FALSE, recursive=TRUE)
   ext <- ifelse(graphics.type == "postscript", "eps", "pdf")
   id.path <- file.path(path, id)
   if (file.exists(id.path))

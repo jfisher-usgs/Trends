@@ -21,7 +21,7 @@ DrawPlot <- function(obj, model, xlim=NULL, ylim=NULL, main=NULL, ylab=NULL) {
        xlab="Date", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
   if (missing(model)) {
-    cols <- c("#F02311", "#107FC9", "#C3FF68", "#BE80FF", "#050505")
+    cols <- c("#F02311", "#107FC9", "#90AB76", "#BE80FF", "#050505")
     obj$col <- cols[as.integer(factor(obj$Name, levels=unique(obj$Name)))]
   } else {
     x <- seq(xlim[1], xlim[2], "days")

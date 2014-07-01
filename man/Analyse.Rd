@@ -9,10 +9,10 @@
 
 \usage{
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
-            graphics.type = "pdf", merge.pdfs = TRUE, site.locations = NULL)
+            graphics.type = "", merge.pdfs = TRUE, site.locations = NULL)
 
 PlotObs(processed.obs, processed.config, path, id, sdate=NA, edate=NA,
-        graphics.type = "pdf", merge.pdfs = TRUE)
+        graphics.type = "", merge.pdfs = TRUE)
 }
 
 \arguments{
@@ -44,7 +44,30 @@ for the side-effect of drawing plots to external files.
 \seealso{\code{\link{ProcessObs}}, \code{\link{ProcessConfig}}}
 
 \examples{
-print("notyet")
+read.args <- list(header = TRUE, sep = "\t", colClasses = "character", na.strings = "",
+                  fill = TRUE, strip.white = TRUE, comment.char = "", flush = TRUE,
+                  stringsAsFactors = FALSE)
+path.in <- system.file("extdata", "SIR2014", package = "Trends")
+
+file <- file.path(path.in, "Observations.tsv")
+observations <- do.call(read.table, c(list(file), read.args))
+file <- file.path(path.in, "Parameters.tsv")
+parameters <- do.call(read.table, c(list(file), read.args))
+file <- file.path(path.in, "Detection_Limits.tsv")
+detection.limits <- do.call(read.table, c(list(file), read.args))
+processed.obs <- ProcessObs(observations, parameters, detection.limits,
+                            date.fmt = "\%m/\%d/\%Y")
+
+file <- file.path(path.in, "Config_Stats_VOC.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- tail(ProcessConfig(config, processed.obs))
+stats <- RunAnalysis(processed.obs, processed.config, 
+                     sdate = "1987-01-01", edate = "2012-12-31")
+
+file <- file.path(path.in, "Config_Plots_NWQL.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- head(ProcessConfig(config, processed.obs))
+PlotObs(processed.obs, processed.config, sdate = "1989-01-01", edate = "2012-12-31")
 }
 
 \keyword{hplot}

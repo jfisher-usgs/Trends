@@ -58,10 +58,6 @@ Returns a data frame with components:
 
 \author{J.C. Fisher and L.C. Davis}
 
-\seealso{\code{\link{read.table}}}
-
-\examples{
-print("notyet")
-}
+\seealso{\code{\link{RunAnalysis}}}
 
 \keyword{file}
