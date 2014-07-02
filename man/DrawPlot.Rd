@@ -27,7 +27,7 @@ is not missing.
 
 \author{J.C. Fisher}
 
-\seealso{\code{\link{PlotObs}}, \code{\link{RunAnalysis}}}
+\seealso{\code{\link{RunAnalysis}}}
 
 \examples{
 print("notyet")

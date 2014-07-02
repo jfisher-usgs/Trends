@@ -1,11 +1,10 @@
 \name{Analyse}
 
 \alias{RunAnalysis}
-\alias{PlotObs}
 
 \title{Analyse Observations}
 
-\description{These functions analyse observations.}
+\description{This function analyses observations.}
 
 \usage{
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
