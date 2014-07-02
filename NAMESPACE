@@ -5,7 +5,6 @@ importFrom(rgdal, readOGR, writeOGR)
 
 export(DrawPlot,
        MergePDFs,
-       PlotObs,
        ProcessConfig,
        ProcessObs,
        RunAnalysis,

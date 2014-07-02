@@ -1,5 +1,3 @@
-
-
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, graphics.type="", merge.pdfs=TRUE,
                         site.locations=NULL) {
@@ -122,73 +120,6 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   }
 
   invisible(stats)
-}
-
-
-PlotObs <- function(processed.obs, processed.config, path, id, sdate=NA,
-                    edate=NA, graphics.type="", merge.pdfs=TRUE) {
-
-  if(inherits(sdate <- try(as.Date(sdate)), "ty-error"))
-    sdate <- NA
-  if(inherits(edate <- try(as.Date(edate)), "ty-error"))
-    edate <- NA
-
-  id.path <- .CreateDir(path, id, graphics.type)
-
-  plot.count <- list()
-  rec <- processed.config$rec
-  for (i in sort(unique(rec))) {
-
-    idx <- match(i, rec)
-    site.id   <- processed.config[idx, "Site_id"]
-    site.name <- processed.config[idx, "Site_name"]
-
-    pars <- processed.config[rec == i, "Parameter"]
-    lst <- lapply(pars, function(i) processed.obs[[i]])
-    names(lst) <- pars
-
-    FUN <- function(i) {
-      return(data.frame(lst[[i]], Name=attr(lst[[i]], "Name"),
-                        stringsAsFactors=FALSE))
-    }
-    d <- do.call(rbind, lapply(seq_along(lst), FUN))
-    d <- d[d$Site_id == site.id, ]
-
-    date1 <- if (is.na(sdate)) min(d$Date) else sdate
-    date2 <- if (is.na(edate)) max(d$Date) else edate
-    d <- d[d$Date >= date1 & d$Date <= date2, ]
-
-    if (is.null(plot.count[[site.id]]))
-      plot.count[[site.id]] <- 0L
-    if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
-      letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
-      .OpenDevice(id.path, paste0(site.name, "_", letter), graphics.type)
-      main <- paste0(site.name, " (", site.id, ")")
-    } else {
-      main <- NULL
-    }
-    plot.count[[site.id]] <- plot.count[[site.id]] + 1L
-
-    xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
-    
-    ylab <- processed.config[idx, "Axis_title"]
-    if (is.na(ylab)) {
-      if (length(lst) == 1) {
-        a <- attributes(lst[[1]])
-        ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
-      } else {
-        ylab <- "Unknown"
-      }
-    }
-
-    DrawPlot(d, xlim=xlim, main=main, ylab=ylab)
-  }
-  if (graphics.type %in% c("pdf", "postscript"))
-    graphics.off()
-  if (graphics.type == "pdf" && merge.pdfs)
-    MergePDFs(id.path)
-  
-  invisible()
 }
 
 

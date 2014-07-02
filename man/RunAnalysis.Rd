@@ -10,9 +10,6 @@
 \usage{
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
             graphics.type = "", merge.pdfs = TRUE, site.locations = NULL)
-
-PlotObs(processed.obs, processed.config, path, id, sdate=NA, edate=NA,
-        graphics.type = "", merge.pdfs = TRUE)
 }
 
 \arguments{
@@ -61,13 +58,8 @@ processed.obs <- ProcessObs(observations, parameters, detection.limits,
 file <- file.path(path.in, "Config_Stats_VOC.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- tail(ProcessConfig(config, processed.obs))
-stats <- RunAnalysis(processed.obs, processed.config, 
+stats <- RunAnalysis(processed.obs, processed.config,
                      sdate = "1987-01-01", edate = "2012-12-31")
-
-file <- file.path(path.in, "Config_Plots_NWQL.tsv")
-config <- do.call(read.table, c(list(file), read.args))
-processed.config <- head(ProcessConfig(config, processed.obs))
-PlotObs(processed.obs, processed.config, sdate = "1989-01-01", edate = "2012-12-31")
 }
 
 \keyword{hplot}
