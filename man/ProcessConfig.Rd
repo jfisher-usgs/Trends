@@ -4,29 +4,28 @@
 
 \title{Process Configuration}
 
-\description{This functions processes a configuration table.}
+\description{This function processes a configuration table.}
 
 \usage{ProcessConfig(config, processed.obs)}
 
 \arguments{
-\item{config}{something...}
-\item{processed.obs}{something...}
+\item{config}{data.frame; see \sQuote{Details} section.}
+\item{processed.obs}{list; see \code{\link{ProcessObs}} for details.}
 }
 
-\format{
-The \code{config} table requires the following fields:
-\code{"Site_id"}, \code{"Site_name"}, \code{"Parameters"}, and
-\code{"Axis_title"}. The first line in the data table must contain variable
-names. See \sQuote{Value} for field descriptions.
+\details{
+Required column names in the \code{config} data frame include: \code{"Site_id"}, \code{"Site_name"}, and \code{"Parameters"}.
+Variables in the data frame are of class \code{\link{character}}.
+Multiple parameter identifiers can be specified in a single record of \code{config$Parameters} using a comma separator.
+Site and parameter identifiers not found in \code{processed.obs} are removed.
 }
 
 \value{
-Returns a data frame with components:
-\item{Site_id}{numeric; a unique site identifier.}
+Returns a data frame with the following components:
+\item{Site_id}{numeric; a site identifier.}
 \item{Site_name}{character; a local site name.}
-\item{Parameters}{character; comma separated unique parameter identifiers.}
-\item{Axis_title}{factor; plot label for the y-axis (allows for missing
-  values).}
+\item{Parameter}{character; a parameter identifier.}
+\item{rec}{integer; record/row index in \code{config}.}
 }
 
 \author{J.C. Fisher}

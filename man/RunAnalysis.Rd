@@ -1,4 +1,4 @@
-\name{Analyse}
+\name{RunAnalysis}
 
 \alias{RunAnalysis}
 

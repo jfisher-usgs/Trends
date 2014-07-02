@@ -91,11 +91,10 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
 
     a <- attributes(processed.obs[[processed.config$Parameter[i]]])
-    ylab <- processed.config$Axis_title[i]
-    if (is.na(ylab))
-      ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
+    ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
-    DrawPlot(obs[[i]], models[[i]], xlim=xlim, main=main, ylab=ylab)
+    DrawPlot(obs[[i]][, c("Date", "surv")], models[[i]],
+             xlim=xlim, main=main, ylab=ylab)
   }
   if (graphics.type %in% c("pdf", "postscript"))
     graphics.off()

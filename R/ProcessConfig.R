@@ -16,8 +16,5 @@ ProcessConfig <- function(config, processed.obs) {
   d <- d[d$Parameter %in% names(processed.obs), ]
   d <- d[order(as.integer(factor(d$Site_id, levels=unique(d$Site_id)))), ]
 
-  if (is.null(d$Axis_title))
-    d$Axis_title <- NA
-
   return(d)
 }
