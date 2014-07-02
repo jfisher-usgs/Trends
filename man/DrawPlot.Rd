@@ -2,7 +2,7 @@
 
 \alias{DrawPlot}
 
-\title{Draw Single Plot}
+\title{Draw Plot}
 
 \description{This function draws a single plot on a graphics device.}
 

@@ -2,7 +2,7 @@
 
 \alias{RunAnalysis}
 
-\title{Analyse Observations}
+\title{Run Analysis}
 
 \description{This function analyses observations.}
 
@@ -54,7 +54,7 @@ detection.limits <- do.call(read.table, c(list(file), read.args))
 processed.obs <- ProcessObs(observations, parameters, detection.limits,
                             date.fmt = "\%m/\%d/\%Y")
 
-file <- file.path(path.in, "Config_Stats_VOC.tsv")
+file <- file.path(path.in, "Config_VOC.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- tail(ProcessConfig(config, processed.obs))
 stats <- RunAnalysis(processed.obs, processed.config,

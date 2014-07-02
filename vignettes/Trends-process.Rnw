@@ -1,4 +1,4 @@
-% \VignetteIndexEntry{Processing 2014 Water Quality Data}
+% \VignetteIndexEntry{Processing 2014 Water Quality Monitoring Network Data}
 % \VignetteEngine{knitr::knitr}
 % \VignetteDepends{Trends, MASS, survival, NADA, sp, rgdal}
 
@@ -57,7 +57,7 @@ Load the \href{https://github.com/jfisher-usgs/Trends}{Trends} package into the 
 library(Trends)
 @
 
-Support for merging PDF files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.
+Support for merging Portable Document Format (PDF) files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.
 Determine if \textbf{pdftk} is accessible from \textbf{R}:
 <<>>=
 merge.pdfs <- as.logical(nchar(Sys.which("pdftk")))
@@ -115,9 +115,9 @@ processed.obs <- ProcessObs(observations, parameters, detection.limits,
                             date.fmt = "%m/%d/%Y")
 @
 
-Run trend analysis for NWQL parameters from 1989 through 2012:
+Run trend analysis for National Water Quality Laboratory (NWQL) parameters from 1989 through 2012:
 <<>>=
-file <- file.path(path.in, "Config_Stats_NWQL.tsv")
+file <- file.path(path.in, "Config_NWQL.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
@@ -126,9 +126,9 @@ RunAnalysis(processed.obs, processed.config, path = path.out,
             graphics.type = graphics.type)
 @
 
-Run trend analysis for field parameters from 1989 through 2012:
+Run trend analysis for field parameters (pH, Specific Conductance, and Temperature) from 1989 through 2012:
 <<>>=
-file <- file.path(path.in, "Config_Stats_Field.tsv")
+file <- file.path(path.in, "Config_Field.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
@@ -137,9 +137,9 @@ RunAnalysis(processed.obs, processed.config, path = path.out,
             graphics.type = graphics.type)
 @
 
-Run trend analysis for RAD parameters from 1981 through 2012:
+Run trend analysis for radiation-related (RAD) parameters from 1981 through 2012:
 <<>>=
-file <- file.path(path.in, "Config_Stats_RAD.tsv")
+file <- file.path(path.in, "Config_RAD.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
@@ -148,9 +148,9 @@ RunAnalysis(processed.obs, processed.config, path = path.out,
             graphics.type = graphics.type)
 @
 
-Run trend analysis for VOC parameters from 1987 through 2012:
+Run trend analysis for volotile organic compond (VOC) parameters from 1987 through 2012:
 <<>>=
-file <- file.path(path.in, "Config_Stats_VOC.tsv")
+file <- file.path(path.in, "Config_VOC.tsv")
 config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
@@ -159,7 +159,7 @@ RunAnalysis(processed.obs, processed.config, path = path.out,
             graphics.type = graphics.type)
 @
 
-Run trend analysis for Carbon Tetrachloride at the RWMC Production well from 2002 through 2012:
+Run trend analysis for Carbon Tetrachloride, a VOC parameter, at the RWMC Production well (433002113021701) from 2002 through 2012:
 <<>>=
 rec <- with(processed.config, Site_name == "RWMC Production" & Parameter == "P32102")
 RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
