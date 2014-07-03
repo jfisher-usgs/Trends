@@ -5,15 +5,15 @@ ProcessConfig <- function(config, processed.obs) {
 
   FUN <- function(i) {
     d <- config[i, , drop=FALSE]
-    p <- strsplit(d$Parameters, ",")[[1]]
+    p <- strsplit(d$Parameter_id, ",")[[1]]
     p <- unique(sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", p, perl=TRUE))
-    d <- data.frame(d, Parameter=p, rec=i, row.names=NULL,
+    d$Parameter_id <- NULL
+    d <- data.frame(d, Parameter_id=p, rec=i, row.names=NULL,
                     stringsAsFactors=FALSE)
-    d$Parameters <- NULL
     return(d)
   }
   d <- do.call(rbind, lapply(seq_len(nrow(config)), FUN))
-  d <- d[d$Parameter %in% names(processed.obs), ]
+  d <- d[d$Parameter_id %in% names(processed.obs), ]
   d <- d[order(as.integer(factor(d$Site_id, levels=unique(d$Site_id)))), ]
 
   return(d)

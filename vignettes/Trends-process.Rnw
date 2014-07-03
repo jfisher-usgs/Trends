@@ -161,7 +161,7 @@ RunAnalysis(processed.obs, processed.config, path = path.out,
 
 Run trend analysis for Carbon Tetrachloride, a VOC parameter, at the RWMC Production well (433002113021701) from 2002 through 2012:
 <<>>=
-rec <- with(processed.config, Site_name == "RWMC Production" & Parameter == "P32102")
+rec <- with(processed.config, Site_name == "RWMC Production" & Parameter_id == "P32102")
 RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
             id = "Stats_RWMC_CCl4_2002-2012",sdate = "2002-01-01", edate = "2012-12-31",
             merge.pdfs = merge.pdfs, graphics.type = graphics.type)

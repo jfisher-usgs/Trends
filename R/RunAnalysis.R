@@ -13,7 +13,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   obs <- list()
   models <- list()
 
-  d <- processed.config[, c("Site_id", "Site_name", "Parameter")]
+  d <- processed.config[, c("Site_id", "Site_name", "Parameter_id")]
   stats <- data.frame(d, "sdate"=sdate, "edate"=edate, "n"=NA, "nmissing"=NA,
                       "nexact"=NA, "nleft"=NA, "ninterval"=NA, "nbelow.rl"=NA,
                       "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA,
@@ -21,7 +21,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                       "p"=NA, "slope"=NA, "trend"=NA, check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
-    d <- processed.obs[[processed.config[i, "Parameter"]]]
+    d <- processed.obs[[processed.config[i, "Parameter_id"]]]
     d <- d[d$Site_id == processed.config[i, "Site_id"], ]
 
     date1 <- if (is.na(sdate)) min(d$Date) else sdate
@@ -100,8 +100,9 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     }
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
 
-    a <- attributes(processed.obs[[processed.config$Parameter[i]]])
-    ylab <- ifelse(is.na(a$Units), a$Name, paste0(a$Name, ", in ", a$Units))
+    a <- attributes(processed.obs[[processed.config$Parameter_id[i]]])
+    ylab <- ifelse(is.na(a$Units), a$Parameter_name, 
+                   paste0(a$Parameter_name, ", in ", a$Units))
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
     DrawPlot(obs[[i]][, c("Date", "surv")], models[[i]],
              xlim=xlim, main=main, ylab=ylab)
@@ -123,8 +124,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       coords <- site.locations@coords[idxs, , drop=FALSE]
       crs <- site.locations@proj4string
       obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
-      writeOGR(obj, path, id, "ESRI Shapefile", check_exists=TRUE,
-               overwrite_layer=TRUE)
+      suppressWarnings(writeOGR(obj, path, id, "ESRI Shapefile", 
+                                check_exists=TRUE, overwrite_layer=TRUE))
     }
   }
 

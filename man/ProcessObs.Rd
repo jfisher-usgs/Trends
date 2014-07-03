@@ -28,7 +28,7 @@ The character codes are identified using the following criteria: "<", below reco
 A warning is given if the character code is not recognized and its value set to \code{NA}.
 Observed values with character codes of "V" and "U" are set to \code{NA}.
 
-Required columns in the \code{parameters} data frame include: \code{"Parameter"}, a unique parameter identifier; \code{"Name"}, the common parameter name; \code{"Units"}, the units associated with the parameter=; and \code{"sd"}, a column name in \code{observations} where the parameters standard deviation values are located.
+Required columns in the \code{parameters} data frame include: \code{"Parameter_id"}, a unique parameter identifier; \code{"Parameter_name"}, the common parameter name; \code{"Units"}, the units associated with the parameter=; and \code{"sd"}, a column name in \code{observations} where the parameters standard deviation values are located.
 
 A required column in the \code{detection.limits} data frame is \code{"Date"}, a start date for when the detection limit was implemented.
 Values of the detection limit are located in subsequent columns; a unique parameter identifier is specified for each of these columns.
@@ -52,7 +52,7 @@ Each data frame has the following components:
 \item{sd}{numeric; the standard deviation.}
 \item{dl}{numeric; the detection limit.}
 \item{surv}{\code{\link{Surv}}; censored data of \emph{interval} type.}
-Additional attributes associated with the returned data frame include: \code{Parameter}, a unique parameter identifier; \code{Name}, a parameter name; and \code{Units}, the parameter units.
+Additional attributes associated with the returned data frame include: \code{Parameter_id}, a unique parameter identifier; \code{Parameter_name}, a parameter name; and \code{Units}, the parameter units.
 }
 
 \author{J.C. Fisher}

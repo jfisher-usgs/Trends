@@ -4,7 +4,7 @@ ProcessObs <- function(observations, parameters, detection.limits=NULL,
   observations$Date <- as.Date(observations$Date, format=date.fmt)
   observations <- observations[!is.na(observations$Date), ]
 
-  par.names <- make.names(parameters$Parameter)
+  par.names <- make.names(parameters$Parameter_id)
   par.names <- sort(par.names[par.names %in% colnames(observations)])
 
   detection.limits$Date <- as.Date(detection.limits$Date, format=date.fmt)
@@ -31,7 +31,7 @@ ProcessObs <- function(observations, parameters, detection.limits=NULL,
     d$value <- as.numeric(d$value)
     d$value[d$code %in% c("V", "U")] <- NA
 
-    p <- parameters[match(nam, make.names(parameters$Parameter)), , drop=TRUE]
+    p <- parameters[match(nam, make.names(parameters$Parameter_id)), , drop=TRUE]
     sd.col <- p$sd
     idx <- ifelse(!is.na(sd.col), match(sd.col, colnames(observations)), NA)
     d$sd <- if (is.na(idx)) NA else as.numeric(observations[is.rec, idx])
@@ -71,9 +71,10 @@ ProcessObs <- function(observations, parameters, detection.limits=NULL,
     d$surv <- Surv(time=t1, time2=t2, type="interval2")
 
     d <- d[order(d$Site_name, d$Date), ]
-    attributes(d) <- c(attributes(d), p[c("Parameter", "Name", "Units")])
+    vars <- c("Parameter_id", "Parameter_name", "Units")
+    attributes(d) <- c(attributes(d), p[vars])
 
-    lst[[p$Parameter]] <- d
+    lst[[p$Parameter_id]] <- d
   }
 
   return(lst)

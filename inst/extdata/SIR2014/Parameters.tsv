@@ -1,4 +1,4 @@
-Parameter	Name	Units	sd
+Parameter_id	Parameter_name	Units	sd
 pH	pH		
 Spec. Cond.	Specific Conductance	microsiemens per cm	
 Temp	Temperature	degree celsius	
