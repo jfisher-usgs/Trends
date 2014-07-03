@@ -17,20 +17,19 @@ ProcessObs <- function(observations, parameters, detection.limits=NULL,
     if (all(!is.rec))
       next
 
-    d <- observations[is.rec, c("Site_name", "Site_id", "Date")]
-    d <- data.frame(d, code=NA, conc=NA, sd=NA, dl=NA, t1=NA, t2=NA,
-                    is.exact=NA, is.left=NA, is.interval=NA)
+    d <- observations[is.rec, c("Site_id", "Site_name", "Date")]
+    d <- data.frame(d, code=NA, value=NA, sd=NA, dl=NA)
     d$Site_id   <- as.factor(d$Site_id)
     d$Site_name <- as.factor(d$Site_name)
 
-    d$conc <- as.character(observations[is.rec, par.names[i]])
-    d$code <- substr(d$conc, 1, 1)
+    d$value <- as.character(observations[is.rec, par.names[i]])
+    d$code <- substr(d$value, 1, 1)
     d$code[!d$code %in% c("<", "E", "V", "U")] <- ""
     d$code <- as.factor(d$code)
     is.code <- d$code != ""
-    d$conc[is.code] <- substr(d$conc[is.code], 2, nchar(d$conc[is.code]))
-    d$conc <- as.numeric(d$conc)
-    d$conc[d$code %in% c("V", "U")] <- NA
+    d$value[is.code] <- substr(d$value[is.code], 2, nchar(d$value[is.code]))
+    d$value <- as.numeric(d$value)
+    d$value[d$code %in% c("V", "U")] <- NA
 
     p <- parameters[match(nam, make.names(parameters$Parameter)), , drop=TRUE]
     sd.col <- p$sd
@@ -47,31 +46,29 @@ ProcessObs <- function(observations, parameters, detection.limits=NULL,
       }
     }
 
+    t1 <- t2 <- rep(NA, nrow(d))
+
     is.left <- d$code %in% "<"
     is.exact <- !is.left & (is.na(d$sd) | is.na(d$dl))
-    d$t1[is.exact] <- d$conc[is.exact]
-    d$t2[is.exact] <- d$conc[is.exact]
-    d$t2[is.left]  <- d$conc[is.left]
-    lower.conc <- d$conc - 3 * d$sd
-    upper.conc <- d$conc + 3 * d$sd
+    t1[is.exact] <- d$value[is.exact]
+    t2[is.exact] <- d$value[is.exact]
+    t2[is.left]  <- d$value[is.left]
+    lower.value <- d$value - 3 * d$sd
+    upper.value <- d$value + 3 * d$sd
 
-    are.left <- which(!is.exact & upper.conc <= d$dl)
-    d$t2[are.left] <- d$dl[are.left]
-    are.left <- which(!is.exact & lower.conc <= d$dl & upper.conc > d$dl)
-    d$t2[are.left] <- upper.conc[are.left]
+    are.left <- which(!is.exact & upper.value <= d$dl)
+    t2[are.left] <- d$dl[are.left]
+    are.left <- which(!is.exact & lower.value <= d$dl & upper.value > d$dl)
+    t2[are.left] <- upper.value[are.left]
 
-    are.interval <- which(!is.exact & lower.conc > d$dl)
-    d$t1[are.interval] <- lower.conc[are.interval]
-    d$t2[are.interval] <- upper.conc[are.interval]
+    are.interval <- which(!is.exact & lower.value > d$dl)
+    t1[are.interval] <- lower.value[are.interval]
+    t2[are.interval] <- upper.value[are.interval]
 
-    d$t2[which(d$t2 <= 0)] <- NA  # TODO: zero is invalid for 'lognormal' distribution
-    d$t1[which(d$t1 <= 0 | is.na(d$t2))] <- NA
+    t2[which(t2 <= 0)] <- NA  # TODO: zero is invalid for 'lognormal' distribution
+    t1[which(t1 <= 0 | is.na(t2))] <- NA
 
-    is.t1 <- !is.na(d$t1)
-    is.t2 <- !is.na(d$t2)
-    d$is.exact    <-  is.t1 & is.t2 & d$t1 == d$t2
-    d$is.left     <- !is.t1 & is.t2
-    d$is.interval <-  is.t1 & is.t2 & d$t1 != d$t2
+    d$surv <- Surv(time=t1, time2=t2, type="interval2")
 
     d <- d[order(d$Site_name, d$Date), ]
     attributes(d) <- c(attributes(d), p[c("Parameter", "Name", "Units")])

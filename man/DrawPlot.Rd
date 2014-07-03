@@ -6,12 +6,10 @@
 
 \description{This function draws a single plot on a graphics device.}
 
-\usage{
-DrawPlot(d, model, xlim = NULL, ylim = NULL, main = NULL, ylab = "")
-}
+\usage{DrawPlot(d, model, xlim = NULL, ylim = NULL, main = NULL, ylab = "")}
 
 \arguments{
-\item{d}{data.frame; observations, the first and second column is of class \code{\link{Date}} and \code{\link{Surv}}, respectively.
+\item{d}{\code{\link{data.frame}}; observations, the first and second column is of class \code{\link{Date}} and \code{\link{Surv}}, respectively.
   Right censored data is not permitted.}
 \item{model}{\code{\link{survreg}}; survival regression model of \emph{interval} type (optional).}
 \item{xlim}{Date; the \code{x} limits (\code{x1}, \code{x2}) of the plot.}
@@ -23,7 +21,7 @@ DrawPlot(d, model, xlim = NULL, ylim = NULL, main = NULL, ylab = "")
 \details{
 Exact data is drawn as points.
 Left and interval censored data is drawn as vertical lines.
-The 50th percentile of the regression model is drawn as a curved line and the interval between the 10th and 90th percentile is drawn as a solid polygon.
+The 50th percentile of the regression model is drawn as a curved line and the interval between the 10th and 90th percentile confidence bands is drawn as a solid polygon.
 }
 
 \author{J.C. Fisher}

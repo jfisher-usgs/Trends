@@ -4,17 +4,14 @@
 
 \title{Merge PDF Files}
 
-\description{This function combines PDF files into a new file.}
+\description{This function combines Portable Document Format (PDF) files into a new file.}
 
 \usage{MergePDFs(path, preserve.files = FALSE, open.file = FALSE)}
 
 \arguments{
-\item{path}{character; the path name of the folder containing the PDF files to
-  merge.}
-\item{preserve.files}{logical; if \code{TRUE}, all individual PDF files are
-  preserved after a merge is completed.}
-\item{open.file}{logical; if \code{TRUE}, the merged PDF file is opened using
-  the systems default PDF viewer.}
+\item{path}{character; the path name of the folder containing the PDF files to merge.}
+\item{preserve.files}{logical; if \code{TRUE}, all individual PDF files are preserved after a merge is completed.}
+\item{open.file}{logical; if \code{TRUE}, the merged PDF file is opened using your systems default PDF viewer.}
 }
 
 \details{
@@ -25,13 +22,12 @@ The merged file is placed one directory above \code{path}.
 \value{The name of the merged file is returned.}
 
 \note{
-Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
-a cross-platform command-line tool for working with PDFs.
+Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs.
 }
 
 \author{J.C. Fisher}
 
-\seealso{\code{\link{system}}}
+\seealso{\code{\link{RunAnalysis}}, \code{\link{system}}}
 
 \examples{\donttest{
 path <- file.path(tempdir(), "merge")

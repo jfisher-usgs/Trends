@@ -9,13 +9,13 @@
 \usage{ProcessConfig(config, processed.obs)}
 
 \arguments{
-\item{config}{data.frame; see \sQuote{Details} section.}
-\item{processed.obs}{list; see \code{\link{ProcessObs}} for details.}
+\item{config}{\code{\link{data.frame}}; see \sQuote{Details} section.}
+\item{processed.obs}{\code{\link{list}}; see \code{\link{ProcessObs}} for details.}
 }
 
 \details{
 Required column names in the \code{config} data frame include: \code{"Site_id"}, \code{"Site_name"}, and \code{"Parameters"}.
-Variables in the data frame are of class \code{\link{character}}.
+Variables in the data frame are of character-class.
 Multiple parameter identifiers can be specified in a single record of \code{config$Parameters} using a comma separator.
 Site and parameter identifiers not found in \code{processed.obs} are removed.
 }

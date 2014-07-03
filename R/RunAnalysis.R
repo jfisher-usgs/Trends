@@ -27,18 +27,25 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     date1 <- if (is.na(sdate)) min(d$Date) else sdate
     date2 <- if (is.na(edate)) max(d$Date) else edate
     d <- d[d$Date >= date1 & d$Date <= date2, ]
+    obs[[i]] <- d
 
-    d$surv <- Surv(time=d$t1, time2=d$t2, type="interval2")
-    is.missing <- is.na(d$surv)
+    d <- cbind(d, as.matrix(d$surv))
 
-    obs[[i]] <-  d
+    stats[i, c("n", "nmissing")] <- c(nrow(d), sum(is.na(d$status)))
 
-    stats[i, c("n", "nmissing")] <- c(nrow(d), sum(is.missing))
-    vars <- c("nexact", "nleft", "ninterval")
-    stats[i, vars] <- c(sum(d$is.exact), sum(d$is.left), sum(d$is.interval))
-    stats[i, "nbelow.rl"] <- sum(d$code == "<")
+    is.exact    <- d$status == 1
+    is.left     <- d$status == 2
+    is.interval <- d$status == 3
+    is.below.rl <- d$code == "<"
 
-    stats[i, c("min", "max")] <- c(min(d$t1), max(d$t2))
+    stats[i, "nexact"]    <- sum(is.exact)
+    stats[i, "nleft"]     <- sum(is.left)
+    stats[i, "ninterval"] <- sum(is.interval)
+    stats[i, "nbelow.rl"] <- sum(is.below.rl)
+
+    stats[i, c("min", "max")] <-  range(d$time1, na.rm=TRUE)
+    if (any(is.left))
+      stats[i, "min"] <- 0
 
     model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
                                       control=survreg.control(maxiter=100)))
@@ -57,18 +64,21 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     is.trend <- !anyNA(c(p, slope)) & p <= 0.05
     stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
 
-    if (any(d$is.interval)) {
+    if (any(is.interval)) {
       fit <- summary(survfit(d$surv ~ 1))$table
       vars <- c("median", "0.95LCL", "0.95UCL")
       stats[i, vars] <- fit[vars]
-    } else if (any(d$is.left)) {
-      fit <- cenfit(d$t2[!is.missing], d$is.left[!is.missing])
+    } else if (any(is.left)) {
+      is.not.missing <- !is.na(d$status)
+      fit <- cenfit(d$time1[is.not.missing], is.left[is.not.missing])
       vars <- c("mean", "0.95LCL", "0.95UCL")
       stats[i, vars] <- suppressWarnings(mean(fit)[vars])
-      stats[i, c("median", "sd")] <- suppressWarnings(c(median(fit), sd(fit)))
+      stats[i, "median"] <- suppressWarnings(median(fit))
+      stats[i, "sd"]     <- suppressWarnings(sd(fit))
     } else {
-      t1 <- na.omit(d$t1)
-      stats[i, c("median", "mean", "sd")] <- c(median(t1), mean(t1), sd(t1))
+      stats[i, "median"] <- median(d$time1, na.rm=TRUE)
+      stats[i, "mean"]   <- mean(d$time1, na.rm=TRUE)
+      stats[i, "sd"]     <- sd(d$time1, na.rm=TRUE)
     }
   }
 
