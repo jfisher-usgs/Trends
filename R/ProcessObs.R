@@ -72,6 +72,7 @@ ProcessObs <- function(observations, parameters, detection.limits=NULL,
     d$is.exact    <-  is.t1 & is.t2 & d$t1 == d$t2
     d$is.left     <- !is.t1 & is.t2
     d$is.interval <-  is.t1 & is.t2 & d$t1 != d$t2
+
     d <- d[order(d$Site_name, d$Date), ]
     attributes(d) <- c(attributes(d), p[c("Parameter", "Name", "Units")])
 

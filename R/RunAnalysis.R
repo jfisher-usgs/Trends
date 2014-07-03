@@ -3,7 +3,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         site.locations=NULL) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
-    stop("arguments 'path' and 'id' required for selected graphics type")
+    stop("arguments 'path' and 'id' are required for selected graphics type")
 
   if(inherits(sdate <- try(as.Date(sdate)), "ty-error"))
     sdate <- NA

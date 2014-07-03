@@ -1,4 +1,4 @@
-% \VignetteIndexEntry{Processing 2014 Water Quality Monitoring Network Data}
+% \VignetteIndexEntry{Processing Instructions for the 2014 Trend Analysis}
 % \VignetteEngine{knitr::knitr}
 % \VignetteDepends{Trends, MASS, survival, NADA, sp, rgdal}
 
@@ -39,7 +39,7 @@ options(width=90)
 ptime <- proc.time()
 @
 
-\title{Processing 2014 Water Quality Monitoring Network Data}
+\title{Processing Instructions for the 2014 Trend Analysis}
 
 \author{Jason C. Fisher}
 
