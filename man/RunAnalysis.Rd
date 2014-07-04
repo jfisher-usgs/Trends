@@ -2,7 +2,7 @@
 
 \alias{RunAnalysis}
 
-\title{Run Analysis}
+\title{Run Trend Analysis}
 
 \description{This function analyses observations for a significant trend.}
 
@@ -54,7 +54,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{p}{numeric; the \href{http://en.wikipedia.org/wiki/P-value}{p-value} statistic.}
 \item{slope}{numeric; the slope of the linear-predictor in percent change per year.}
 \item{trend}{character; significant trends are indicated by a p-value less than or equal to 0.05, a 5 percent acceptance level.
-  The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}). 
+  The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
   P-values greater than 0.05 are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the table of summary statistics (described above) is written to an external text file.
 If in addition, a file-based graphics types is selected, plots are drawn to an external file(s); otherwise, these plots are drawn to the \sQuote{active} device.

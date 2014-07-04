@@ -24,11 +24,11 @@ Required columns in the \code{observations} data frame include: \code{"Site_id"}
 Observations and standard deviations are located in the subsequent columns; a unique parameter identifier is specified for each of these columns.
 Observed values are checked for a character code in the first digit of each character string.
 Values are stripped of their character code and converted to numeric-class.
-The character codes are identified using the following criteria: "<", below recording level; "E", estimated value; "V", contaminated; and "U", undetectable.
+The character codes are identified using the following criteria: \code{"<"}, below recording level; \code{"E"}, estimated value; \code{"V"}, contaminated; and \code{"U"}, undetectable.
 A warning is given if the character code is not recognized and its value set to \code{NA}.
-Observed values with character codes of "V" and "U" are set to \code{NA}.
+Observed values with character codes of \code{"V"} and \code{"U"} are set to \code{NA}.
 
-Required columns in the \code{parameters} data frame include: \code{"Parameter_id"}, a unique parameter identifier; \code{"Parameter_name"}, the common parameter name; \code{"Units"}, the units associated with the parameter=; and \code{"sd"}, a column name in \code{observations} where the parameters standard deviation values are located.
+Required columns in the \code{parameters} data frame include: \code{"Parameter_id"}, a unique parameter identifier; \code{"Parameter_name"}, the common parameter name; \code{"Units"}, the units associated with the parameter; and \code{"sd"}, a column name in \code{observations} where the parameters standard deviation values are located.
 
 A required column in the \code{detection.limits} data frame is \code{"Date"}, a start date for when the detection limit was implemented.
 Values of the detection limit are located in subsequent columns; a unique parameter identifier is specified for each of these columns.

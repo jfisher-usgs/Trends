@@ -2,7 +2,7 @@
 
 \alias{DrawPlot}
 
-\title{Draw Plot}
+\title{Draw Single Plot}
 
 \description{This function draws a single plot on a graphics device.}
 
@@ -21,7 +21,7 @@
 \details{
 Exact data is drawn as points.
 Left and interval censored data is drawn as vertical lines.
-The 50th percentile of the regression model is drawn as a curved line and the interval between the 10th and 90th percentile confidence bands is drawn as a solid polygon.
+The 50th percentile of the regression model is drawn as a curved line and the interval between the 10th and 90th confidence bands is drawn as a solid polygon.
 }
 
 \author{J.C. Fisher}
