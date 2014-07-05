@@ -31,7 +31,7 @@ DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
     ylim <- extendrange(pretty(ylim), f=0.06)
   }
 
-  par(mar=c(1.5, 3, 1.5, 0.5) + 0.1, mgp=c(2, 0.5, 0))
+  par(mar=c(1.5, 3, 1.5, 1) + 0.1, mgp=c(2, 0.5, 0))
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 

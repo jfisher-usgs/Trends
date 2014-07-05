@@ -45,8 +45,8 @@ ptime <- proc.time()
 
 \maketitle
 
-If R (version $\geq$ 3.1) is not already installed on your computer, download and install the latest binary distribution from the Comprehenisive R Archive Network (\href{http://cran.r-project.org/}{CRAN}).
-Open an \textbf{R} session and install required packages with the following commands:
+If \href{http://www.r-project.org/}{R} (version $\geq$ 3.1) is not already installed on your computer, download and install the latest binary distribution from the Comprehenisive R Archive Network (\href{http://cran.r-project.org/}{CRAN}).
+Open an \textbf{R} session and install the required packages with the following commands:
 <<eval=FALSE>>=
 install.packages(c("NADA", "rgdal"))
 install.packages("Trends", repos = "http://jfisher-usgs.github.com/R/")
@@ -159,15 +159,15 @@ RunAnalysis(processed.obs, processed.config, path = path.out,
             graphics.type = graphics.type)
 @
 
-Run trend analysis for Carbon Tetrachloride, a VOC parameter, at the RWMC Production well (433002113021701) from 2002 through 2012:
+Run trend analysis for Carbon Tetrachloride (P32102), a VOC parameter, at the RWMC Production well (433002113021701) from 2002 through 2012:
 <<>>=
-rec <- with(processed.config, Site_id == "433002113021701" & Parameter_id == "P32102")
+rec <- with(processed.config, Parameter_id == "P32102" & Site_id == "433002113021701")
 RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
             id = "Stats_RWMC_CCl4_2002-2012",sdate = "2002-01-01", edate = "2012-12-31",
             merge.pdfs = merge.pdfs, graphics.type = graphics.type)
 @
 
-To reprocess the 2014 water quality data, evaluate R code extracted from this vignette using the following command:
+To reprocess the 2014 water quality data, evaluate \textbf{R} code extracted from this vignette using the following command:
 <<eval=FALSE>>=
 source(system.file("doc", "Trends-process.R", package = "Trends"), echo = TRUE)
 list.files(path.out, full.names = TRUE, recursive = TRUE)  # path names of output files
