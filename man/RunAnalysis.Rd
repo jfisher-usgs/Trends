@@ -12,24 +12,23 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 }
 
 \arguments{
-\item{processed.obs}{\code{\link{list}}, see \code{\link{ProcessObs}} for details.}
-\item{processed.config}{\code{\link{data.frame}}, see \code{\link{ProcessConfig}} for details.}
-\item{path}{character, the path name of the output folder.}
+\item{processed.obs}{\code{\link{list}}, see documentation for \code{\link{ProcessObs}} function for details.}
+\item{processed.config}{\code{\link{data.frame}}, see documentation for \code{\link{ProcessConfig}} function for details.}
+\item{path}{character, the path name of the folder where output data is written.}
 \item{id}{character, an analysis identifier that is used to construct output file names.}
-\item{sdate, edate}{character or \code{\link{Date}}; start and end date corresponding to the period of interest.
+\item{sdate, edate}{\code{\link{Date}} or character; the start and end date corresponding to the period of interest.
   The required date format is \code{YYYY-M-D} (\code{\%Y-\%m-\%d}).}
-\item{graphics.type}{character; the graphics type for the plots.
-  The default is the \sQuote{active} device.
+\item{graphics.type}{character; the graphics type for plot figures.
+  The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
 \item{merge.pdfs}{logical; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see \code{\link{MergePDFs}} for details.}
-\item{site.locations}{\code{\link{SpatialPointsDataFrame}}, the geo-referenced site coordinates with a data frame component of \code{Site_id}, a unique site identifier.}
+\item{site.locations}{\code{\link{SpatialPointsDataFrame}}, the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
 }
 
 \details{
-This function fits a parametric survival regression model, an accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model, using the \code{\link{survreg}} function.
-The assumed distribution for the observed data is the \code{"lognormal"} distribution.
-Descriptive statistics are calculated using the \code{\link{survfit}} function when interval-censored data is present.
-The \code{\link{cenfit}} is used when there is left-censored data and no interval-censored data.
+This function uses the \code{\link{survreg}} function to fit a parametric survival regression model, otherwise known as an accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model, to the censored data.
+The assumed distribution for the censored data is the \code{"lognormal"} distribution.
+Descriptive statistics are calculated using the \code{\link{survfit}} function when interval-censored data is present; the \code{\link{cenfit}} is used when there is left-censored data and no interval-censored data.
 }
 
 \value{
@@ -37,7 +36,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{Site_id}{numeric; a unique site identifier.}
 \item{Site_name}{character; a local site name.}
 \item{Parameter_id}{character; a unique parameter identifier.}
-\item{sdate, edate}{Date; start and end date corresponding to the period of interest.}
+\item{sdate, edate}{Date; the start and end date corresponding to the period of interest.}
 \item{n}{integer; the number of records in the analysis.}
 \item{nmissing}{integer; the number of missing values.}
 \item{nexact}{integer; the number of exact values.}
@@ -45,8 +44,8 @@ This function returns a \code{data.frame} object with the following components:
 \item{ninterval}{integer; the number of interval-censored values.}
 \item{nbelow.rl}{integer; the number of values that are below the recording level.}
 \item{min, max}{numeric; the minimum and maximum values.}
-\item{median}{numeric; the median value.}
-\item{mean}{numeric; the mean value.}
+\item{median}{numeric; the median.}
+\item{mean}{numeric; the mean.}
 \item{sd}{numeric; the standard deviation.}
 \item{0.95LCL, 0.95UCL}{numeric; the lower and upper 95 percent confidence levels.}
 \item{c1, c2}{numeric; the coefficients in the AFT model on the log median survival time scale.}
@@ -56,8 +55,8 @@ This function returns a \code{data.frame} object with the following components:
 \item{trend}{character; significant trends are indicated by a p-value less than or equal to 0.05, a 5 percent acceptance level.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
   P-values greater than 0.05 are specified as having no significant trend (\code{"none"}).}
-If arguments \code{path} and \code{id} are specified, the table of summary statistics (described above) is written to an external text file.
-If in addition, a file-based graphics types is selected, plots are drawn to an external file(s); otherwise, these plots are drawn to the \sQuote{active} device.
+If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
+If in addition, a file-based graphics type is selected, plots are drawn to external files; otherwise, these plots are drawn to the \sQuote{active} device.
 }
 
 \author{J.C. Fisher and L.C. Davis}
