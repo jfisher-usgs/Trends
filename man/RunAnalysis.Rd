@@ -21,14 +21,14 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \item{graphics.type}{character; the graphics type for plot figures.
   The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
-\item{merge.pdfs}{logical; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see \code{\link{MergePDFs}} for details.}
+\item{merge.pdfs}{logical; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see documentation for \code{\link{MergePDFs}} function for details.}
 \item{site.locations}{\code{\link{SpatialPointsDataFrame}}, the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
 }
 
 \details{
-This function uses the \code{\link{survreg}} function to fit a parametric survival regression model, otherwise known as an accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model, to the censored data.
+This function uses the \code{\link{survreg}} function to fit a parametric survival regression model, an accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model, to the censored data.
 The assumed distribution for the censored data is the \code{"lognormal"} distribution.
-Descriptive statistics are calculated using the \code{\link{survfit}} function when interval-censored data is present; the \code{\link{cenfit}} is used when there is left-censored data and no interval-censored data.
+Descriptive statistics are calculated using the \code{\link{survfit}} function when interval-censored data is present, while the \code{\link{cenfit}} function is used when there is left-censored data and no interval-censored data.
 }
 
 \value{
@@ -56,7 +56,7 @@ This function returns a \code{data.frame} object with the following components:
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
   P-values greater than 0.05 are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
-If in addition, a file-based graphics type is selected, plots are drawn to external files; otherwise, these plots are drawn to the \sQuote{active} device.
+If in addition, a file-based graphics type is selected, plots are drawn to external files; otherwise, plots are drawn to the \sQuote{active} device.
 }
 
 \author{J.C. Fisher and L.C. Davis}
@@ -89,4 +89,4 @@ stats <- RunAnalysis(processed.obs, processed.config,
                      sdate = "1987-01-01", edate = "2012-12-31")
 }
 
-\keyword{hplot}
+\keyword{models}

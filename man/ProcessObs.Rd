@@ -24,7 +24,7 @@ ProcessObs(observations, parameters, detection.limits = NULL, date.fmt = "\%Y-\%
 The \code{observations}, \code{parameters}, and \code{detection.limits} data tables are composed of \code{character-class} components.
 
 Required columns in the \code{observations} data table include: \code{"Site_id"}, a unique site identifier; \code{"Site_name"}, a local site name; and \code{"Date"}, the observation date.
-Measured values and their uncertainity (reported as standard deviation) are located in the subsequent columns; a unique parameter identifier is specified for each of these column names.
+Measured values and their uncertainty (reported as standard deviation) are located in the subsequent columns; a unique parameter identifier is specified for each of these column names.
 Measured values are checked for an optional character code in the first digit of each character string value.
 Character codes are identified using the following criteria: \code{"<"}, below recording level; \code{"E"}, estimated value; \code{"V"}, contaminated; and \code{"U"}, undetectable.
 Values are stripped of their character code and converted to \code{numeric-class}.
@@ -39,7 +39,7 @@ Detection limit values are located in subsequent columns; a unique parameter ide
 A measured value is converted to censored data under the following conditions:
 (1) the measured value is below the recording level and represented as \emph{left-censored} data; or
 (2) there is a standard deviation and detection limit associated with the measured value, therefore, it is represented as \emph{interval-censored} data.
-The upper and lower bounds of interval-censored data are calcuated by adding and subtracting 3 standard deviations from the measured value, respectively.
+The upper and lower bounds of interval-censored data are calculated by adding and subtracting 3 standard deviations from the measured value, respectively.
 Note that interval-censored data with a lower bound less than the detection limit is represented as left-censored data.
 For left- and interval-censored data, the upper bound is set to the detection limit when its magnitude is less than the detection limit.
 }
@@ -62,4 +62,4 @@ Additional attributes associated with the returned data frame include: \code{Par
 
 \seealso{\code{\link{RunAnalysis}}}
 
-\keyword{file}
+\keyword{methods}

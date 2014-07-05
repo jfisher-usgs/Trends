@@ -10,13 +10,13 @@
 
 \arguments{
 \item{path}{character; the path name of the folder containing the PDF files to merge.}
-\item{preserve.files}{logical; if \code{TRUE}, all individual PDF files are preserved after a merge is completed.}
-\item{open.file}{logical; if \code{TRUE}, the merged PDF file is opened using your systems default PDF viewer.}
+\item{preserve.files}{logical; if \code{TRUE} all individual PDF files are preserved after a merge is completed.}
+\item{open.file}{logical; if \code{TRUE} the merged PDF file is opened using your systems default PDF viewer.}
 }
 
 \details{
 Names of the individual PDF files are used as bookmarks in the merged file.
-The merged file is placed one directory above \code{path}.
+The merged file is placed one directory above the \code{path} folder.
 }
 
 \value{The name of the merged file is returned.}
@@ -57,4 +57,4 @@ MergePDFs(path, open.file = TRUE)
 unlink(paste0(path, ".pdf"))
 }}
 
-\keyword{misc}
+\keyword{utilities}

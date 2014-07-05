@@ -4,14 +4,14 @@
 
 \title{Draw Single Plot}
 
-\description{This function draws a single plot on a graphics device.}
+\description{This function draws a single plot on the active graphics device.}
 
 \usage{DrawPlot(d, model, xlim = NULL, ylim = NULL, main = NULL, ylab = "")}
 
 \arguments{
-\item{d}{\code{\link{data.frame}}; observations, the first and second column is of class \code{\link{Date}} and \code{\link{Surv}}, respectively.
-  Right censored data is not permitted.}
-\item{model}{\code{\link{survreg}}; survival regression model of \emph{interval} type (optional).}
+\item{d}{\code{\link{data.frame}}; observations, where the first and second column is of class \code{\link{Date}} and \code{\link{Surv}}, respectively.
+  Right-censored data is not permitted.}
+\item{model}{\code{\link{survreg}}; the survival regression model of \emph{interval} type (optional).}
 \item{xlim}{Date; the \code{x} limits (\code{x1}, \code{x2}) of the plot.}
 \item{ylim}{numeric; the \code{y} limits (\code{y1}, \code{y2}) of the plot.}
 \item{main}{character; a main title for the plot.}
@@ -20,7 +20,7 @@
 
 \details{
 Exact data is drawn as points.
-Left and interval censored data is drawn as vertical lines.
+Left- and interval-censored data is drawn as vertical lines with short-horizontal lines at the interval bounds.
 The 50th percentile of the regression model is drawn as a curved line and the interval between the 10th and 90th confidence bands is drawn as a solid polygon.
 }
 
