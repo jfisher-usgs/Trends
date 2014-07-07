@@ -65,12 +65,12 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
 
     if (any(is.interval)) {
-      fit <- summary(survfit(d$surv ~ 1))$table
+      fit <- summary(survfit(d$surv ~ 1, type="kaplan-meier"))$table
       vars <- c("median", "0.95LCL", "0.95UCL")
       stats[i, vars] <- fit[vars]
     } else if (any(is.left)) {
       is.not.missing <- !is.na(d$status)
-      fit <- cenfit(d$time1[is.not.missing], is.left[is.not.missing])
+      fit <- cenfit(d$time1[is.not.missing], is.left[is.not.missing])  # k-m
       vars <- c("mean", "0.95LCL", "0.95UCL")
       stats[i, vars] <- suppressWarnings(mean(fit)[vars])
       stats[i, "median"] <- suppressWarnings(median(fit))
@@ -101,7 +101,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     plot.count[[site.id]] <- plot.count[[site.id]] + 1L
 
     a <- attributes(processed.obs[[processed.config$Parameter_id[i]]])
-    ylab <- ifelse(is.na(a$Units), a$Parameter_name, 
+    ylab <- ifelse(is.na(a$Units), a$Parameter_name,
                    paste0(a$Parameter_name, ", in ", a$Units))
     xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
     DrawPlot(obs[[i]][, c("Date", "surv")], models[[i]],
@@ -124,7 +124,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       coords <- site.locations@coords[idxs, , drop=FALSE]
       crs <- site.locations@proj4string
       obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
-      suppressWarnings(writeOGR(obj, path, id, "ESRI Shapefile", 
+      suppressWarnings(writeOGR(obj, path, id, "ESRI Shapefile",
                                 check_exists=TRUE, overwrite_layer=TRUE))
     }
   }

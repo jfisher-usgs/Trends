@@ -9,8 +9,8 @@
 \usage{ProcessConfig(config, processed.obs)}
 
 \arguments{
-\item{config}{\code{\link{data.frame}}; see \sQuote{Details} section.}
-\item{processed.obs}{\code{\link{list}}; see documentation for \code{\link{ProcessObs}} function for details.}
+\item{config}{\code{data.frame}; see \sQuote{Details} section.}
+\item{processed.obs}{\code{list}; see documentation for \code{\link{ProcessObs}} function for details.}
 }
 
 \details{
@@ -22,10 +22,10 @@ Site and parameter identifiers not found in the \code{processed.obs} list are re
 
 \value{
 Returns a \code{data.frame} object with the following components:
-\item{Site_id}{numeric; a unique site identifier.}
-\item{Site_name}{character; a local site name.}
-\item{Parameter_id}{character; a unique parameter identifier.}
-\item{rec}{integer; the record (row) index in the \code{config} data table.}
+\item{Site_id}{\code{numeric}; a unique site identifier.}
+\item{Site_name}{\code{character}; a local site name.}
+\item{Parameter_id}{\code{character}; a unique parameter identifier.}
+\item{rec}{\code{integer}; the record (row) index in the \code{config} data table.}
 }
 
 \author{J.C. Fisher}

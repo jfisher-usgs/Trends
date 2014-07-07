@@ -13,10 +13,10 @@ ProcessObs(observations, parameters, detection.limits = NULL, date.fmt = "\%Y-\%
 }
 
 \arguments{
-\item{observations}{\code{\link{data.frame}}; observational data records, see \sQuote{Details} section.}
-\item{parameters}{data.frame; parameter descriptions, see \sQuote{Details} section.}
-\item{detection.limits}{data.frame; detection limits (optional), see \sQuote{Details} section.}
-\item{date.fmt}{character; the date format used to convert character strings to class \code{\link{Date}}.}
+\item{observations}{\code{data.frame}; observational data records, see \sQuote{Details} section.}
+\item{parameters}{\code{data.frame}; parameter descriptions, see \sQuote{Details} section.}
+\item{detection.limits}{\code{data.frame}; detection limits (optional), see \sQuote{Details} section.}
+\item{date.fmt}{\code{character}; the date format used to convert character strings to class \code{\link{Date}}.}
 }
 
 \details{
@@ -45,15 +45,15 @@ For left- and interval-censored data, the upper bound is set to the detection li
 }
 
 \value{
-Returns an object of class \code{\link{list}} with \code{data.frame} components corresponding to unique parameter identifiers.
-Each data frame has the following components:
-\item{Site_id}{numeric; a unique site identifier.}
-\item{Site_name}{character; a local site name.}
-\item{Date}{Date; the observation date.}
-\item{code}{\code{\link{factor}}; single-digit character code.}
-\item{value}{numeric; the measured value.}
-\item{sd}{numeric; the standard deviation of the measured value.}
-\item{dl}{numeric; the detection limit of the measured value.}
+Returns an object of class \code{list} with \code{data.frame} components corresponding to unique parameter identifiers.
+Each data table has the following components:
+\item{Site_id}{\code{numeric}; a unique site identifier.}
+\item{Site_name}{\code{character}; a local site name.}
+\item{Date}{\code{Date}; the observation date.}
+\item{code}{\code{factor}; single-digit character code.}
+\item{value}{\code{numeric}; the measured value.}
+\item{sd}{\code{numeric}; the standard deviation of the measured value.}
+\item{dl}{\code{numeric}; the detection limit of the measured value.}
 \item{surv}{\code{\link{Surv}}; measurement represented as censored data of \emph{interval} type.}
 Additional attributes associated with the returned data frame include: \code{Parameter_id}, a unique parameter identifier; \code{Parameter_name}, a parameter name; and \code{Units}, the parameter units.
 }

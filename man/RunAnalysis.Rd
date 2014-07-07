@@ -12,17 +12,17 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 }
 
 \arguments{
-\item{processed.obs}{\code{\link{list}}, see documentation for \code{\link{ProcessObs}} function for details.}
-\item{processed.config}{\code{\link{data.frame}}, see documentation for \code{\link{ProcessConfig}} function for details.}
-\item{path}{character, the path name of the folder where output data is written.}
-\item{id}{character, an analysis identifier that is used to construct output file names.}
-\item{sdate, edate}{\code{\link{Date}} or character; the start and end date corresponding to the period of interest.
+\item{processed.obs}{\code{list}; see documentation for \code{\link{ProcessObs}} function for details.}
+\item{processed.config}{\code{data.frame}; see documentation for \code{\link{ProcessConfig}} function for details.}
+\item{path}{\code{character}; the path name of the folder where output data is written.}
+\item{id}{\code{character}; an analysis identifier that is used to construct output file names.}
+\item{sdate, edate}{\code{Date} or \code{character}; the start and end date corresponding to the period of interest.
   The required date format is \code{YYYY-M-D} (\code{\%Y-\%m-\%d}).}
-\item{graphics.type}{character; the graphics type for plot figures.
+\item{graphics.type}{\code{character}; the graphics type for plot figures.
   The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
-\item{merge.pdfs}{logical; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see documentation for \code{\link{MergePDFs}} function for details.}
-\item{site.locations}{\code{\link{SpatialPointsDataFrame}}, the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
+\item{merge.pdfs}{\code{logical}; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see documentation for \code{\link{MergePDFs}} function for details.}
+\item{site.locations}{\code{\link{SpatialPointsDataFrame}}; the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
 }
 
 \details{
@@ -33,26 +33,26 @@ Descriptive statistics are calculated using the \code{\link{survfit}} function w
 
 \value{
 This function returns a \code{data.frame} object with the following components:
-\item{Site_id}{numeric; a unique site identifier.}
-\item{Site_name}{character; a local site name.}
-\item{Parameter_id}{character; a unique parameter identifier.}
-\item{sdate, edate}{Date; the start and end date corresponding to the period of interest.}
-\item{n}{integer; the number of records in the analysis.}
-\item{nmissing}{integer; the number of missing values.}
-\item{nexact}{integer; the number of exact values.}
-\item{nleft}{integer; the number of left-censored values.}
-\item{ninterval}{integer; the number of interval-censored values.}
-\item{nbelow.rl}{integer; the number of values that are below the recording level.}
-\item{min, max}{numeric; the minimum and maximum values.}
-\item{median}{numeric; the median.}
-\item{mean}{numeric; the mean.}
-\item{sd}{numeric; the standard deviation.}
-\item{0.95LCL, 0.95UCL}{numeric; the lower and upper 95 percent confidence levels.}
-\item{c1, c2}{numeric; the coefficients in the AFT model on the log median survival time scale.}
-\item{scale}{numeric; the reciprocal of the shape parameter.}
-\item{p}{numeric; the \href{http://en.wikipedia.org/wiki/P-value}{p-value} statistic.}
-\item{slope}{numeric; the slope of the linear-predictor in percent change per year.}
-\item{trend}{character; significant trends are indicated by a p-value less than or equal to 0.05, a 5 percent acceptance level.
+\item{Site_id}{\code{numeric}; a unique site identifier.}
+\item{Site_name}{\code{character}; a local site name.}
+\item{Parameter_id}{\code{character}; a unique parameter identifier.}
+\item{sdate, edate}{\code{Date}; the start and end date corresponding to the period of interest.}
+\item{n}{\code{integer}; the number of records in the analysis.}
+\item{nmissing}{\code{integer}; the number of missing values.}
+\item{nexact}{\code{integer}; the number of exact values.}
+\item{nleft}{\code{integer}; the number of left-censored values.}
+\item{ninterval}{\code{integer}; the number of interval-censored values.}
+\item{nbelow.rl}{\code{integer}; the number of values that are below the recording level.}
+\item{min, max}{\code{numeric}; the minimum and maximum values.}
+\item{median}{\code{numeric}; the median.}
+\item{mean}{\code{numeric}; the mean.}
+\item{sd}{\code{numeric}; the standard deviation.}
+\item{0.95LCL, 0.95UCL}{\code{numeric}; the lower and upper 95 percent confidence levels.}
+\item{c1, c2}{\code{numeric}; the coefficients in the AFT model on the log median survival time scale.}
+\item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
+\item{p}{\code{numeric}; the \href{http://en.wikipedia.org/wiki/P-value}{p-value} statistic.}
+\item{slope}{\code{numeric}; the slope of the linear-predictor in percent change per year.}
+\item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to 0.05, a 5 percent acceptance level.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
   P-values greater than 0.05 are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.

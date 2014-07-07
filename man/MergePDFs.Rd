@@ -9,9 +9,9 @@
 \usage{MergePDFs(path, preserve.files = FALSE, open.file = FALSE)}
 
 \arguments{
-\item{path}{character; the path name of the folder containing the PDF files to merge.}
-\item{preserve.files}{logical; if \code{TRUE} all individual PDF files are preserved after a merge is completed.}
-\item{open.file}{logical; if \code{TRUE} the merged PDF file is opened using your systems default PDF viewer.}
+\item{path}{\code{character}; the path name of the folder containing the PDF files to merge.}
+\item{preserve.files}{\code{logical}; if \code{TRUE} all individual PDF files are preserved after a merge is completed.}
+\item{open.file}{\code{logical}; if \code{TRUE} the merged PDF file is opened using your systems default PDF viewer.}
 }
 
 \details{

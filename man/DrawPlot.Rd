@@ -9,13 +9,13 @@
 \usage{DrawPlot(d, model, xlim = NULL, ylim = NULL, main = NULL, ylab = "")}
 
 \arguments{
-\item{d}{\code{\link{data.frame}}; observations, where the first and second column is of class \code{\link{Date}} and \code{\link{Surv}}, respectively.
+\item{d}{\code{data.frame}; observations, where the first and second column is of class \code{Date} and \code{\link{Surv}}, respectively.
   Right-censored data is not permitted.}
 \item{model}{\code{\link{survreg}}; the survival regression model of \emph{interval} type (optional).}
-\item{xlim}{Date; the \code{x} limits (\code{x1}, \code{x2}) of the plot.}
-\item{ylim}{numeric; the \code{y} limits (\code{y1}, \code{y2}) of the plot.}
-\item{main}{character; a main title for the plot.}
-\item{ylab}{character; a label for the \code{y} axis.}
+\item{xlim}{\code{Date}; the \code{x} limits of the plot.}
+\item{ylim}{\code{numeric}; the \code{y} limits of the plot.}
+\item{main}{\code{character}; a main title for the plot.}
+\item{ylab}{\code{character}; a label for the \code{y} axis.}
 }
 
 \details{
