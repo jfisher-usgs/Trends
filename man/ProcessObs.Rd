@@ -28,7 +28,7 @@ Measured values and their uncertainty (reported as standard deviation) are locat
 Measured values are checked for an optional character code in the first digit of each character string value.
 Character codes are identified using the following criteria: \code{"<"}, below recording level; \code{"E"}, estimated value; \code{"V"}, contaminated; and \code{"U"}, undetectable.
 Values are stripped of their character code and converted to \code{numeric-class}.
-A warning is given if the character code is not recognized and its value set to \code{\link{NA}}.
+A warning is given if the character code is not recognized and its value set to \code{NA}.
 Measured values with character codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
 
 Required columns in the \code{parameters} data table include: \code{"Parameter_id"}, a unique parameter identifier; \code{"Parameter_name"}, the common parameter name; \code{"Units"}, the units associated with the measured parameter values; and \code{"sd"}, a column name in \code{observations} data table where the parameters standard deviation values are located.

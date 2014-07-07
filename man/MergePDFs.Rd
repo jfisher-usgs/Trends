@@ -30,31 +30,28 @@ Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cros
 \seealso{\code{\link{RunAnalysis}}, \code{\link{system}}}
 
 \examples{\donttest{
-path <- file.path(tempdir(), "merge")
-dir.create(path)
+# Create a temporary directory
+dir.create(path <- file.path(tempdir(), "merge"))
 
-f1 <- file.path(path, "f1.pdf")
-f2 <- file.path(path, "f2.pdf")
-f3 <- file.path(path, "f3.pdf")
-
-pdf(f1)
+# Write three single-page PDF files to the temporary directory
+pdf(file.path(path, "f1.pdf"))
 plot(seq_len(10), main = "f1a")
 plot(sin, -pi, 2 * pi, main = "f1b")
 plot(qnorm, col = "red", main = "f1c")
 dev.off()
-
-pdf(f2)
+pdf(file.path(path, "f2.pdf"))
 plot(table(rpois(100, 5)), type = "h", col = "yellow", main = "f2a")
 dev.off()
-
-pdf(f3)
+pdf(file.path(path, "f3.pdf"))
 plot(x <- sort(rnorm(47)), type = "s", col = "green", main = "f3a")
 plot(x, main = "f3b")
 dev.off()
 
+# Merge PDF files into a single file and open it in your default viewer
 MergePDFs(path, open.file = TRUE)
 
-unlink(paste0(path, ".pdf"))
+# Remove PDF files
+unlink(path, recursive = TRUE)
 }}
 
 \keyword{utilities}

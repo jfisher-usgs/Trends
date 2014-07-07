@@ -28,7 +28,6 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \details{
 This function uses the \code{\link{survreg}} function to fit a parametric survival regression model, an accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model, to the censored data.
 The assumed distribution for the censored data is the \code{"lognormal"} distribution.
-Descriptive statistics are calculated using the \code{\link{survfit}} function when interval-censored data is present, while the \code{\link{cenfit}} function is used when there is left-censored data and no interval-censored data.
 }
 
 \value{
@@ -45,9 +44,8 @@ This function returns a \code{data.frame} object with the following components:
 \item{nbelow.rl}{\code{integer}; the number of values that are below the recording level.}
 \item{min, max}{\code{numeric}; the minimum and maximum values.}
 \item{median}{\code{numeric}; the median.}
-\item{mean}{\code{numeric}; the mean.}
-\item{sd}{\code{numeric}; the standard deviation.}
-\item{0.95LCL, 0.95UCL}{\code{numeric}; the lower and upper 95 percent confidence levels.}
+\item{mean, sd}{\code{numeric}; the mean and standard deviation, set to \code{NA} if censored data is present.}
+\item{iter}{\code{numeric}; the number of iterations required for convergence. If \code{NA}, the regression did not converge after 100 iterations.}
 \item{c1, c2}{\code{numeric}; the coefficients in the AFT model on the log median survival time scale.}
 \item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
 \item{p}{\code{numeric}; the \href{http://en.wikipedia.org/wiki/P-value}{p-value} statistic.}
@@ -56,7 +54,7 @@ This function returns a \code{data.frame} object with the following components:
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
   P-values greater than 0.05 are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
-If in addition, a file-based graphics type is selected, plots are drawn to external files; otherwise, plots are drawn to the \sQuote{active} device.
+If in addition a file-based graphics type is selected, plots are drawn to external files.
 }
 
 \author{J.C. Fisher and L.C. Davis}
@@ -64,27 +62,35 @@ If in addition, a file-based graphics type is selected, plots are drawn to exter
 \seealso{\code{\link{DrawPlot}}}
 
 \examples{
+# Specify global arguments for reading table formatted data in a text file
 read.args <- list(header = TRUE, sep = "\t", colClasses = "character",
                   na.strings = "", fill = TRUE, strip.white = TRUE,
                   comment.char = "", flush = TRUE, stringsAsFactors = FALSE)
-path.in <- system.file("extdata", "SIR2014", package = "Trends")
 
+# Read input files
+path.in <- system.file("extdata", "SIR2014", package = "Trends")
 file <- file.path(path.in, "Observations.tsv")
 observations <- do.call(read.table, c(list(file), read.args))
 file <- file.path(path.in, "Parameters.tsv")
 parameters <- do.call(read.table, c(list(file), read.args))
 file <- file.path(path.in, "Detection_Limits.tsv")
 detection.limits <- do.call(read.table, c(list(file), read.args))
+file <- file.path(path.in, "Config_VOC.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+
+# Process observations
 processed.obs <- ProcessObs(observations, parameters, detection.limits,
                             date.fmt = "\%m/\%d/\%Y")
 
+# Plot data for a single parameter at a specific site
 d <- processed.obs[["P32102"]]
 d <- d[d$Site_id == "433002113021701", c("Date", "surv")]
 DrawPlot(d, main = "RWMC Production", ylab = "Carbon Tetrachloride")
 
-file <- file.path(path.in, "Config_VOC.tsv")
-config <- do.call(read.table, c(list(file), read.args))
+# Configure sites, parameters, and duration for analysis
 processed.config <- tail(ProcessConfig(config, processed.obs))
+
+# Run analysis
 stats <- RunAnalysis(processed.obs, processed.config,
                      sdate = "1987-01-01", edate = "2012-12-31")
 }

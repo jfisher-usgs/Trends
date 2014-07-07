@@ -17,8 +17,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   stats <- data.frame(d, "sdate"=sdate, "edate"=edate, "n"=NA, "nmissing"=NA,
                       "nexact"=NA, "nleft"=NA, "ninterval"=NA, "nbelow.rl"=NA,
                       "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA,
-                      "0.95LCL"=NA, "0.95UCL"=NA, "c1"=NA, "c2"=NA, "scale"=NA,
-                      "p"=NA, "slope"=NA, "trend"=NA, check.names=FALSE)
+                      "iter"=NA, "c1"=NA, "c2"=NA, "scale"=NA, "p"=NA, 
+                      "slope"=NA, "trend"=NA, check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
     d <- processed.obs[[processed.config[i, "Parameter_id"]]]
@@ -47,39 +47,32 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     if (any(is.left))
       stats[i, "min"] <- 0
 
-    model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
-                                      control=survreg.control(maxiter=100)))
-    models[[i]] <- model
+    maximum.iterations <- 100
+    control <- survreg.control(maxiter=maximum.iterations)
+    model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal", 
+                                      control=control))
+    stats[i, "iter"] <- if (model$iter < maximum.iterations) model$iter else NA
 
     p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
     slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # % change per yr
+    vars <- c("c1", "c2", "scale", "p", "slope")
+    stats[i, vars] <- c(model$coefficients, model$scale, p, slope)
 
-    model.info <- c()
-    model.info[c("c1", "c2")] <- model$coefficients
-    model.info["scale"] <- model$scale
-    model.info["p"] <- p
-    model.info["slope"] <- slope
-    stats[i, names(model.info)] <- model.info
+    if (!anyNA(c(p, slope))) {
+      significance.level <- 0.05
+      is.trend <- p <= significance.level
+      stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
+    }
 
-    is.trend <- !anyNA(c(p, slope)) & p <= 0.05
-    stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
-
-    if (any(is.interval)) {
-      fit <- summary(survfit(d$surv ~ 1, type="kaplan-meier"))$table
-      vars <- c("median", "0.95LCL", "0.95UCL")
-      stats[i, vars] <- fit[vars]
-    } else if (any(is.left)) {
-      is.not.missing <- !is.na(d$status)
-      fit <- cenfit(d$time1[is.not.missing], is.left[is.not.missing])  # k-m
-      vars <- c("mean", "0.95LCL", "0.95UCL")
-      stats[i, vars] <- suppressWarnings(mean(fit)[vars])
-      stats[i, "median"] <- suppressWarnings(median(fit))
-      stats[i, "sd"]     <- suppressWarnings(sd(fit))
+    if (any(is.interval) || any(is.left)) {
+      stats[i, "median"] <- median(predict(model, type="response"))
     } else {
       stats[i, "median"] <- median(d$time1, na.rm=TRUE)
-      stats[i, "mean"]   <- mean(d$time1, na.rm=TRUE)
-      stats[i, "sd"]     <- sd(d$time1, na.rm=TRUE)
+      stats[i, "mean"] <- mean(d$time1, na.rm=TRUE)
+      stats[i, "sd"] <- sd(d$time1, na.rm=TRUE)
     }
+    
+    models[[i]] <- model
   }
 
   id.path <- .CreateDir(path, id, graphics.type)

@@ -29,6 +29,7 @@ The 50th percentile of the regression model is drawn as a curved line and the in
 \seealso{\code{\link{RunAnalysis}}}
 
 \examples{
+# Create time-series data set with exact, left-censored, and interval-censored data
 n <- 30
 x <- as.Date(sort(sample(1:1000, n)), origin = as.Date("1992-02-15"))
 time1 <- runif(n, min = 0, max = 100)
@@ -37,9 +38,12 @@ time1[sample(1:n, 10)] <- NA
 idxs <- sample(1:n, 10)
 time1[idxs] <- time2[idxs]
 y <- survival::Surv(time1, time2, type = "interval2")
-
 d <- data.frame(x, y)
+
+# Fit the data with a regression model
 model <- survival::survreg(y ~ x, data = d)
+
+# Plot the data and regression model
 DrawPlot(d, model, main = "Title", ylab = "Value")
 }
 
