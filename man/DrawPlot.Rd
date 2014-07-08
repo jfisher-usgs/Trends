@@ -21,7 +21,7 @@
 \details{
 Exact data is drawn as points.
 Left- and interval-censored data is drawn as vertical lines with short-horizontal lines at the interval bounds.
-The 50th percentile of the regression model is drawn as a curved line and the interval between the 10th and 90th confidence bands is drawn as a solid polygon.
+The 50th percentile of the regression model is drawn as a curved line and the interval between the 10th and 90th confidence bands as a solid polygon.
 }
 
 \author{J.C. Fisher}

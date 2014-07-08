@@ -8,7 +8,7 @@ ProcessConfig <- function(config, processed.obs) {
     p <- strsplit(d$Parameter_id, ",")[[1]]
     p <- unique(sub("^[[:space:]]*(.*?)[[:space:]]*$", "\\1", p, perl=TRUE))
     d$Parameter_id <- NULL
-    d <- data.frame(d, Parameter_id=p, rec=i, row.names=NULL,
+    d <- data.frame(d, Parameter_id=p, row=i, row.names=NULL,
                     stringsAsFactors=FALSE)
     return(d)
   }

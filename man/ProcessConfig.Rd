@@ -25,7 +25,7 @@ Returns a \code{data.frame} object with the following components:
 \item{Site_id}{\code{numeric}; a unique site identifier.}
 \item{Site_name}{\code{character}; a local site name.}
 \item{Parameter_id}{\code{character}; a unique parameter identifier.}
-\item{rec}{\code{integer}; the record (row) index in the \code{config} data table.}
+\item{row}{\code{integer}; the row index in the \code{config} data table.}
 }
 
 \author{J.C. Fisher}

@@ -37,6 +37,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{Site_id}{\code{numeric}; a unique site identifier.}
 \item{Site_name}{\code{character}; a local site name.}
 \item{Parameter_id}{\code{character}; a unique parameter identifier.}
+\item{Parameter_name}{\code{character}; a common parameter name.}
 \item{sdate, edate}{\code{Date}; the start and end date corresponding to the period of interest.}
 \item{n}{\code{integer}; the number of records in the analysis.}
 \item{nmissing}{\code{integer}; the number of missing values.}
