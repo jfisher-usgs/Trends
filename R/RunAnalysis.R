@@ -17,7 +17,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   stats <- data.frame(d, "sdate"=sdate, "edate"=edate, "n"=NA, "nmissing"=NA,
                       "nexact"=NA, "nleft"=NA, "ninterval"=NA, "nbelow.rl"=NA,
                       "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA,
-                      "iter"=NA, "c1"=NA, "c2"=NA, "scale"=NA, "p"=NA, 
+                      "iter"=NA, "c1"=NA, "c2"=NA, "scale"=NA, "p"=NA,
                       "slope"=NA, "trend"=NA, check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
@@ -49,9 +49,17 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
     maximum.iterations <- 100
     control <- survreg.control(maxiter=maximum.iterations)
-    model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal", 
+    model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
                                       control=control))
-    stats[i, "iter"] <- if (model$iter < maximum.iterations) model$iter else NA
+
+    is.converge <- model$iter < maximum.iterations
+    stats[i, "iter"] <- ifelse(is.converge, model$iter, NA)
+    if (is.converge) {
+      models[[i]] <- model
+    } else {
+      models[[i]] <- NA
+      next()
+    }
 
     p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
     slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # % change per yr
@@ -71,8 +79,6 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       stats[i, "mean"] <- mean(d$time1, na.rm=TRUE)
       stats[i, "sd"] <- sd(d$time1, na.rm=TRUE)
     }
-    
-    models[[i]] <- model
   }
 
   id.path <- .CreateDir(path, id, graphics.type)
@@ -109,7 +115,9 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     file <- file.path(path, paste0(id, ".tsv"))
     write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
   }
-  if (inherits(site.locations, "SpatialPointsDataFrame")) {
+
+  is.rgdal <- suppressPackageStartupMessages(require("rgdal", quietly=TRUE))
+  if (is.rgdal && inherits(site.locations, "SpatialPointsDataFrame")) {
     idxs <- match(stats$Site_id, site.locations@data$Site_id)
     if (anyNA(idxs)) {
       stop("site id(s) not found in 'spatial.locations'")

@@ -1,8 +1,5 @@
 import(survival)
 
-importFrom(sp, SpatialPointsDataFrame)
-importFrom(rgdal, readOGR, writeOGR)
-
 export(DrawPlot,
        MergePDFs,
        ProcessConfig,

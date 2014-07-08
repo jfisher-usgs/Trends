@@ -22,12 +22,12 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
   The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
 \item{merge.pdfs}{\code{logical}; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see documentation for \code{\link{MergePDFs}} function for details.}
-\item{site.locations}{\code{\link{SpatialPointsDataFrame}}; the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
+\item{site.locations}{\code{SpatialPointsDataFrame}; the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
 }
 
 \details{
-This function uses the \code{\link{survreg}} function to fit a parametric survival regression model, an accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model, to the censored data.
-The assumed distribution for the censored data is the \code{"lognormal"} distribution.
+This function uses the \code{\link{survreg}} function to fit an accelerated failure time model (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT model}) to the data.
+The data is assumed to follow a \href{http://en.wikipedia.org/wiki/Lognormal}{log-normal} distribution.
 }
 
 \value{

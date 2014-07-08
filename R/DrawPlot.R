@@ -8,7 +8,8 @@ DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
     stop("wrong class for fields in data frame 'd'")
   if (attr(d[, 2], "type") != "interval")
     stop("survival object must be of 'interval' type")
-  if (!missing(model) && !inherits(model, "survreg"))
+  is.model <- ifelse(missing(model) || is.na(model), FALSE, TRUE)
+  if (is.model && !inherits(model, "survreg"))
     stop("wrong class for agrument 'model'")
 
   d <- cbind(d[, 1:2], as.matrix(d[, 2]))
@@ -35,7 +36,7 @@ DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
   plot(NA, xlim=xlim, ylim=ylim, xaxt="n", yaxt="n", xaxs="i", yaxs="i",
        xlab="", ylab=ylab, type="n", main=main, frame.plot=FALSE)
 
-  if (!missing(model)) {
+  if (is.model) {
     x <- seq(xlim[1], xlim[2], "days")
     newdata <- list(x)
     names(newdata) <- names(model$coefficients)[2]
@@ -63,7 +64,7 @@ DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
 
   box(lwd=lwd)
 
-  if (!missing(model)) {
+  if (is.model) {
     p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
     if (is.na(p))
       return()

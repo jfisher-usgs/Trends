@@ -5,8 +5,8 @@ Title: Trend analysis of Monitoring Network Data
 Author: Jason C. Fisher and Linda C. Davis
 Maintainer: Jason C. Fisher <jfisher@usgs.gov>
 Depends: R (>= 3.1.0)
-Imports: survival, sp, rgdal
-Suggests: knitr
+Imports: survival
+Suggests: rgdal, knitr
 SystemRequirements: PDFtk Server (>= 2.02, optional)
 Description: This package is for identifying trends in data from multiple
   observation sites. Parametric regression is applied to censored data.

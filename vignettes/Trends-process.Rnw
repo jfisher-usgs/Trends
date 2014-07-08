@@ -1,6 +1,6 @@
 % \VignetteIndexEntry{Processing Instructions for the 2014 Trend Analysis}
 % \VignetteEngine{knitr::knitr}
-% \VignetteDepends{Trends, survival, sp, rgdal}
+% \VignetteDepends{Trends, survival, rgdal}
 
 \documentclass{article}
 
