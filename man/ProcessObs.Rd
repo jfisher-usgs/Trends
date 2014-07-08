@@ -16,7 +16,7 @@ ProcessObs(observations, parameters, detection.limits = NULL, date.fmt = "\%Y-\%
 \item{observations}{\code{data.frame}; observational data records, see \sQuote{Details} section.}
 \item{parameters}{\code{data.frame}; parameter descriptions, see \sQuote{Details} section.}
 \item{detection.limits}{\code{data.frame}; detection limits (optional), see \sQuote{Details} section.}
-\item{date.fmt}{\code{character}; the date format used to convert character strings to class \code{\link{Date}}.}
+\item{date.fmt}{\code{character}; the date format used to convert character strings to \code{Date-class}.}
 }
 
 \details{

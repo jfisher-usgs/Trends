@@ -14,7 +14,7 @@ DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
 
   d <- cbind(d[, 1:2], as.matrix(d[, 2]))
   if (any(d$status == 0))  # right censored
-    stop("no right censored data allowed")
+    stop("right-censored data is not allowed")
   d <- d[!is.na(d$status), , drop=FALSE]
   is.exact <- d$status == 1
   d$time2[is.exact] <- d$time1[is.exact]  # exact

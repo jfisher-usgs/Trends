@@ -8,8 +8,8 @@
 
 \usage{
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
-            control = survreg.control(iter.max = 100), graphics.type = "", 
-            merge.pdfs = TRUE, site.locations = NULL)
+            control = survreg.control(iter.max = 100), sig.level = 0.05, 
+            graphics.type = "", merge.pdfs = TRUE, site.locations = NULL)
 }
 
 \arguments{
@@ -20,6 +20,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \item{sdate, edate}{\code{Date} or \code{character}; the start and end date corresponding to the period of interest.
   The required date format is \code{YYYY-M-D} (\code{\%Y-\%m-\%d}).}
 \item{control}{\code{list}; regression control values in the format produced by the \code{\link{survreg.control}} function.}
+\item{sig.level}{\code{numeric}; the \href{http://en.wikipedia.org/wiki/Significance_level}{significance level} of a statistical hypothesis test.}
 \item{graphics.type}{\code{character}; the graphics type for plot figures.
   The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
@@ -28,8 +29,9 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 }
 
 \details{
-This function uses the \code{\link{survreg}} function to fit an accelerated failure time model (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT model}) to the data.
-The data is assumed to follow a \href{http://en.wikipedia.org/wiki/Lognormal}{lognormal} distribution.
+This function uses the \code{\link{survreg}} function to fit a parametric survival regression model; specifically a class of survival models known as the accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model.
+Data are assumed to follow a \href{http://en.wikipedia.org/wiki/Lognormal}{lognormal} distribution.
+Note that if none of the data are censored, the survival regression becomes identical to ordinary least squares regression.
 }
 
 \value{
@@ -53,9 +55,9 @@ This function returns a \code{data.frame} object with the following components:
 \item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
 \item{p}{\code{numeric}; the \href{http://en.wikipedia.org/wiki/P-value}{p-value} statistic.}
 \item{slope}{\code{numeric}; the slope of the linear-predictor in percent change per year.}
-\item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to 0.05, a 5 percent acceptance level.
+\item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to \code{sig.level}.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
-  P-values greater than 0.05 are specified as having no significant trend (\code{"none"}).}
+  P-values greater than \code{sig.level} are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
 If in addition a file-based graphics type is selected, plots are drawn to external files.
 }

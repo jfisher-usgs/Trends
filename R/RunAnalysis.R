@@ -1,6 +1,7 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, control=survreg.control(iter.max=100), 
-                        graphics.type="", merge.pdfs=TRUE, site.locations=NULL) {
+                        sig.level=0.05, graphics.type="", merge.pdfs=TRUE, 
+                        site.locations=NULL) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -51,7 +52,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       stats[i, "min"] <- 0
 
     model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
-                                      control=control))
+                                      control=control, score=TRUE))
 
     is.converge <- model$iter < control$iter.max
     stats[i, "iter"] <- ifelse(is.converge, model$iter, NA)
@@ -68,8 +69,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     stats[i, vars] <- c(model$coefficients, model$scale, p, slope)
 
     if (!anyNA(c(p, slope))) {
-      significance.level <- 0.05
-      is.trend <- p <= significance.level
+      is.trend <- p <= sig.level
       stats[i, "trend"] <- ifelse(is.trend, ifelse(slope > 0, "+", "-"), "none")
     }
 
