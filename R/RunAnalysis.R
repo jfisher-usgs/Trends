@@ -1,6 +1,6 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
-                        edate=NA, graphics.type="", merge.pdfs=TRUE,
-                        site.locations=NULL) {
+                        edate=NA, control=survreg.control(iter.max=100), 
+                        graphics.type="", merge.pdfs=TRUE, site.locations=NULL) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -14,15 +14,18 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   models <- list()
 
   d <- processed.config[, c("Site_id", "Site_name", "Parameter_id")]
-  stats <- data.frame(d, "sdate"=sdate, "edate"=edate, "n"=NA, "nmissing"=NA,
-                      "nexact"=NA, "nleft"=NA, "ninterval"=NA, "nbelow.rl"=NA,
-                      "min"=NA, "max"=NA, "median"=NA, "mean"=NA, "sd"=NA,
-                      "iter"=NA, "c1"=NA, "c2"=NA, "scale"=NA, "p"=NA,
-                      "slope"=NA, "trend"=NA, check.names=FALSE)
+  stats <- data.frame(d, "Parameter_name"=NA, "sdate"=sdate, "edate"=edate, 
+                      "n"=NA, "nmissing"=NA, "nexact"=NA, "nleft"=NA, 
+                      "ninterval"=NA, "nbelow.rl"=NA, "min"=NA, "max"=NA, 
+                      "median"=NA, "mean"=NA, "sd"=NA, "iter"=NA, "c1"=NA, 
+                      "c2"=NA, "scale"=NA, "p"=NA, "slope"=NA, "trend"=NA, 
+                      check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
     d <- processed.obs[[processed.config[i, "Parameter_id"]]]
     d <- d[d$Site_id == processed.config[i, "Site_id"], ]
+    
+    stats[i, "Parameter_name"] <- attr(d, "Parameter_name")
 
     date1 <- if (is.na(sdate)) min(d$Date) else sdate
     date2 <- if (is.na(edate)) max(d$Date) else edate
@@ -47,12 +50,10 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     if (any(is.left))
       stats[i, "min"] <- 0
 
-    maximum.iterations <- 100
-    control <- survreg.control(maxiter=maximum.iterations)
     model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
                                       control=control))
 
-    is.converge <- model$iter < maximum.iterations
+    is.converge <- model$iter < control$iter.max
     stats[i, "iter"] <- ifelse(is.converge, model$iter, NA)
     if (is.converge) {
       models[[i]] <- model

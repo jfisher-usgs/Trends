@@ -8,7 +8,8 @@
 
 \usage{
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
-            graphics.type = "", merge.pdfs = TRUE, site.locations = NULL)
+            control = survreg.control(iter.max = 100), graphics.type = "", 
+            merge.pdfs = TRUE, site.locations = NULL)
 }
 
 \arguments{
@@ -18,6 +19,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \item{id}{\code{character}; an analysis identifier that is used to construct output file names.}
 \item{sdate, edate}{\code{Date} or \code{character}; the start and end date corresponding to the period of interest.
   The required date format is \code{YYYY-M-D} (\code{\%Y-\%m-\%d}).}
+\item{control}{\code{list}; regression control values in the format produced by the \code{\link{survreg.control}} function.}
 \item{graphics.type}{\code{character}; the graphics type for plot figures.
   The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
@@ -27,7 +29,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 
 \details{
 This function uses the \code{\link{survreg}} function to fit an accelerated failure time model (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT model}) to the data.
-The data is assumed to follow a \href{http://en.wikipedia.org/wiki/Lognormal}{log-normal} distribution.
+The data is assumed to follow a \href{http://en.wikipedia.org/wiki/Lognormal}{lognormal} distribution.
 }
 
 \value{
@@ -45,7 +47,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{min, max}{\code{numeric}; the minimum and maximum values.}
 \item{median}{\code{numeric}; the median.}
 \item{mean, sd}{\code{numeric}; the mean and standard deviation, set to \code{NA} if censored data is present.}
-\item{iter}{\code{numeric}; the number of iterations required for convergence. If \code{NA}, the regression did not converge after 100 iterations.}
+\item{iter}{\code{numeric}; the number of iterations required for convergence. If \code{NA}, the regression ran out of iterations and did not converge.}
 \item{c1, c2}{\code{numeric}; the coefficients in the AFT model on the log median survival time scale.}
 \item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
 \item{p}{\code{numeric}; the \href{http://en.wikipedia.org/wiki/P-value}{p-value} statistic.}
