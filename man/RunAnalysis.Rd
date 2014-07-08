@@ -20,7 +20,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \item{sdate, edate}{\code{Date} or \code{character}; the start and end date corresponding to the period of interest.
   The required date format is \code{YYYY-M-D} (\code{\%Y-\%m-\%d}).}
 \item{control}{\code{list}; regression control values in the format produced by the \code{\link{survreg.control}} function.}
-\item{sig.level}{\code{numeric}; the \href{http://en.wikipedia.org/wiki/Significance_level}{significance level} of a statistical hypothesis test.}
+\item{sig.level}{\code{numeric}; the significance level to be coupled with the p-value, see \sQuote{Value} section.}
 \item{graphics.type}{\code{character}; the graphics type for plot figures.
   The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
@@ -30,7 +30,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 
 \details{
 This function uses the \code{\link{survreg}} function to fit a parametric survival regression model; specifically a class of survival models known as the accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model.
-Data are assumed to follow a \href{http://en.wikipedia.org/wiki/Lognormal}{lognormal} distribution.
+Data are assumed to follow a log-normal distribution.
 Note that if none of the data are censored, the survival regression becomes identical to ordinary least squares regression.
 }
 
@@ -53,7 +53,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{iter}{\code{numeric}; the number of iterations required for convergence. If \code{NA}, the regression ran out of iterations and did not converge.}
 \item{c1, c2}{\code{numeric}; the coefficients in the AFT model on the log median survival time scale.}
 \item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
-\item{p}{\code{numeric}; the \href{http://en.wikipedia.org/wiki/P-value}{p-value} statistic.}
+\item{p}{\code{numeric}; the p-value.}
 \item{slope}{\code{numeric}; the slope of the linear-predictor in percent change per year.}
 \item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to \code{sig.level}.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
