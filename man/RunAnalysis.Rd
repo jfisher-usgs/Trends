@@ -8,7 +8,7 @@
 
 \usage{
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
-            control = survreg.control(iter.max = 100), sig.level = 0.05, 
+            control = survreg.control(iter.max = 100), sig.level = 0.05,
             graphics.type = "", merge.pdfs = TRUE, site.locations = NULL)
 }
 
@@ -29,7 +29,8 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 }
 
 \details{
-This function uses the \code{\link{survreg}} function to fit a parametric survival regression model; specifically a class of survival models known as the accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model.
+This function uses the \code{\link{survreg}} function to fit a parametric survival regression model.
+The specific class of survival model is known as the accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model.
 Data are assumed to follow a log-normal distribution.
 Note that if none of the data are censored, the survival regression becomes identical to ordinary least squares regression.
 }
@@ -55,9 +56,9 @@ This function returns a \code{data.frame} object with the following components:
 \item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
 \item{p}{\code{numeric}; the p-value.}
 \item{slope}{\code{numeric}; the slope of the linear-predictor in percent change per year.}
-\item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to \code{sig.level}.
+\item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to the significance level.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
-  P-values greater than \code{sig.level} are specified as having no significant trend (\code{"none"}).}
+  P-values greater than the significance level are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
 If in addition a file-based graphics type is selected, plots are drawn to external files.
 }
