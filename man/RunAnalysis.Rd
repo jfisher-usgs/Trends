@@ -58,7 +58,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{slope}{\code{numeric}; the slope of the linear-predictor in percent change per year.}
 \item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to the significance level.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
-  P-values greater than the significance level are specified as having no significant trend (\code{"none"}).}
+  p-values greater than the significance level are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
 If in addition a file-based graphics type is selected, plots are drawn to external files.
 }
