@@ -29,9 +29,9 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 }
 
 \details{
-This function uses the \code{\link{survreg}} function to fit a parametric survival regression model.
+The \code{\link{survreg}} function is used to fit a parametric survival regression model to the observed data, both censored and uncensored.
 The specific class of survival model is known as the accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model.
-Data are assumed to follow a log-normal distribution.
+Data are assumed to follow a log-normal distribution because most of the variables have values spanning wo or more orders of magnitude..
 Note that if none of the data are censored, the survival regression becomes identical to ordinary least squares regression.
 }
 
@@ -42,13 +42,13 @@ This function returns a \code{data.frame} object with the following components:
 \item{Parameter_id}{\code{character}; a unique parameter identifier.}
 \item{Parameter_name}{\code{character}; a common parameter name.}
 \item{sdate, edate}{\code{Date}; the start and end date corresponding to the period of interest.}
-\item{n}{\code{integer}; the number of records in the analysis.}
+\item{n}{\code{integer}; the number of observations in the analysis.}
 \item{nmissing}{\code{integer}; the number of missing values.}
-\item{nexact}{\code{integer}; the number of exact values.}
-\item{nleft}{\code{integer}; the number of left-censored values.}
-\item{ninterval}{\code{integer}; the number of interval-censored values.}
-\item{nbelow.rl}{\code{integer}; the number of values that are below the recording level.}
-\item{min, max}{\code{numeric}; the minimum and maximum values.}
+\item{nexact}{\code{integer}; the number of exact (uncensored) observations.}
+\item{nleft}{\code{integer}; the number of left-censored observations.}
+\item{ninterval}{\code{integer}; the number of interval-censored observations.}
+\item{nbelow.rl}{\code{integer}; the number of observations that are below the recording level.}
+\item{min, max}{\code{numeric}; the minimum and maximum.}
 \item{median}{\code{numeric}; the median.}
 \item{mean, sd}{\code{numeric}; the mean and standard deviation, set to \code{NA} if censored data is present.}
 \item{iter}{\code{numeric}; the number of iterations required for convergence. If \code{NA}, the regression ran out of iterations and did not converge.}
