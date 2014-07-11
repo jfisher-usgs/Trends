@@ -20,7 +20,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \item{sdate, edate}{\code{Date} or \code{character}; the start and end date corresponding to the period of interest.
   The required date format is \code{YYYY-M-D} (\code{\%Y-\%m-\%d}).}
 \item{control}{\code{list}; regression control values in the format produced by the \code{\link{survreg.control}} function.}
-\item{sig.level}{\code{numeric}; the significance level to be coupled with the p-value, see \sQuote{Value} section.}
+\item{sig.level}{\code{numeric}; the significance level to be coupled with the \emph{p}-value, see \sQuote{Value} section.}
 \item{graphics.type}{\code{character}; the graphics type for plot figures.
   The default is the \sQuote{active} device, typically the normal screen device.
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
@@ -31,8 +31,8 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \details{
 The \code{\link{survreg}} function is used to fit a parametric survival regression model to the observed data, both censored and uncensored.
 The specific class of survival model is known as the accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model.
-Data are assumed to follow a log-normal distribution because most of the variables have values spanning wo or more orders of magnitude..
-Note that if none of the data are censored, the survival regression becomes identical to ordinary least squares regression.
+Data are assumed to follow a log-normal distribution because most of the variables have values spanning two or more orders of magnitude.
+Note that if all observations are uncensored, the survival regression becomes identical to ordinary least squares regression.
 }
 
 \value{
@@ -54,11 +54,11 @@ This function returns a \code{data.frame} object with the following components:
 \item{iter}{\code{numeric}; the number of iterations required for convergence. If \code{NA}, the regression ran out of iterations and did not converge.}
 \item{c1, c2}{\code{numeric}; the coefficients in the AFT model on the log median survival time scale.}
 \item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
-\item{p}{\code{numeric}; the p-value.}
+\item{p}{\code{numeric}; the \emph{p}-value.}
 \item{slope}{\code{numeric}; the slope of the linear-predictor in percent change per year.}
-\item{trend}{\code{character}; significant trends are indicated by a p-value less than or equal to the significance level.
+\item{trend}{\code{character}; significant trends are indicated by a \emph{p}-value less than or equal to the significance level.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
-  p-values greater than the significance level are specified as having no significant trend (\code{"none"}).}
+  \emph{p}-values greater than the significance level are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
 If in addition a file-based graphics type is selected, plots are drawn to external files.
 }
