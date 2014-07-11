@@ -1,8 +1,8 @@
 Trends
 ======
 
-This [R](http://www.r-project.org/ "R") package is for identifying trends in data from multiple observation sites in a monitoring network. 
-A parametric survial regression model is fit to the data.
+This [R](http://www.r-project.org/ "R") package is for identifying trends in data from multiple observation sites in a monitoring network.
+A parametric survial regression model is used to fit the observed data, both censored and uncensored.
 
 The set of standards used for coding **Trends** is documented in [Google's R Style Guide](http://google-styleguide.googlecode.com/svn/trunk/google-r-style.html "Google's R Style Guide").
 

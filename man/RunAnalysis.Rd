@@ -30,8 +30,11 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 
 \details{
 The \code{\link{survreg}} function is used to fit a parametric survival regression model to the observed data, both censored and uncensored.
-The specific class of survival model is known as the accelerated failure time (\href{http://en.wikipedia.org/wiki/Accelerated_failure_time_model}{AFT}) model.
-Data are assumed to follow a log-normal distribution because most of the variables have values spanning two or more orders of magnitude.
+The specific class of survival model is known as the accelerated failure time (AFT) model.
+A maximum-likelihood estimation (MLE) method is used to estimate parameters in the AFT model.
+The MLE is solved by maximizing the log-likelihood using the Newton-Raphson method, an iterative root-finding algorithm.
+The likelihood function is dependent on the distribution of the observed data.
+Data is assumed to follow a log-normal distribution because most of the variables have values spanning two or more orders of magnitude.
 Note that if all observations are uncensored, the survival regression becomes identical to ordinary least squares regression.
 }
 
@@ -51,7 +54,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{min, max}{\code{numeric}; the minimum and maximum.}
 \item{median}{\code{numeric}; the median.}
 \item{mean, sd}{\code{numeric}; the mean and standard deviation, set to \code{NA} if censored data is present.}
-\item{iter}{\code{numeric}; the number of iterations required for convergence. If \code{NA}, the regression ran out of iterations and did not converge.}
+\item{iter}{\code{numeric}; the number of Newton-Raphson iterations required for convergence. If \code{NA}, the regression failed or ran out of iterations and did not converge.}
 \item{c1, c2}{\code{numeric}; the coefficients in the AFT model on the log median survival time scale.}
 \item{scale}{\code{numeric}; the reciprocal of the shape parameter.}
 \item{p}{\code{numeric}; the \emph{p}-value.}
