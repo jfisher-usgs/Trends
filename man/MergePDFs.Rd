@@ -4,7 +4,7 @@
 
 \title{Merge PDF Files}
 
-\description{This function combines Portable Document Format (PDF) files into a new file.}
+\description{This function combines Portable Document Format (PDF) files into a single new PDF file.}
 
 \usage{MergePDFs(path, preserve.files = FALSE, open.file = FALSE)}
 

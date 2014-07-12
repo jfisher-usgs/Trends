@@ -5,7 +5,7 @@
 \title{Process Observations}
 
 \description{
-This function processes observations.
+This function processes measurements from observation sites in a monitoring network.
 }
 
 \usage{

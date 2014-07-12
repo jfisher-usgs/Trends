@@ -4,7 +4,7 @@
 
 \title{Process Configuration}
 
-\description{This function processes a configuration data table.}
+\description{This function processes configuration records for data analysis.}
 
 \usage{ProcessConfig(config, processed.obs)}
 
