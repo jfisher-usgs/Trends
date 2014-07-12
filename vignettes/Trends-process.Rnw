@@ -52,15 +52,11 @@ install.packages(c("survival", "rgdal"))
 install.packages("Trends", repos = "http://jfisher-usgs.github.com/R/")
 @
 
+Support for merging Portable Document Format (PDF) files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.
+
 Load the \href{https://github.com/jfisher-usgs/Trends}{Trends} package into the current \textbf{R} session:
 <<>>=
 library(Trends)
-@
-
-Support for merging Portable Document Format (PDF) files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.
-Determine if \textbf{pdftk} is accessible from \textbf{R}:
-<<>>=
-merge.pdfs <- as.logical(nchar(Sys.which("pdftk")))
 @
 
 Set the full path name to the directory containing input files; list all files in this directory:
@@ -122,8 +118,7 @@ config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
             id = "Stats_NWQL_1989-2012", sdate = "1989-01-01", edate = "2012-12-31",
-            site.locations = site.locations, merge.pdfs = merge.pdfs,
-            graphics.type = graphics.type)
+            site.locations = site.locations, graphics.type = graphics.type)
 @
 
 Run trend analysis for field parameters (pH, Specific Conductance, and Temperature) from 1989 through 2012:
@@ -133,8 +128,7 @@ config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
             id = "Stats_Field_1989-2012", sdate = "1989-01-01", edate = "2012-12-31",
-            site.locations = site.locations, merge.pdfs = merge.pdfs,
-            graphics.type = graphics.type)
+            site.locations = site.locations, graphics.type = graphics.type)
 @
 
 Run trend analysis for radiation-related (RAD) parameters from 1981 through 2012:
@@ -144,8 +138,7 @@ config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
             id = "Stats_RAD_1981-2012", sdate = "1981-01-01", edate = "2012-12-31",
-            site.locations = site.locations, merge.pdfs = merge.pdfs,
-            graphics.type = graphics.type)
+            site.locations = site.locations, graphics.type = graphics.type)
 @
 
 Run trend analysis for volotile organic compond (VOC) parameters from 1987 through 2012:
@@ -155,8 +148,7 @@ config <- do.call(read.table, c(list(file), read.args))
 processed.config <- ProcessConfig(config, processed.obs)
 RunAnalysis(processed.obs, processed.config, path = path.out,
             id = "Stats_VOC_1987-2012", sdate = "1987-01-01", edate = "2012-12-31",
-            site.locations = site.locations, merge.pdfs = merge.pdfs,
-            graphics.type = graphics.type)
+            site.locations = site.locations, graphics.type = graphics.type)
 @
 
 Run trend analysis for Carbon Tetrachloride (P32102), a VOC parameter, at the RWMC Production well (433002113021701) from 2002 through 2012:
@@ -164,7 +156,7 @@ Run trend analysis for Carbon Tetrachloride (P32102), a VOC parameter, at the RW
 rec <- with(processed.config, Parameter_id == "P32102" & Site_id == "433002113021701")
 RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
             id = "Stats_RWMC_CCl4_2002-2012",sdate = "2002-01-01", edate = "2012-12-31",
-            merge.pdfs = merge.pdfs, graphics.type = graphics.type)
+            graphics.type = graphics.type)
 @
 
 To reprocess the 2014 water quality data, evaluate \textbf{R} code extracted from this vignette using the following command:

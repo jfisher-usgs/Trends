@@ -1,6 +1,6 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
-                        edate=NA, control=survreg.control(iter.max=100), 
-                        sig.level=0.05, graphics.type="", merge.pdfs=TRUE, 
+                        edate=NA, control=survreg.control(iter.max=100),
+                        sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
                         site.locations=NULL) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
@@ -15,17 +15,17 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   models <- list()
 
   d <- processed.config[, c("Site_id", "Site_name", "Parameter_id")]
-  stats <- data.frame(d, "Parameter_name"=NA, "sdate"=sdate, "edate"=edate, 
-                      "n"=NA, "nmissing"=NA, "nexact"=NA, "nleft"=NA, 
-                      "ninterval"=NA, "nbelow.rl"=NA, "min"=NA, "max"=NA, 
-                      "median"=NA, "mean"=NA, "sd"=NA, "iter"=NA, "c1"=NA, 
-                      "c2"=NA, "scale"=NA, "p"=NA, "slope"=NA, "trend"=NA, 
+  stats <- data.frame(d, "Parameter_name"=NA, "sdate"=sdate, "edate"=edate,
+                      "n"=NA, "nmissing"=NA, "nexact"=NA, "nleft"=NA,
+                      "ninterval"=NA, "nbelow.rl"=NA, "min"=NA, "max"=NA,
+                      "median"=NA, "mean"=NA, "sd"=NA, "iter"=NA, "c1"=NA,
+                      "c2"=NA, "scale"=NA, "p"=NA, "slope"=NA, "trend"=NA,
                       check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
     d <- processed.obs[[processed.config[i, "Parameter_id"]]]
     d <- d[d$Site_id == processed.config[i, "Site_id"], ]
-    
+
     stats[i, "Parameter_name"] <- attr(d, "Parameter_name")
 
     date1 <- if (is.na(sdate)) min(d$Date) else sdate
@@ -109,8 +109,12 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   }
   if (graphics.type %in% c("pdf", "postscript"))
     graphics.off()
-  if (graphics.type == "pdf" && merge.pdfs)
-    MergePDFs(id.path)
+  if (graphics.type == "pdf" && merge.pdfs) {
+    if (as.logical(nchar(Sys.which("pdftk"))))
+      MergePDFs(id.path)
+    else
+      warning("PDFtk Server cannot be found so PDF files will not be merged")
+  }
 
   if (!missing(path) & !missing(id)) {
     file <- file.path(path, paste0(id, ".tsv"))
