@@ -19,7 +19,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \item{id}{\code{character}; an analysis identifier that is used to construct output file names.}
 \item{sdate, edate}{\code{Date} or \code{character}; the start and end date corresponding to the period of interest.
   The required date format is \code{YYYY-M-D} (\code{\%Y-\%m-\%d}).}
-\item{control}{\code{list}; regression control values in the format produced by the \code{\link{survreg.control}} function.}
+\item{control}{\code{list}; the regression control values in the format produced by the \code{\link{survreg.control}} function.}
 \item{sig.level}{\code{numeric}; the significance level to be coupled with the \emph{p}-value, see \sQuote{Value} section.}
 \item{graphics.type}{\code{character}; the graphics type for plot figures.
   The default is the \sQuote{active} device, typically the normal screen device.

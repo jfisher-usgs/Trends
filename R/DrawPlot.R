@@ -1,4 +1,5 @@
-DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
+DrawPlot <- function(d, model, plim=c(0.1, 0.9), xlim=NULL, ylim=NULL,
+                     main=NULL, ylab="") {
 
   if (!inherits(d, "data.frame"))
     stop("wrong class for argument 'd'")
@@ -12,12 +13,22 @@ DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
   if (is.model && !inherits(model, "survreg"))
     stop("wrong class for agrument 'model'")
 
+  if (!is.null(plim)) {
+    if (!is.numeric(plim) || length(plim) != 2 ||
+        identical(plim[1], plim[2])) {
+      warning("problem with argument 'plim', confidence band not drawn")
+      plim <- NULL
+    } else {
+      plim[is.na(plim)] <- 0.5
+    }
+  }
+
   d <- cbind(d[, 1:2], as.matrix(d[, 2]))
   if (any(d$status == 0))  # right censored
     stop("right-censored data is not allowed")
   d <- d[!is.na(d$status), , drop=FALSE]
   is.exact <- d$status == 1
-  d$time2[is.exact] <- d$time1[is.exact]  # exact
+  d$time2[is.exact] <- d$time1[is.exact]  # uncensored
   d$time2[d$status == 2] <- 0  # left censored
 
   xran <- extendrange(d[, 1], f=0.02)
@@ -40,9 +51,14 @@ DrawPlot <- function(d, model, xlim=NULL, ylim=NULL, main=NULL, ylab="") {
     x <- seq(xlim[1], xlim[2], "days")
     newdata <- list(x)
     names(newdata) <- names(model$coefficients)[2]
-    y <- predict(model, newdata, type="quantile", p=c(0.1, 0.9, 0.5))
-    polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
-    lines(x, y[, 3], lty=1, lwd=1, col="#F02311")
+
+    if (!is.null(plim)) {
+      y <- predict(model, newdata, type="quantile", p=plim)
+      polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
+    }
+
+    y <- predict(model, newdata, type="quantile", p=0.5)
+    lines(x, y, lty=1, lwd=1, col="#F02311")
   }
 
   lwd <- 0.5 * (96 / (6 * 12))

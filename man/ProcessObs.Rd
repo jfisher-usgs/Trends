@@ -13,14 +13,13 @@ ProcessObs(observations, parameters, detection.limits = NULL, date.fmt = "\%Y-\%
 }
 
 \arguments{
-\item{observations}{\code{data.frame}; observational data records, see \sQuote{Details} section.}
-\item{parameters}{\code{data.frame}; parameter descriptions, see \sQuote{Details} section.}
-\item{detection.limits}{\code{data.frame}; detection limits (optional), see \sQuote{Details} section.}
+\item{observations}{\code{data.frame}; the observed data records, see \sQuote{Details} section.}
+\item{parameters}{\code{data.frame}; the parameter descriptions, see \sQuote{Details} section.}
+\item{detection.limits}{\code{data.frame}; the detection limits, see \sQuote{Details} section.}
 \item{date.fmt}{\code{character}; the date format used to convert character strings to \code{Date-class}.}
 }
 
 \details{
-
 The \code{observations}, \code{parameters}, and \code{detection.limits} data tables are composed of \code{character-class} components.
 
 Required columns in the \code{observations} data table include: \code{"Site_id"}, a unique site identifier; \code{"Site_name"}, a local site name; and \code{"Date"}, the observation date.
@@ -54,7 +53,7 @@ Each data table has the following components:
 \item{value}{\code{numeric}; the measured value.}
 \item{sd}{\code{numeric}; the standard deviation of the measured value.}
 \item{dl}{\code{numeric}; the detection limit of the measured value.}
-\item{surv}{\code{\link{Surv}}; measurement represented as censored data of \emph{interval} type.}
+\item{surv}{\code{\link{Surv}}; observation as censored or uncensored data of \emph{interval} type, that is, \code{attr(surv, "type") == "interval"}.}
 Additional attributes associated with the returned data frame include: \code{Parameter_id}, a unique parameter identifier; \code{Parameter_name}, a parameter name; and \code{Units}, the parameter units.
 }
 
