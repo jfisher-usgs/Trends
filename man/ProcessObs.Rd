@@ -22,8 +22,8 @@ ProcessObs(observations, parameters, detection.limits = NULL, date.fmt = "\%Y-\%
 \details{
 The \code{observations}, \code{parameters}, and \code{detection.limits} data tables are composed of \code{character-class} components.
 
-Required columns in the \code{observations} data table include: \code{"Site_id"}, a unique site identifier; \code{"Site_name"}, a local site name; and \code{"Date"}, the observation date.
-Measured values and their uncertainty (reported as standard deviation) are located in the subsequent columns; a unique parameter identifier is specified for each of these column names.
+Required columns in the \code{observations} data table include: \code{"Site_id"}, a unique site identifier; \code{"Site_name"}, a local site name; and \code{"Date"}, the measurement date.
+Measured values and their uncertainty (reported as standard deviation) are located in the subsequent columns; a unique parameter identifier, or parameters standard deviation identifier, is specified for each of these column names.
 Measured values are checked for an optional character code in the first digit of each character string value.
 Character codes are identified using the following criteria: \code{"<"}, below recording level; \code{"E"}, estimated value; \code{"V"}, contaminated; and \code{"U"}, undetectable.
 Values are stripped of their character code and converted to \code{numeric-class}.
