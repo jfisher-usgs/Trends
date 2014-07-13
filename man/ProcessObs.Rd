@@ -38,7 +38,7 @@ Detection limit values are located in subsequent columns; a unique parameter ide
 A measured value is converted to censored data under the following conditions:
 (1) the measured value is below the recording level and represented as \emph{left-censored} data; or
 (2) there is a standard deviation and detection limit associated with the measured value, therefore, it is represented as \emph{interval-censored} data.
-The upper and lower bounds of interval-censored data are calculated by adding and subtracting 3 standard deviations from the measured value, respectively.
+The upper and lower bounds of interval-censored data are calculated by adding and subtracting three standard deviations from the measured value, respectively.
 Note that interval-censored data with a lower bound less than the detection limit is represented as left-censored data.
 For left- and interval-censored data, the upper bound is set to the detection limit when its magnitude is less than the detection limit.
 }
@@ -53,7 +53,7 @@ Each data table has the following components:
 \item{value}{\code{numeric}; the measured value.}
 \item{sd}{\code{numeric}; the standard deviation of the measured value.}
 \item{dl}{\code{numeric}; the detection limit of the measured value.}
-\item{surv}{\code{\link{Surv}}; observation as censored or uncensored data of \emph{interval} type, that is, \code{attr(surv, "type") == "interval"}.}
+\item{surv}{\code{\link{Surv}}; the observation as censored or uncensored data of \emph{interval} type.}
 Additional attributes associated with the returned data frame include: \code{Parameter_id}, a unique parameter identifier; \code{Parameter_name}, a parameter name; and \code{Units}, the parameter units.
 }
 

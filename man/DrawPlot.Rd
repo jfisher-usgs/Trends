@@ -12,8 +12,9 @@ DrawPlot(d, model, plim = c(0.1, 0.9), xlim = NULL, ylim = NULL,
 }
 
 \arguments{
-\item{d}{\code{data.frame}; observations, where the first (\code{x}) and second (\code{y}) column is of class \code{Date} and \code{\link{Surv}}, respectively.
-  The \code{Surv} component is of type \emph{interval} with no right-censored data.}
+\item{d}{\code{data.frame}; observations, where the first and second column is of class \code{Date} and \code{\link{Surv}}, respectively.
+  The \code{Surv} component is of type \emph{interval}, that is, \code{attr(d[, 2], "type") == "interval"}.
+  Right-censored data is not permitted.}
 \item{model}{\code{\link{survreg}}; a survival regression model.}
 \item{plim}{\code{numeric}; the percentile limits defining the confidence band of the regression model.}
 \item{xlim}{\code{Date}; the \code{x} limits of the plot.}
