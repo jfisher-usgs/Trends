@@ -84,6 +84,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
   id.path <- .CreateDir(path, id, graphics.type)
 
+  figs <- NULL
   plot.count <- list()
   for (i in seq_len(nrow(processed.config))) {
     site.id <- processed.config$Site_id[i]
@@ -93,7 +94,9 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       plot.count[[site.id]] <- 0L
     if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
       letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
-      .OpenDevice(id.path, paste0(site.name, "_", letter), graphics.type)
+      fig <- paste0(site.name, "_", letter)
+      .OpenDevice(id.path,  fig, graphics.type)
+      figs <- c(figs, fig)
       main <- paste0(site.name, " (", site.id, ")")
     } else {
       main <- NULL
@@ -111,7 +114,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     graphics.off()
   if (graphics.type == "pdf" && merge.pdfs) {
     if (as.logical(nchar(Sys.which("pdftk"))))
-      MergePDFs(id.path)
+      MergePDFs(id.path, paste0(figs, ".pdf"))
     else
       warning("PDFtk Server cannot be found so PDF files will not be merged")
   }
@@ -169,4 +172,5 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     }
   }
   par(mfrow=c(4, 1), omi=c(4, 3.5, 6, 4.5) * 0.166667)
+  invisible()
 }

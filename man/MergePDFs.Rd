@@ -6,10 +6,11 @@
 
 \description{This function combines Portable Document Format (PDF) files into a single new PDF file.}
 
-\usage{MergePDFs(path, preserve.files = FALSE, open.file = FALSE)}
+\usage{MergePDFs(path, pdfs, preserve.files = FALSE, open.file = FALSE)}
 
 \arguments{
 \item{path}{\code{character}; the path name of the folder containing the PDF files to merge.}
+\item{pdfs}{\code{character}; a vector of file names, if missing, all PDF files under \code{path} will be merged.}
 \item{preserve.files}{\code{logical}; if \code{TRUE} all individual PDF files are preserved after a merge is completed.}
 \item{open.file}{\code{logical}; if \code{TRUE} the merged PDF file is opened using your systems default PDF viewer.}
 }

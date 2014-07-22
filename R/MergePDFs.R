@@ -1,12 +1,14 @@
 # Combine PDF files into a new file.
 # Requires PDFtk Server (http://www.pdflabs.com/tools/pdftk-server/)
 
-MergePDFs <- function(path, preserve.files=FALSE, open.file=FALSE) {
+MergePDFs <- function(path, pdfs, preserve.files=FALSE, open.file=FALSE) {
 
   if (Sys.which("pdftk") == "")
     stop("pdftk not found, check that PDFtk Server is installed")
 
-  pdfs <- list.files(path, pattern=".pdf$")
+  if (missing(pdfs))
+    pdfs <- list.files(path, pattern=".pdf$")
+
   if (length(pdfs) == 0 || pdfs == "")
     stop("path does not exist or input files are missing")
 
@@ -33,7 +35,8 @@ MergePDFs <- function(path, preserve.files=FALSE, open.file=FALSE) {
   }
   pages <- cumsum(npages) - (npages - 1L)
 
-  cmd[2] <- paste("pdftk *.pdf cat output", shQuote(tmp.pdf))
+  input.pdf.files <- paste(shQuote(pdfs), collapse=" ")
+  cmd[2] <- paste("pdftk", input.pdf.files, "cat output", shQuote(tmp.pdf))
   cat(cmd, file=tmp.bat, sep="\n")
   system(command=tmp.bat, show.output.on.console=FALSE)
 
@@ -59,7 +62,7 @@ MergePDFs <- function(path, preserve.files=FALSE, open.file=FALSE) {
   unlink(tmp.bat)
   unlink(tmp.pdf)
   if (!preserve.files) {
-    unlink(file.path(path, "*.pdf"))
+    unlink(file.path(path, pdfs))
     if (length(list.files(path)) == 0)
       unlink(path, recursive=TRUE, force=TRUE)
   }
