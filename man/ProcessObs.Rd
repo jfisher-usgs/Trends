@@ -39,8 +39,8 @@ A measured value is converted to censored data under the following conditions:
 (1) the measured value is below the recording level and represented as \emph{left-censored} data; or
 (2) there is a standard deviation and detection limit associated with the measured value, therefore, it is represented as \emph{interval-censored} data.
 The upper and lower bounds of interval-censored data are calculated by adding and subtracting three standard deviations from the measured value, respectively.
-Note that interval-censored data with a lower bound less than the detection limit is represented as left-censored data.
-For left- and interval-censored data, the upper bound is set to the detection limit when its magnitude is less than the detection limit.
+Note that interval-censored data with a lower or upper bound less than the detection limit is represented as left-censored data.
+For left-censored data, the upper bound is set to the detection limit when its magnitude is less than the detection limit.
 }
 
 \value{
