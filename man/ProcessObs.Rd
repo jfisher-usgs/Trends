@@ -9,24 +9,25 @@ This function processes measurements from observation sites in a monitoring netw
 }
 
 \usage{
-ProcessObs(observations, parameters, detection.limits = NULL, date.fmt = "\%Y-\%m-\%d")
+ProcessObs(observations, parameters, detection.limits = NULL,
+           date.fmt = "\%Y-\%m-\%d")
 }
 
 \arguments{
 \item{observations}{\code{data.frame}; the observed data records, see \sQuote{Details} section.}
 \item{parameters}{\code{data.frame}; the parameter descriptions, see \sQuote{Details} section.}
 \item{detection.limits}{\code{data.frame}; the detection limits, see \sQuote{Details} section.}
-\item{date.fmt}{\code{character}; the date format used to convert character strings to \code{Date-class}.}
+\item{date.fmt}{\code{character}; the date format used to convert character strings to \code{Date}-class.}
 }
 
 \details{
-The \code{observations}, \code{parameters}, and \code{detection.limits} data tables are composed of \code{character-class} components.
+The \code{observations}, \code{parameters}, and \code{detection.limits} data tables are composed of \code{character}-class components.
 
 Required columns in the \code{observations} data table include: \code{"Site_id"}, a unique site identifier; \code{"Site_name"}, a local site name; and \code{"Date"}, the measurement date.
 Measured values and their uncertainty (reported as standard deviation) are located in the subsequent columns; a unique parameter identifier, or parameters standard deviation identifier, is specified for each of these column names.
 Measured values are checked for an optional character code in the first digit of each character string value.
 Character codes are identified using the following criteria: \code{"<"}, below recording level; \code{"E"}, estimated value; \code{"V"}, contaminated; and \code{"U"}, undetectable.
-Values are stripped of their character code and converted to \code{numeric-class}.
+Values are stripped of their character code and converted to \code{numeric}-class.
 A warning is given if the character code is not recognized and its value set to \code{NA}.
 Measured values with character codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
 

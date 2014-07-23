@@ -15,7 +15,7 @@
 
 \details{
 Required columns in the \code{config} data frame include: \code{"Site_id"}, a unique site identifier; \code{"Site_name"}, a local site name; and \code{"Parameter_id"}, unique parameter identifier(s).
-The \code{config} data table is composed of \code{character-class} components.
+The \code{config} data table is composed of \code{character}-class components.
 Multiple parameter identifiers can be specified in a single value of \code{config$Parameter_id} using a comma separator.
 Site and parameter identifiers not found in the \code{processed.obs} list are removed.
 }

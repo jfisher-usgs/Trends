@@ -6,11 +6,17 @@ MergePDFs <- function(path, pdfs, preserve.files=FALSE, open.file=FALSE) {
   if (Sys.which("pdftk") == "")
     stop("pdftk not found, check that PDFtk Server is installed")
 
-  if (missing(pdfs))
-    pdfs <- list.files(path, pattern=".pdf$")
+  if (file.access(path) < 0)
+    stop("path does not exist")
 
-  if (length(pdfs) == 0 || pdfs == "")
-    stop("path does not exist or input files are missing")
+  if (missing(pdfs)) {
+    pdfs <- list.files(path, pattern=".pdf$")
+    if (length(pdfs) == 0 || pdfs == "")
+      stop("no input PDF files were found in path")
+  }
+
+  if (any(file.access(file.path(path, pdfs)) < 0))
+    stop("one or more input PDF files is missing")
 
   out.pdf <- file.path(dirname(path), paste0(basename(path), ".pdf"))
   if(file.exists(out.pdf))
