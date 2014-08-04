@@ -4,7 +4,7 @@ Trends
 This [R](http://www.r-project.org/ "R") package is for identifying trends in data from multiple observation sites in a monitoring network.
 A parametric survival regression model is used to fit the observed data, both censored and uncensored.
 
-The set of standards used for coding **Trends** is documented in [Google's R Style Guide](http://google-styleguide.googlecode.com/svn/trunk/google-r-style.html "Google's R Style Guide").
+The set of standards used for coding **Trends** is documented in [Google's R Style Guide](http://google-styleguide.googlecode.com/svn/trunk/Rguide.xml "Google's R Style Guide").
 
 Install
 -------
