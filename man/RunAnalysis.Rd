@@ -50,7 +50,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{nexact}{\code{integer}; the number of exact (uncensored) observations.}
 \item{nleft}{\code{integer}; the number of left-censored observations.}
 \item{ninterval}{\code{integer}; the number of interval-censored observations.}
-\item{nbelow.rl}{\code{integer}; the number of observations that are below the recording level.}
+\item{nbelow.rl}{\code{integer}; the number of observations that are below the reporting level.}
 \item{min, max}{\code{numeric}; the minimum and maximum.}
 \item{median}{\code{numeric}; the median.}
 \item{mean, sd}{\code{numeric}; the mean and standard deviation, set to \code{NA} if censored data is present.}

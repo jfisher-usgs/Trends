@@ -26,7 +26,7 @@ The \code{observations}, \code{parameters}, and \code{detection.limits} data tab
 Required columns in the \code{observations} data table include: \code{"Site_id"}, a unique site identifier; \code{"Site_name"}, a local site name; and \code{"Date"}, the measurement date.
 Measured values and their uncertainty (reported as standard deviation) are located in the subsequent columns; a unique parameter identifier, or parameters standard deviation identifier, is specified for each of these column names.
 Measured values are checked for an optional character code in the first digit of each character string value.
-Character codes are identified using the following criteria: \code{"<"}, below recording level; \code{"E"}, estimated value; \code{"V"}, contaminated; and \code{"U"}, undetectable.
+Character codes are identified using the following criteria: \code{"<"}, below reporting level; \code{"E"}, estimated value; \code{"V"}, contaminated; and \code{"U"}, undetectable.
 Values are stripped of their character code and converted to \code{numeric}-class.
 A warning is given if the character code is not recognized and its value set to \code{NA}.
 Measured values with character codes of \code{"V"} and \code{"U"} are also set to \code{NA}.
@@ -37,7 +37,7 @@ A required column in the \code{detection.limits} data table is \code{"Date"}, th
 Detection limit values are located in subsequent columns; a unique parameter identifier is specified for each of these column names.
 
 A measured value is converted to censored data under the following conditions:
-(1) the measured value is below the recording level and represented as \emph{left-censored} data; or
+(1) the measured value is below the reporting level and represented as \emph{left-censored} data; or
 (2) there is a standard deviation and detection limit associated with the measured value, therefore, it is represented as \emph{interval-censored} data.
 The upper and lower bounds of interval-censored data are calculated by adding and subtracting three standard deviations from the measured value, respectively.
 Note that interval-censored data with a lower or upper bound less than the detection limit is represented as left-censored data.
