@@ -11,7 +11,8 @@ Install
 If R is not already installed on your computer, download and install the latest binary distribution from [CRAN](http://cran.r-project.org/ "The Comprehensive R Archive Network").
 Open an R session and install the required packages using the following commands:
 
-    repos <- c("http://jfisher-usgs.github.com/R", "http://cran.us.r-project.org")
+    repos <- c("http://cran.us.r-project.org", "http://jfisher-usgs.github.com/R")
+    update.packages(ask = FALSE, repos = repos[1])
     install.packages("Trends", repos = repos, dependencies = TRUE, type = "both")
 
 Support for merging PDF files into a new file requires [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"), a cross-platform command-line tool for working with PDFs; download and install.
