@@ -1,7 +1,7 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, control=survreg.control(iter.max=100),
                         sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
-                        site.locations=NULL) {
+                        site.locations=NULL, thin.data.mo=NULL) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -31,6 +31,14 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     date1 <- if (is.na(sdate)) min(d$Date) else sdate
     date2 <- if (is.na(edate)) max(d$Date) else edate
     d <- d[d$Date >= date1 & d$Date <= date2, ]
+
+    if (!is.null(thin.data.mo) && thin.data.mo %in% month.name) {
+      d <- d[months(d$Date) %in% thin.data.mo, , drop=FALSE]
+      d <- d[!duplicated(as.integer(format(d$Date, "%Y"))), , drop=FALSE]
+      if (nrow(d) == 0)
+        stop("thinning the data results in empty data set")
+    }
+
     obs[[i]] <- d
 
     d <- cbind(d, as.matrix(d$surv))
@@ -47,7 +55,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     stats[i, "ninterval"] <- sum(is.interval)
     stats[i, "nbelow.rl"] <- sum(is.below.rl)
 
-    stats[i, c("min", "max")] <-  range(d$time1, na.rm=TRUE)
+    stats[i, c("min", "max")] <- range(d$time1, na.rm=TRUE)
     if (any(is.left))
       stats[i, "min"] <- 0
 
