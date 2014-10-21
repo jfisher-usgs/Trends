@@ -101,15 +101,26 @@ file <- file.path(path.in, "Detection_Limits.tsv")
 detection.limits <- do.call(read.table, c(list(file), read.args))
 @
 
+Process observational data:
+<<>>=
+processed.obs <- ProcessObs(observations, parameters, detection.limits,
+                            date.fmt = "%m/%d/%Y")
+@
+
 Read geo-referenced site locations from a point shapefile:
 <<>>=
 site.locations <- rgdal::readOGR(path.in, layer = "Site_Locations", verbose = FALSE)
 @
 
-Process observational data:
+Read water levels from a text file:
 <<>>=
-processed.obs <- ProcessObs(observations, parameters, detection.limits,
-                            date.fmt = "%m/%d/%Y")
+file <- file.path(path.in, "Water_Levels.tsv")
+water.levels <- do.call(read.table, c(list(file), read.args))
+@
+
+Process water-level data:
+<<>>=
+processed.wl <- ProcessWL(water.levels, date.fmt = "%Y-%m-%d %H:%M")
 @
 
 Run trend analysis for National Water Quality Laboratory (NWQL) parameters from 1989 through 2012:

@@ -64,6 +64,22 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
 
 
+    is.water.levels <- is.data.frame(water.levels)
+    if (is.water.levels)
+      idxs <- water.levels$Site_id == processed.config[i, "Site_id"]
+      if (sum(idxs) < 2)
+        stop("insufficient water-level data")
+      wl <- water.levels[idxs, -1]
+
+      d$wl <- approx(wl[, 1], wl[, 2], xout=d$Date)$y
+
+      if (anyNA(d$wl))
+        stop("unable to predict water levels")
+
+      d$wl.diff <- c(0, diff(d$wl))
+    }
+
+
 
 
     FUN <- function(formula) {
