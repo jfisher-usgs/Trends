@@ -1,7 +1,8 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, control=survreg.control(iter.max=100),
                         sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
-                        site.locations=NULL, thin.data.mo=NULL) {
+                        site.locations=NULL, model.seasonality=FALSE,
+                        thin.data.mo=NULL, water.levels=NULL) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -59,8 +60,33 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     if (any(is.left))
       stats[i, "min"] <- 0
 
-    model <- suppressWarnings(survreg(surv ~ Date, data=d, dist="lognormal",
-                                      control=control, score=TRUE))
+
+
+
+
+
+
+    FUN <- function(formula) {
+      return(suppressWarnings(survreg(formula, data=d, dist="lognormal",
+                                      control=control, score=TRUE)))
+    }
+
+    if (model.seasonality) {
+      model <- FUN(surv ~ Date + I(sin(2 * pi * as.numeric(Date) / 365.242)) +
+                                 I(cos(2 * pi * as.numeric(Date) / 365.242)))
+    } else {
+      model <- FUN(surv ~ Date)
+    }
+
+
+
+
+
+
+
+
+
+
 
     is.converge <- model$iter < control$iter.max
     stats[i, "iter"] <- ifelse(is.converge, model$iter, NA)
@@ -73,8 +99,11 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
     p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
     slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # % change per yr
+
+
     vars <- c("c1", "c2", "scale", "p", "slope")
-    stats[i, vars] <- c(model$coefficients, model$scale, p, slope)
+    stats[i, vars] <- c(model$coefficients[1:2], model$scale, p, slope)
+
 
     if (!anyNA(c(p, slope))) {
       is.trend <- p <= sig.level

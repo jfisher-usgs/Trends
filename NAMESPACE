@@ -4,6 +4,7 @@ export(DrawPlot,
        MergePDFs,
        ProcessConfig,
        ProcessObs,
+       ProcessWL,
        RunAnalysis,
        .CreateDir,
        .OpenDevice)
