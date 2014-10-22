@@ -38,8 +38,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       d <- d[months(d$Date) %in% thin.data.mo, , drop=FALSE]
       d <- d[!duplicated(as.integer(format(d$Date, "%Y"))), , drop=FALSE]
       if (nrow(d) == 0)
-        stop("thinning the data results in empty data set")
-      d$Date <- as.Date(paste0(format(d$Date, "%Y-%m"), "-15"))  # TODO(jfisher): is this necessary
+        stop("thinning data results in empty data set")
+###   d$Date <- as.Date(paste0(format(d$Date, "%Y-%m"), "-15"))
     }
 
     obs[[i]] <- d
