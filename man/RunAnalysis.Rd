@@ -10,7 +10,8 @@
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
             control = survreg.control(iter.max = 100), sig.level = 0.05,
             graphics.type = "", merge.pdfs = TRUE, site.locations = NULL,
-            model.seasonality = FALSE, thin.data.mo = NULL, water.levels = NULL)
+            model.seasonality = FALSE, thin.data.mo = NULL,
+            explanatory.data = NULL, calc.change = FALSE)
 }
 
 \arguments{
@@ -27,11 +28,14 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
 \item{merge.pdfs}{\code{logical}; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see documentation for \code{\link{MergePDFs}} function for details.}
 \item{site.locations}{\code{SpatialPointsDataFrame}; the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
-\item{model.seasonality}{\code{logical}; if \code{TRUE}, seasonal patterns are modeled by a trignometric regression.}
+\item{model.seasonality}{\code{logical}; if \code{TRUE}, seasonal patterns are modeled by a trigonometric regression.}
 \item{thin.data.mo}{\code{character}; the full name of a calendar month; if specified, data is thinned to one sample per year collected during this month.
   Allows verification that the variable sampling frequencies don't substantially affect the trend results.
   Thinning the data also could remove serial correlation in the more frequently sampled years.}
-\item{water.levels}{\code{data.frame}; something...}
+\item{explanatory.data}{\code{data.frame}; explanatory data used as a covariate in the trend model, see value from the \code{\link{ProcessWL}} function for the data table format.}
+\item{calc.change}{\code{logical}; if \code{TRUE}, the change in the explanatory variable from the current observation and the previous observation is calculated and used as a covariate in the trend model.
+  Requires specification of the the \code{explanatory.data} argument.
+  Should be used when the explanatory variable is monotonically increasing or decreasing during the entire trend period.}
 }
 
 \details{

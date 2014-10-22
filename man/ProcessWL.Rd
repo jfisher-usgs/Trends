@@ -14,7 +14,7 @@
 }
 
 \details{
-Required columns in the \code{water.levels} data frame include: \code{"SITE_NO"}, a unique site identifier; \code{"LEV_DT"}, the measurement date-time; \code{"ALT_VA"}, referenced land-surface elevation; and \code{"LEV_VA"}, depth below land surface to the water table.
+Required columns in the \code{water.levels} data table include: \code{"SITE_NO"}, a unique site identifier; \code{"LEV_DT"}, the measurement date-time; \code{"ALT_VA"}, referenced land-surface elevation; and \code{"LEV_VA"}, depth below land surface to the water table.
 The \code{water.levels} data table is composed of \code{character}-class components.
 }
 
@@ -22,7 +22,7 @@ The \code{water.levels} data table is composed of \code{character}-class compone
 Returns a \code{data.frame} object with the following components:
 \item{Site_id}{\code{factor}; a unique site identifier.}
 \item{Date}{\code{Date}; the measurement date.}
-\item{WL}{\code{numeric}; the water-level elevation.}
+\item{Var}{\code{numeric}; the water-level elevation.}
 }
 
 \author{J.C. Fisher}

@@ -2,7 +2,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, control=survreg.control(iter.max=100),
                         sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
                         site.locations=NULL, model.seasonality=FALSE,
-                        thin.data.mo=NULL, water.levels=NULL) {
+                        thin.data.mo=NULL, explanatory.data=NULL,
+                        calc.change=FALSE) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -63,20 +64,16 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
 
 
-
-    is.water.levels <- is.data.frame(water.levels)
-    if (is.water.levels)
-      idxs <- water.levels$Site_id == processed.config[i, "Site_id"]
+    if (is.data.frame(explanatory.data)) {
+      idxs <- explanatory.data$Site_id == processed.config[i, "Site_id"]
       if (sum(idxs) < 2)
-        stop("insufficient water-level data")
-      wl <- water.levels[idxs, -1]
-
-      d$wl <- approx(wl[, 1], wl[, 2], xout=d$Date)$y
-
-      if (anyNA(d$wl))
-        stop("unable to predict water levels")
-
-      d$wl.diff <- c(0, diff(d$wl))
+        stop("insufficient explanatory data")
+      e <- explanatory.data[idxs, -1]
+      d$explanatory.var <- approx(e[, 1], e[, 2], xout=d$Date)$y
+      if (anyNA(d$explanatory.var))
+        stop("unable to predict explanatory variable")
+      if (calc.change)
+        d$explanatory.var <- c(0, diff(d$explanatory.var))
     }
 
 
@@ -93,13 +90,6 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     } else {
       model <- FUN(surv ~ Date)
     }
-
-
-
-
-
-
-
 
 
 
