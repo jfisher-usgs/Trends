@@ -3,7 +3,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
                         site.locations=NULL, model.seasonality=FALSE,
                         thin.data.mo=NULL, explanatory.data=NULL,
-                        calc.change=FALSE) {
+                        first.diff=FALSE) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -66,14 +66,14 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
     if (is.data.frame(explanatory.data)) {
       idxs <- explanatory.data$Site_id == processed.config[i, "Site_id"]
-      if (sum(idxs) < 2)
+      if (sum(idxs) < 3)
         stop("insufficient explanatory data")
       e <- explanatory.data[idxs, -1]
       d$explanatory.var <- approx(e[, 1], e[, 2], xout=d$Date)$y
       if (anyNA(d$explanatory.var))
-        stop("unable to predict explanatory variable")
-      if (calc.change)
-        d$explanatory.var <- c(0, diff(d$explanatory.var))
+        stop("unable to predict explanatory variable at observation(s)")
+      if (first.diff)
+        d$explanatory.var <- c(NA, diff(d$explanatory.var))  # TODO(jfisher): check if equal intervals are required
     }
 
 
