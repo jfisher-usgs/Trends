@@ -1,9 +1,9 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, control=survreg.control(iter.max=100),
                         sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
-                        site.locations=NULL, model.seasonality=FALSE,
+                        site.locations=NULL, is.seasonality=FALSE,
                         thin.data.mo=NULL, explanatory.data=NULL,
-                        first.diff=FALSE) {
+                        is.diff=FALSE) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -39,6 +39,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       d <- d[!duplicated(as.integer(format(d$Date, "%Y"))), , drop=FALSE]
       if (nrow(d) == 0)
         stop("thinning the data results in empty data set")
+      d$Date <- as.Date(paste0(format(d$Date, "%Y-%m"), "-15"))  # TODO(jfisher): is this necessary
     }
 
     obs[[i]] <- d
@@ -61,10 +62,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     if (any(is.left))
       stats[i, "min"] <- 0
 
-
-
-
-    if (is.data.frame(explanatory.data)) {
+    is.explanatory <- is.data.frame(explanatory.data)
+    if (is.explanatory) {
       idxs <- explanatory.data$Site_id == processed.config[i, "Site_id"]
       if (sum(idxs) < 3)
         stop("insufficient explanatory data")
@@ -72,27 +71,23 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       d$explanatory.var <- approx(e[, 1], e[, 2], xout=d$Date)$y
       if (anyNA(d$explanatory.var))
         stop("unable to predict explanatory variable at observation(s)")
-      if (first.diff)
-        d$explanatory.var <- c(NA, diff(d$explanatory.var))  # TODO(jfisher): check if equal intervals are required
+      if (is.diff) {
+        t.diff <- diff(d$Date)
+        if (abs(max(t.diff) - min(t.diff)) > 1)
+          stop("1st order differences require non-irregular time series")
+        d$explanatory.var <- c(NA, diff(d$explanatory.var))
+      }
     }
 
-
-
-
-    FUN <- function(formula) {
-      return(suppressWarnings(survreg(formula, data=d, dist="lognormal",
-                                      control=control, score=TRUE)))
-    }
-
-    if (model.seasonality) {
-      model <- FUN(surv ~ Date + I(sin(2 * pi * as.numeric(Date) / 365.242)) +
-                                 I(cos(2 * pi * as.numeric(Date) / 365.242)))
-    } else {
-      model <- FUN(surv ~ Date)
-    }
-
-
-
+    x <- "surv ~ Date"
+    if (is.seasonality)
+      x <- c(x, "I(sin(2 * pi * as.numeric(Date) / 365.242))",
+                "I(cos(2 * pi * as.numeric(Date) / 365.242))")
+    if (is.explanatory)
+      x <- c(x, "explanatory.var")
+    formula <- as.formula(paste(x, collapse=" + "))
+    model <- suppressWarnings(survreg(formula, data=d, dist="lognormal",
+                                      control=control, score=TRUE))
 
     is.converge <- model$iter < control$iter.max
     stats[i, "iter"] <- ifelse(is.converge, model$iter, NA)
