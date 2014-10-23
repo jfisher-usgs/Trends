@@ -1,9 +1,9 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, control=survreg.control(iter.max=100),
                         sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
-                        site.locations=NULL, is.seasonality=FALSE,
-                        thin.data.mo=NULL, explanatory.data=NULL,
-                        is.diff=FALSE) {
+                        site.locations=NULL, thin.data.mo=NULL,
+                        is.seasonality=FALSE, explanatory.var=NULL,
+                        is.residual=FALSE) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -20,8 +20,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   stats <- data.frame(d, "Parameter_name"=NA, "sdate"=sdate, "edate"=edate,
                       "n"=NA, "nmissing"=NA, "nexact"=NA, "nleft"=NA,
                       "ninterval"=NA, "nbelow.rl"=NA, "min"=NA, "max"=NA,
-                      "median"=NA, "mean"=NA, "sd"=NA, "iter"=NA, "c1"=NA,
-                      "c2"=NA, "scale"=NA, "p"=NA, "slope"=NA, "trend"=NA,
+                      "median"=NA, "mean"=NA, "sd"=NA, "iter"=NA, "slope"=NA,
+                      "se"=NA, "p"=NA, "p.model"=NA, "trend"=NA,
                       check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
@@ -38,8 +38,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       d <- d[months(d$Date) %in% thin.data.mo, , drop=FALSE]
       d <- d[!duplicated(as.integer(format(d$Date, "%Y"))), , drop=FALSE]
       if (nrow(d) == 0)
-        stop("thinning data results in empty data set")
-###   d$Date <- as.Date(paste0(format(d$Date, "%Y-%m"), "-15"))
+        stop("thinning results in empty data set")
     }
 
     obs[[i]] <- d
@@ -62,29 +61,27 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     if (any(is.left))
       stats[i, "min"] <- 0
 
-    is.explanatory <- is.data.frame(explanatory.data)
+    is.explanatory <- is.data.frame(explanatory.var)
     if (is.explanatory) {
-      idxs <- explanatory.data$Site_id == processed.config[i, "Site_id"]
+      idxs <- explanatory.var$Site_id == processed.config[i, "Site_id"]
       if (sum(idxs) < 3)
         stop("insufficient explanatory data")
-      e <- explanatory.data[idxs, -1]
+      e <- explanatory.var[idxs, -1]
+      e <- e[order(e[, 1]), ]
       d$explanatory.var <- approx(e[, 1], e[, 2], xout=d$Date)$y
       if (anyNA(d$explanatory.var))
         stop("unable to predict explanatory variable at observation(s)")
-      if (is.diff) {
-        t.diff <- diff(d$Date)
-        if (abs(max(t.diff) - min(t.diff)) > 1)
-          stop("1st order differences require non-irregular time series")
-        d$explanatory.var <- c(NA, diff(d$explanatory.var))
+      if (is.residual) {
+        d$explanatory.var <- residuals(lm(explanatory.var ~ Date, data=d))
       }
     }
 
     x <- "surv ~ Date"
+    if (is.explanatory)
+      x <- c(x, "explanatory.var")
     if (is.seasonality)
       x <- c(x, "I(sin(2 * pi * as.numeric(Date) / 365.242))",
                 "I(cos(2 * pi * as.numeric(Date) / 365.242))")
-    if (is.explanatory)
-      x <- c(x, "explanatory.var")
     formula <- as.formula(paste(x, collapse=" + "))
     model <- suppressWarnings(survreg(formula, data=d, dist="lognormal",
                                       control=control, score=TRUE))
@@ -98,13 +95,15 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       next()
     }
 
-    p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
-    slope <- 100 * (exp(model$coefficients[2]) - 1) * 365.242  # % change per yr
+    summary.tbl <- summary(model)$table
+    v  <- summary.tbl["Date", "Value"]
+    se <- summary.tbl["Date", "Std. Error"]
+    p  <- summary.tbl["Date", "p"]
 
+    slope <- 100 * (exp(v) - 1) * 365.242  # % change per yr
+    p.model <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
 
-    vars <- c("c1", "c2", "scale", "p", "slope")
-    stats[i, vars] <- c(model$coefficients[1:2], model$scale, p, slope)
-
+    stats[i, c("slope", "se", "p", "p.model")] <- c(slope, se, p, p.model)
 
     if (!anyNA(c(p, slope))) {
       is.trend <- p <= sig.level

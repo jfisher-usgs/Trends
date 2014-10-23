@@ -81,7 +81,8 @@ DrawPlot <- function(d, model, plim=c(0.1, 0.9), xlim=NULL, ylim=NULL,
   box(lwd=lwd)
 
   if (is.model) {
-    p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
+#   p <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
+    p <- summary(model)$table[2, "p"]
     if (is.na(p))
       return()
     p <- ifelse(p < 0.001, "p < 0.001", paste("p =", sprintf("%.3f", p)))
