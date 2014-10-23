@@ -1,9 +1,9 @@
 RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                         edate=NA, control=survreg.control(iter.max=100),
                         sig.level=0.05, graphics.type="", merge.pdfs=TRUE,
-                        site.locations=NULL, thin.data.mo=NULL,
-                        is.seasonality=FALSE, explanatory.var=NULL,
-                        is.residual=FALSE) {
+                        site.locations=NULL, is.seasonality=FALSE,
+                        explanatory.var=NULL, is.residual=FALSE,
+                        thin.obs.mo=NULL) {
 
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
@@ -21,7 +21,7 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
                       "n"=NA, "nmissing"=NA, "nexact"=NA, "nleft"=NA,
                       "ninterval"=NA, "nbelow.rl"=NA, "min"=NA, "max"=NA,
                       "median"=NA, "mean"=NA, "sd"=NA, "iter"=NA, "slope"=NA,
-                      "se"=NA, "p"=NA, "p.model"=NA, "trend"=NA,
+                      "std.err"=NA, "p"=NA, "p.model"=NA, "trend"=NA,
                       check.names=FALSE)
 
   for (i in seq_len(nrow(processed.config))) {
@@ -34,8 +34,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     date2 <- if (is.na(edate)) max(d$Date) else edate
     d <- d[d$Date >= date1 & d$Date <= date2, ]
 
-    if (!is.null(thin.data.mo) && thin.data.mo %in% month.name) {
-      d <- d[months(d$Date) %in% thin.data.mo, , drop=FALSE]
+    if (!is.null(thin.obs.mo) && thin.obs.mo %in% month.name) {
+      d <- d[months(d$Date) %in% thin.obs.mo, , drop=FALSE]
       d <- d[!duplicated(as.integer(format(d$Date, "%Y"))), , drop=FALSE]
       if (nrow(d) == 0)
         stop("thinning results in empty data set")
@@ -96,14 +96,17 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     }
 
     summary.tbl <- summary(model)$table
-    v  <- summary.tbl["Date", "Value"]
-    se <- summary.tbl["Date", "Std. Error"]
-    p  <- summary.tbl["Date", "p"]
+    val <- summary.tbl["Date", "Value"]
+    se  <- summary.tbl["Date", "Std. Error"]
+    p   <- summary.tbl["Date", "p"]
 
-    slope <- 100 * (exp(v) - 1) * 365.242  # % change per yr
+    slope   <- 100 * (exp(val) - 1) * 365.242  # percent change per year
+    std.err <- 100 * (exp(se)  - 1) * 365.242
+
     p.model <- 1 - pchisq(2 * diff(model$loglik), sum(model$df) - model$idf)
 
-    stats[i, c("slope", "se", "p", "p.model")] <- c(slope, se, p, p.model)
+    vars <-  c("slope", "std.err", "p", "p.model")
+    stats[i, vars] <- c(slope, std.err, p, p.model)
 
     if (!anyNA(c(p, slope))) {
       is.trend <- p <= sig.level

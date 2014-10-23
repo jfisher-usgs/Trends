@@ -10,8 +10,8 @@
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
             control = survreg.control(iter.max = 100), sig.level = 0.05,
             graphics.type = "", merge.pdfs = TRUE, site.locations = NULL,
-            thin.data.mo = NULL, is.seasonality = FALSE, explanatory.var = NULL,
-            is.residual = FALSE)
+            is.seasonality = FALSE, explanatory.var = NULL, is.residual = FALSE,
+            thin.obs.mo = NULL)
 }
 
 \arguments{
@@ -28,14 +28,14 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
   A file-based device can be selected by specifying either \code{"\link{pdf}"} or \code{"\link{postscript}"}.}
 \item{merge.pdfs}{\code{logical}; if \code{TRUE} and \code{graphics.type = "pdf"} the figures are combined into a single PDF file, see documentation for \code{\link{MergePDFs}} function for details.}
 \item{site.locations}{\code{SpatialPointsDataFrame}; the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
-\item{thin.data.mo}{\code{character}; the full name of a calendar month; if specified, data is thinned to one sample per year collected during this month.
-  Allows verification that the variable sampling frequencies don't substantially affect the trend results.
-  Thinning the data also could remove serial correlation in the more frequently sampled years.}
 \item{is.seasonality}{\code{logical}; if \code{TRUE}, seasonal patterns are modeled by a trigonometric regression; as covariates in the trend model.}
 \item{explanatory.var}{\code{data.frame}; an explanatory variable added to the covariates of the trend model, see value from the \code{\link{ProcessWL}} function for the data table format.}
 \item{is.residual}{\code{logical}; if \code{TRUE}, the explanatory variable is transformed using its residuals from linear regression.
   Should be used when the explanatory variable is monotonically increasing or decreasing during the entire trend period.
   Requires specification of the \code{explanatory.var} argument.}
+\item{thin.obs.mo}{\code{character}; the full name of a calendar month; if specified, data is thinned to one observation per year collected during this month.
+  Allows verification that the variable sampling frequencies don't substantially affect the trend results.
+  Thinning the data also could remove serial correlation in the more frequently sampled years.}
 }
 
 \details{
@@ -66,7 +66,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{mean, sd}{\code{numeric}; the mean and standard deviation, set to \code{NA} if censored data is present.}
 \item{iter}{\code{numeric}; the number of Newton-Raphson iterations required for convergence. If \code{NA}, the regression failed or ran out of iterations and did not converge.}
 \item{slope}{\code{numeric}; the slope of the linear trend over time in percent change per year.}
-\item{se}{\code{numeric}; the standard error for linear trend over time.}
+\item{std.err}{\code{numeric}; the standard error for the linear trend over time in percent change per year.}
 \item{p}{\code{numeric}; the \emph{p}-value for linear trend over time.}
 \item{p.model}{\code{numeric}; the \emph{p}-value for the parametric survival regression model.}
 \item{trend}{\code{character}; significant trends are indicated by a \emph{p}-value (\code{p}) less than or equal to the significance level.
