@@ -26,6 +26,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
   for (i in seq_len(nrow(processed.config))) {
     d <- processed.obs[[processed.config[i, "Parameter_id"]]]
+
+    site.id <- processed.config[i, "Site_id"]
     d <- d[d$Site_id == processed.config[i, "Site_id"], ]
 
     stats[i, "Parameter_name"] <- attr(d, "Parameter_name")
@@ -63,14 +65,14 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
     is.explanatory <- is.data.frame(explanatory.var)
     if (is.explanatory) {
-      idxs <- explanatory.var$Site_id == processed.config[i, "Site_id"]
+      idxs <- explanatory.var$Site_id == site.id
       if (sum(idxs) < 3)
-        stop("insufficient explanatory data")
+        stop(paste("insufficient explanatory data:", site.id))
       e <- explanatory.var[idxs, -1]
       e <- e[order(e[, 1]), ]
       d$explanatory.var <- approx(e[, 1], e[, 2], xout=d$Date)$y
       if (anyNA(d$explanatory.var))
-        stop("unable to predict explanatory variable at observation(s)")
+        stop(paste("unable to predict explanatory variable:", site.id))
       if (is.residual) {
         d$explanatory.var <- residuals(lm(explanatory.var ~ Date, data=d))
       }
@@ -122,6 +124,28 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     }
   }
 
+  if (!missing(path) & !missing(id)) {
+    file <- file.path(path, paste0(id, ".tsv"))
+    write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
+  }
+
+  is.rgdal <- suppressPackageStartupMessages(require("rgdal", quietly=TRUE))
+  if (is.rgdal && inherits(site.locations, "SpatialPointsDataFrame")) {
+    idxs <- match(stats$Site_id, site.locations@data$Site_id)
+    if (anyNA(idxs)) {
+      stop("site id(s) not found in 'spatial.locations'")
+    } else {
+      coords <- site.locations@coords[idxs, , drop=FALSE]
+      crs <- site.locations@proj4string
+      obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
+      suppressWarnings(writeOGR(obj, path, id, "ESRI Shapefile",
+                                check_exists=TRUE, overwrite_layer=TRUE))
+    }
+  }
+
+  if (is.explanatory)
+    return(stats)
+
   id.path <- .CreateDir(path, id, graphics.type)
 
   figs <- NULL
@@ -157,25 +181,6 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       MergePDFs(id.path, paste0(figs, ".pdf"))
     else
       warning("PDFtk Server cannot be found so PDF files will not be merged")
-  }
-
-  if (!missing(path) & !missing(id)) {
-    file <- file.path(path, paste0(id, ".tsv"))
-    write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
-  }
-
-  is.rgdal <- suppressPackageStartupMessages(require("rgdal", quietly=TRUE))
-  if (is.rgdal && inherits(site.locations, "SpatialPointsDataFrame")) {
-    idxs <- match(stats$Site_id, site.locations@data$Site_id)
-    if (anyNA(idxs)) {
-      stop("site id(s) not found in 'spatial.locations'")
-    } else {
-      coords <- site.locations@coords[idxs, , drop=FALSE]
-      crs <- site.locations@proj4string
-      obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
-      suppressWarnings(writeOGR(obj, path, id, "ESRI Shapefile",
-                                check_exists=TRUE, overwrite_layer=TRUE))
-    }
   }
 
   invisible(stats)

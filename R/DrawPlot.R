@@ -51,12 +51,10 @@ DrawPlot <- function(d, model, plim=c(0.1, 0.9), xlim=NULL, ylim=NULL,
     x <- seq(xlim[1], xlim[2], "days")
     newdata <- list(x)
     names(newdata) <- names(model$coefficients)[2]
-
     if (!is.null(plim)) {
       y <- predict(model, newdata, type="quantile", p=plim)
       polygon(c(x, rev(x)), c(y[, 1], rev(y[, 2])), col="#FFFFD5", border=NA)
     }
-
     y <- predict(model, newdata, type="quantile", p=0.5)
     lines(x, y, lty=1, lwd=1, col="#F02311")
   }
