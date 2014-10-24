@@ -153,7 +153,7 @@ RunAnalysis(processed.obs, processed.config, path = path.out,
             site.locations = site.locations, graphics.type = graphics.type)
 @
 
-Run trend analysis for volotile organic compond (VOC) parameters from 1987 through 2012:
+Run trend analysis for volatile organic compound (VOC) parameters from 1987 through 2012:
 <<>>=
 file <- file.path(path.in, "Config_VOC.tsv")
 config <- do.call(read.table, c(list(file), read.args))
