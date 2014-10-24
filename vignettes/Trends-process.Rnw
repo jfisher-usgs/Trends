@@ -171,6 +171,41 @@ RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
             graphics.type = graphics.type)
 @
 
+Run trend analysis for Chloride (CL), a NWQL parameter, at the USGS 114 (433318112555001), PW 8 (433456112572001), USGS 87 (433013113024201), USGS 35 (433339112565801), and USGS 39 (433343112570001) wells from 1989 through 2012:
+<<>>=
+file <- file.path(path.in, "Config_NWQL.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+site.ids <- c("433318112555001", "433456112572001", "433013113024201",
+              "433339112565801", "433343112570001")
+rec <- with(processed.config, Parameter_id == "CL" & Site_id %in% site.ids)
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test_1989-2012",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type)
+@
+
+Account for water-level variability in the trend model.
+<<>>=
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test_WLs",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type, explanatory.var = processed.wl)
+@
+
+Account for seasonal variability in the trend model.
+<<>>=
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test_Season",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type, is.seasonality = TRUE)
+@
+
+Account for water-level variability and seasonal variability in the trend model.
+<<>>=
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test_WLs_Season",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type, is.seasonality = TRUE,
+            explanatory.var = processed.wl)
+@
+
 To reprocess the 2014 water quality data, evaluate \textbf{R} code extracted from this vignette using the following command:
 <<eval=FALSE>>=
 source(system.file("doc", "Trends-process.R", package = "Trends"), echo = TRUE)

@@ -1,6 +1,6 @@
 Changes in Version 0.2-1
 
-  o  ...
+  o  Additional explanatory variables (such as seasonality and water levels) may be added as covariants in the trend model.
 
 Changes in Version 0.2-0
 
