@@ -30,7 +30,7 @@ RunAnalysis(processed.obs, processed.config, path, id, sdate = NA, edate = NA,
 \item{site.locations}{\code{SpatialPointsDataFrame}; the geo-referenced site coordinates with a required \code{data.frame} component of \code{"Site_id"}, a unique site identifier.}
 \item{is.seasonality}{\code{logical}; if \code{TRUE}, seasonal patterns are modeled by a trigonometric regression; as covariates in the trend model.}
 \item{explanatory.var}{\code{data.frame}; an explanatory variable added to the covariates of the trend model, see value from the \code{\link{ProcessWL}} function for the data table format.
-  Note that linear interpolation is used to approximate explanatory variable values at sample dates in \code{processed.obs}.}
+  Note that explanatory variable values are linearly interpolated at sample dates in \code{processed.obs}.}
 \item{is.residual}{\code{logical}; if \code{TRUE}, the explanatory variable is transformed using its residuals from linear regression.
   Should be used when the explanatory variable is monotonically increasing or decreasing during the entire trend period.
   Requires specification of the \code{explanatory.var} argument.}
@@ -75,8 +75,6 @@ This function returns a \code{data.frame} object with the following components:
   \emph{p}-values greater than the significance level are specified as having no significant trend (\code{"none"}).}
 If arguments \code{path} and \code{id} are specified, the returned data table of summary statistics (described above) is written to an external text file.
 If in addition a file-based graphics type is selected, plots are drawn to external files.
-
-Plots are not drawn when the \code{explanatory.var} argument is specified.
 }
 
 \author{J.C. Fisher and L.C. Davis}

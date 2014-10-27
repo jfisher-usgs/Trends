@@ -65,22 +65,24 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
 
     is.explanatory <- is.data.frame(explanatory.var)
     if (is.explanatory) {
-      idxs <- explanatory.var$Site_id == site.id
-      if (sum(idxs) < 3)
+      e <- explanatory.var[explanatory.var$Site_id == site.id, ]
+      e <- e[order(e$Date), -1]
+      if (nrow(e) < 3)
         stop(paste("insufficient explanatory data:", site.id))
-      e <- explanatory.var[idxs, -1]
-      e <- e[order(e[, 1]), ]
-      d$explanatory.var <- approx(e[, 1], e[, 2], xout=d$Date)$y
-      if (anyNA(d$explanatory.var))
-        stop(paste("unable to predict explanatory variable:", site.id))
       if (is.residual) {
-        d$explanatory.var <- residuals(lm(explanatory.var ~ Date, data=d))
+        x <- e[e$Date >= min(d$Date) & e$Date <= max(d$Date), ]
+        if (nrow(x) < 3)
+          stop(paste("insufficient residual explanatory data:", site.id))
+        LinModel <- lm(Var ~ Date, data=x)
+        e$Var <- e$Var - predict(LinModel, newdata=e[, "Date", drop=FALSE])
       }
+      PredExplanatory <- .MakeFunction(alist(Date=NA, x=e$Date, y=e$Var),
+                                       quote(approx(x, y, xout=Date)$y))
     }
 
     x <- "surv ~ Date"
     if (is.explanatory)
-      x <- c(x, "explanatory.var")
+      x <- c(x, "PredExplanatory(Date)")
     if (is.seasonality)
       x <- c(x, "I(sin(2 * pi * as.numeric(Date) / 365.242))",
                 "I(cos(2 * pi * as.numeric(Date) / 365.242))")
@@ -143,44 +145,42 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     }
   }
 
-  if (!is.explanatory) {
 
-    id.path <- .CreateDir(path, id, graphics.type)
+  id.path <- .CreateDir(path, id, graphics.type)
 
-    figs <- NULL
-    plot.count <- list()
-    for (i in seq_len(nrow(processed.config))) {
-      site.id <- processed.config$Site_id[i]
-      site.name <- processed.config$Site_name[i]
+  figs <- NULL
+  plot.count <- list()
+  for (i in seq_len(nrow(processed.config))) {
+    site.id <- processed.config$Site_id[i]
+    site.name <- processed.config$Site_name[i]
 
-      if (is.null(plot.count[[site.id]]))
-        plot.count[[site.id]] <- 0L
-      if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
-        letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
-        fig <- paste0(site.name, "_", letter)
-        .OpenDevice(id.path,  fig, graphics.type)
-        figs <- c(figs, fig)
-        main <- paste0(site.name, " (", site.id, ")")
-      } else {
-        main <- NULL
-      }
-      plot.count[[site.id]] <- plot.count[[site.id]] + 1L
-
-      a <- attributes(processed.obs[[processed.config$Parameter_id[i]]])
-      ylab <- ifelse(is.na(a$Units), a$Parameter_name,
-                     paste0(a$Parameter_name, ", in ", a$Units))
-      xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
-      DrawPlot(obs[[i]][, c("Date", "surv")], models[[i]],
-               xlim=xlim, main=main, ylab=ylab)
+    if (is.null(plot.count[[site.id]]))
+      plot.count[[site.id]] <- 0L
+    if ((plot.count[[site.id]] + 4L) %% 4L == 0L) {
+      letter <- LETTERS[(plot.count[[site.id]] + 4L) %/% 4L]
+      fig <- paste0(site.name, "_", letter)
+      .OpenDevice(id.path,  fig, graphics.type)
+      figs <- c(figs, fig)
+      main <- paste0(site.name, " (", site.id, ")")
+    } else {
+      main <- NULL
     }
-    if (graphics.type %in% c("pdf", "postscript"))
-      graphics.off()
-    if (graphics.type == "pdf" && merge.pdfs) {
-      if (as.logical(nchar(Sys.which("pdftk"))))
-        MergePDFs(id.path, paste0(figs, ".pdf"))
-      else
-        warning("PDFtk Server cannot be found so PDF files will not be merged")
-    }
+    plot.count[[site.id]] <- plot.count[[site.id]] + 1L
+
+    a <- attributes(processed.obs[[processed.config$Parameter_id[i]]])
+    ylab <- ifelse(is.na(a$Units), a$Parameter_name,
+                   paste0(a$Parameter_name, ", in ", a$Units))
+    xlim <- if (inherits(c(sdate, edate), "Date")) c(sdate, edate) else NULL
+    DrawPlot(obs[[i]][, c("Date", "surv")], models[[i]],
+             xlim=xlim, main=main, ylab=ylab)
+  }
+  if (graphics.type %in% c("pdf", "postscript"))
+    graphics.off()
+  if (graphics.type == "pdf" && merge.pdfs) {
+    if (as.logical(nchar(Sys.which("pdftk"))))
+      MergePDFs(id.path, paste0(figs, ".pdf"))
+    else
+      warning("PDFtk Server cannot be found so PDF files will not be merged")
   }
 
   invisible(stats)
@@ -218,4 +218,10 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   }
   par(mfrow=c(4, 1), omi=c(4, 3.5, 6, 4.5) * 0.166667)
   invisible()
+}
+
+
+.MakeFunction <- function(args, body, env=parent.frame()) {
+  args <- as.pairlist(args)
+  eval(call("function", args, body), env)
 }
