@@ -187,7 +187,7 @@ RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
 Account for residual water-level variability in the trend model.
 <<>>=
 RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
-            id = "Test_WLs",sdate = "1989-01-01", edate = "2012-12-31",
+            id = "Test_resWLs",sdate = "1989-01-01", edate = "2012-12-31",
             graphics.type = graphics.type, explanatory.var = processed.wl,
             is.residual = TRUE)
 @
@@ -195,14 +195,14 @@ RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
 Account for seasonal variability in the trend model.
 <<>>=
 RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
-            id = "Test_Season",sdate = "1989-01-01", edate = "2012-12-31",
+            id = "Test_Seas",sdate = "1989-01-01", edate = "2012-12-31",
             graphics.type = graphics.type, is.seasonality = TRUE)
 @
 
 Account for residual water-level variability and seasonal variability in the trend model.
 <<>>=
 RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
-            id = "Test_WLs_Season",sdate = "1989-01-01", edate = "2012-12-31",
+            id = "Test_resWLs_Seas",sdate = "1989-01-01", edate = "2012-12-31",
             graphics.type = graphics.type, is.seasonality = TRUE,
             explanatory.var = processed.wl, is.residual = TRUE)
 @

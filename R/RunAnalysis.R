@@ -8,9 +8,9 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
   if ((missing(path) | missing(id)) & graphics.type %in% c("pdf", "postscript"))
     stop("arguments 'path' and 'id' are required for selected graphics type")
 
-  if(inherits(sdate <- try(as.Date(sdate)), "ty-error"))
+  if(inherits(sdate <- try(as.Date(sdate)), "try-error"))
     sdate <- NA
-  if(inherits(edate <- try(as.Date(edate)), "ty-error"))
+  if(inherits(edate <- try(as.Date(edate)), "try-error"))
     edate <- NA
 
   obs <- list()
@@ -28,7 +28,8 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     d <- processed.obs[[processed.config[i, "Parameter_id"]]]
 
     site.id <- processed.config[i, "Site_id"]
-    d <- d[d$Site_id == processed.config[i, "Site_id"], ]
+    d <- d[d$Site_id == site.id, ]
+    d <- d[order(d$Date), ]
 
     stats[i, "Parameter_name"] <- attr(d, "Parameter_name")
 
@@ -70,19 +71,22 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
       if (nrow(e) < 3)
         stop(paste("insufficient explanatory data:", site.id))
       if (is.residual) {
-        x <- e[e$Date >= min(d$Date) & e$Date <= max(d$Date), ]
-        if (nrow(x) < 3)
+        ee <- e[e$Date >= min(d$Date) & e$Date <= max(d$Date), ]
+        if (nrow(ee) < 3)
           stop(paste("insufficient residual explanatory data:", site.id))
-        LinModel <- lm(Var ~ Date, data=x)
-        e$Var <- e$Var - predict(LinModel, newdata=e[, "Date", drop=FALSE])
+        args <- alist(Date=NA, x=e$Date, y=e$Var, xx=ee$Date, yy=ee$Var)
+        body <- quote(approx(x, y, xout=Date)$y -
+                      predict(lm(yy ~ xx), newdata=data.frame(xx=Date)))
+      } else {
+        args <- alist(Date=NA, x=e$Date, y=e$Var)
+        body <- quote(approx(x, y, xout=Date)$y)
       }
-      PredExplanatory <- .MakeFunction(alist(Date=NA, x=e$Date, y=e$Var),
-                                       quote(approx(x, y, xout=Date)$y))
+      PredEx <- .MakeFunction(args, body)
     }
 
     x <- "surv ~ Date"
     if (is.explanatory)
-      x <- c(x, "PredExplanatory(Date)")
+      x <- c(x, "PredEx(Date)")
     if (is.seasonality)
       x <- c(x, "I(sin(2 * pi * as.numeric(Date) / 365.242))",
                 "I(cos(2 * pi * as.numeric(Date) / 365.242))")

@@ -68,7 +68,7 @@ This function returns a \code{data.frame} object with the following components:
 \item{iter}{\code{numeric}; the number of Newton-Raphson iterations required for convergence. If \code{NA}, the regression failed or ran out of iterations and did not converge.}
 \item{slope}{\code{numeric}; the slope of the linear trend over time in percent change per year.}
 \item{std.err}{\code{numeric}; the standard error for the linear trend over time in percent change per year.}
-\item{p}{\code{numeric}; the \emph{p}-value for linear trend over time.}
+\item{p}{\code{numeric}; the \emph{p}-value for the linear trend over time.}
 \item{p.model}{\code{numeric}; the \emph{p}-value for the parametric survival regression model.}
 \item{trend}{\code{character}; significant trends are indicated by a \emph{p}-value (\code{p}) less than or equal to the significance level.
   The sign of the \code{slope} indicates whether the significant trend is positive (\code{"+"}) or negative (\code{"-"}).
