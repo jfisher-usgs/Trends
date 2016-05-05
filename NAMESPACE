@@ -1,10 +1,17 @@
-import(survival)
+importFrom("grDevices", "dev.new", "extendrange", "graphics.off", "pdf",
+           "postscript")
+importFrom("graphics", "arrows", "axis", "axis.Date", "box", "legend", "lines",
+           "par", "plot", "points", "polygon")
+importFrom("stats", "as.formula", "median", "pchisq", "predict", "sd")
+importFrom("utils", "write.table")
 
-export(DrawPlot,
-       MergePDFs,
-       ProcessConfig,
-       ProcessObs,
-       ProcessWL,
-       RunAnalysis,
-       .CreateDir,
-       .OpenDevice)
+import("survival")
+
+export("DrawPlot",
+       "MergePDFs",
+       "ProcessConfig",
+       "ProcessObs",
+       "ProcessWL",
+       "RunAnalysis",
+       ".CreateDir",
+       ".OpenDevice")

@@ -135,17 +135,18 @@ RunAnalysis <- function(processed.obs, processed.config, path, id, sdate=NA,
     write.table(stats, file=file, quote=FALSE, sep="\t", row.names=FALSE)
   }
 
-  is.rgdal <- suppressPackageStartupMessages(require("rgdal", quietly=TRUE))
-  if (is.rgdal && inherits(site.locations, "SpatialPointsDataFrame")) {
+  is <- requireNamespace("sp", quietly=TRUE) &
+        requireNamespace("rgdal", quietly=TRUE)
+  if (is && inherits(site.locations, "SpatialPointsDataFrame")) {
     idxs <- match(stats$Site_id, site.locations@data$Site_id)
     if (anyNA(idxs)) {
       stop("site id(s) not found in 'spatial.locations'")
     } else {
       coords <- site.locations@coords[idxs, , drop=FALSE]
       crs <- site.locations@proj4string
-      obj <- SpatialPointsDataFrame(coords, stats, proj4string=crs)
-      suppressWarnings(writeOGR(obj, path, id, "ESRI Shapefile",
-                                check_exists=TRUE, overwrite_layer=TRUE))
+      obj <- sp::SpatialPointsDataFrame(coords, stats, proj4string=crs)
+      suppressWarnings(rgdal::writeOGR(obj, path, id, "ESRI Shapefile",
+                                       check_exists=TRUE, overwrite_layer=TRUE))
     }
   }
 
