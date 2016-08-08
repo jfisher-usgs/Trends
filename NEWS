@@ -1,6 +1,10 @@
-Changes in Version 1.0-0
+Changes in Version 1.0.0
+
+  o  Change repository for package installation to https://jfisher-usgs.github.io/R
 
   o  Minor changes for compiling with R version 3.3.0.
+
+  o  Change format for package version numbering from #.#-# to #.#.#
 
 Changes in Version 0.2-1
 
