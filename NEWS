@@ -2,6 +2,8 @@ Changes in Version 1.0.1
 
   o  ...
 
+  o  Change to in-source documentation using the roxygen2 package.
+
 Changes in Version 1.0.0
 
   o  Change repository for package installation to https://jfisher-usgs.github.io/R

@@ -1,0 +1,221 @@
+% \VignetteIndexEntry{Processing Instructions for the 2014 Trend Analysis}
+% \VignetteEngine{knitr::knitr}
+% \VignetteDepends{Trends, survival, rgdal}
+
+\documentclass{article}
+
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{url}
+\usepackage[authoryear]{natbib}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{subfig}
+
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\ttdefault}{lmtt}
+
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+
+\definecolor{dark-red}{rgb}{0.4, 0.15, 0.15}
+\definecolor{medium-blue}{rgb}{0, 0, 0.5}
+
+\hypersetup{colorlinks, urlcolor={medium-blue}, linkcolor={medium-blue}, citecolor={dark-red}}
+
+\widowpenalties 1 10000
+\raggedbottom
+
+\makeatletter
+\makeatother
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+try(knitr::opts_chunk$set(dev="pdf", tidy=FALSE, comment="#"), silent=TRUE)
+options(warn=1)
+options(width=90)
+ptime <- proc.time()
+@
+
+\title{Processing Instructions for the 2014 Trend Analysis}
+
+\author{Jason C. Fisher}
+
+\maketitle
+
+If \href{http://www.r-project.org/}{R} (version $\geq$ 3.1) is not already installed on your computer, download and install the latest binary distribution from the Comprehensive R Archive Network (\href{http://cran.r-project.org/}{CRAN}).
+Open an \textbf{R} session and install the required packages with the following commands:
+<<eval=FALSE>>=
+repos <- c("http://cran.us.r-project.org", "https://jfisher-usgs.github.io/R")
+install.packages("Trends", repos = repos, dependencies = TRUE, type = "both")
+@
+
+Support for merging Portable Document Format (PDF) files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.
+
+Load the \href{https://github.com/jfisher-usgs/Trends}{Trends} package into the current \textbf{R} session:
+<<>>=
+library(Trends)
+@
+
+Set the full path name to the directory containing input files; list all files in this directory:
+<<>>=
+list.files(path.in <- system.file("extdata", "SIR2014", package = "Trends"))
+@
+
+Set the full path name to the output directory; if it doesn't already exist, create this directory:
+<<>>=
+path.out <- file.path(getwd(), paste0("Trends_", format(Sys.time(), "%Y%m%d%H%M%S")))
+dir.create(path = path.out, showWarnings = FALSE)
+@
+
+Set the graphics type for output figures to a PDF file format:
+<<>>=
+graphics.type <- "pdf"
+@
+
+Specify global arguments for reading table formatted data from a text file:
+<<>>=
+read.args <- list(header = TRUE, sep = "\t", colClasses = "character", na.strings = "",
+                  fill = TRUE, strip.white = TRUE, comment.char = "", flush = TRUE,
+                  stringsAsFactors = FALSE)
+@
+
+Read observational data from a text file:
+<<>>=
+file <- file.path(path.in, "Observations.tsv")
+observations <- do.call(read.table, c(list(file), read.args))
+@
+
+Read parameter descriptions from a text file:
+<<>>=
+file <- file.path(path.in, "Parameters.tsv")
+parameters <- do.call(read.table, c(list(file), read.args))
+@
+
+Read detection limits from a text file:
+<<>>=
+file <- file.path(path.in, "Detection_Limits.tsv")
+detection.limits <- do.call(read.table, c(list(file), read.args))
+@
+
+Process observational data:
+<<>>=
+processed.obs <- ProcessObs(observations, parameters, detection.limits,
+                            date.fmt = "%m/%d/%Y")
+@
+
+Read geo-referenced site locations from a point shapefile:
+<<>>=
+site.locations <- rgdal::readOGR(path.in, layer = "Site_Locations", verbose = FALSE)
+@
+
+Read water levels from a text file:
+<<>>=
+file <- file.path(path.in, "Water_Levels.tsv")
+water.levels <- do.call(read.table, c(list(file), read.args))
+@
+
+Process water-level data:
+<<>>=
+processed.wl <- ProcessWL(water.levels, date.fmt = "%Y-%m-%d %H:%M")
+@
+
+Run trend analysis for National Water Quality Laboratory (NWQL) parameters from 1989 through 2012:
+<<>>=
+file <- file.path(path.in, "Config_NWQL.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out,
+            id = "Stats_NWQL_1989-2012", sdate = "1989-01-01", edate = "2012-12-31",
+            site.locations = site.locations, graphics.type = graphics.type)
+@
+
+Run trend analysis for field parameters (pH, Specific Conductance, and Temperature) from 1989 through 2012:
+<<>>=
+file <- file.path(path.in, "Config_Field.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out,
+            id = "Stats_Field_1989-2012", sdate = "1989-01-01", edate = "2012-12-31",
+            site.locations = site.locations, graphics.type = graphics.type)
+@
+
+Run trend analysis for radiation-related (RAD) parameters from 1981 through 2012:
+<<>>=
+file <- file.path(path.in, "Config_RAD.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out,
+            id = "Stats_RAD_1981-2012", sdate = "1981-01-01", edate = "2012-12-31",
+            site.locations = site.locations, graphics.type = graphics.type)
+@
+
+Run trend analysis for volatile organic compound (VOC) parameters from 1987 through 2012:
+<<>>=
+file <- file.path(path.in, "Config_VOC.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+RunAnalysis(processed.obs, processed.config, path = path.out,
+            id = "Stats_VOC_1987-2012", sdate = "1987-01-01", edate = "2012-12-31",
+            site.locations = site.locations, graphics.type = graphics.type)
+@
+
+Run trend analysis for Carbon Tetrachloride (P32102), a VOC parameter, at the RWMC Production well from 2005 through 2012:
+<<>>=
+rec <- with(processed.config, Parameter_id == "P32102" & Site_id == "433002113021701")
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Stats_RWMC_CCl4_2005-2012",sdate = "2005-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type)
+@
+
+Run trend analysis for Chloride (CL), a NWQL parameter, at the USGS 114, PW 8, USGS 87, USGS 35, and USGS 39 wells from 1989 through 2012:
+<<>>=
+file <- file.path(path.in, "Config_NWQL.tsv")
+config <- do.call(read.table, c(list(file), read.args))
+processed.config <- ProcessConfig(config, processed.obs)
+site.ids <- c("433318112555001", "433456112572001", "433013113024201",
+              "433339112565801", "433343112570001")
+rec <- with(processed.config, Parameter_id == "CL" & Site_id %in% site.ids)
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type)
+@
+
+Account for residual water-level variability in the trend model.
+<<>>=
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test_resWLs",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type, explanatory.var = processed.wl,
+            is.residual = TRUE)
+@
+
+Account for seasonal variability in the trend model.
+<<>>=
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test_Seas",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type, is.seasonality = TRUE)
+@
+
+Account for residual water-level variability and seasonal variability in the trend model.
+<<>>=
+RunAnalysis(processed.obs, processed.config[rec, ], path = path.out,
+            id = "Test_resWLs_Seas",sdate = "1989-01-01", edate = "2012-12-31",
+            graphics.type = graphics.type, is.seasonality = TRUE,
+            explanatory.var = processed.wl, is.residual = TRUE)
+@
+
+To reprocess the 2014 water quality data, evaluate \textbf{R} code extracted from this vignette using the following command:
+<<eval=FALSE>>=
+source(system.file("doc", "Trends-process.R", package = "Trends"), echo = TRUE)
+list.files(path.out, full.names = TRUE, recursive = TRUE)  # path names of output files
+@
+
+Total processing time for this vignette was \Sexpr{format(round((proc.time() - ptime)["elapsed"] / 60, digits=0))} minutes.
+Version information about \textbf{R} and loaded packages is as follows:
+<<echo=FALSE, results="asis">>=
+print(toLatex(sessionInfo(), locale=FALSE))
+@
+
+\end{document}

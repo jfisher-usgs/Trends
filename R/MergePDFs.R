@@ -1,5 +1,58 @@
-# Combine PDF files into a new file.
-# Requires PDFtk Server (http://www.pdflabs.com/tools/pdftk-server/)
+#' Merge PDF Files
+#'
+#' This function combines Portable Document Format (PDF) files into a single new PDF file.
+#'
+#' @param path character.
+#'   Path name of the folder containing the PDF files to merge.
+#' @param pdfs character.
+#'   Vector of file names, if missing, all PDF files under \code{path} will be merged.
+#' @param preserve.files logical.
+#'   If true, all individual PDF files are preserved after a merge is completed.
+#' @param open.file logical.
+#'   If true, the merged PDF file is opened using your systems default PDF viewer.
+#'
+#' @details Names of the individual PDF files are used as bookmarks in the merged file.
+#'   The merged file is placed one directory above the \code{path} folder.
+#'
+#' @return Returns the name of the merged file.
+#'
+#' @note Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
+#'   a cross-platform command-line tool for working with PDFs.
+#'
+#' @author J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+#'
+#' @seealso \code{\link{RunAnalysis}}, \code{\link{system}}
+#'
+#' @keywords utilities
+#'
+#' @export
+#'
+#' @examples
+#' \donttest{
+#'   # Create a temporary directory
+#'   dir.create(path <- file.path(tempdir(), "merge"))
+#'
+#'   # Write three single-page PDF files to the temporary directory
+#'   pdf(file.path(path, "f1.pdf"))
+#'   plot(seq_len(10), main = "f1a")
+#'   plot(sin, -pi, 2 * pi, main = "f1b")
+#'   plot(qnorm, col = "red", main = "f1c")
+#'   dev.off()
+#'   pdf(file.path(path, "f2.pdf"))
+#'   plot(table(rpois(100, 5)), type = "h", col = "yellow", main = "f2a")
+#'   dev.off()
+#'   pdf(file.path(path, "f3.pdf"))
+#'   plot(x <- sort(rnorm(47)), type = "s", col = "green", main = "f3a")
+#'   plot(x, main = "f3b")
+#'   dev.off()
+#'
+#'   # Merge PDF files into a single file and open it in your default viewer
+#'   MergePDFs(path, open.file = TRUE)
+#'
+#'   # Remove PDF files
+#'   unlink(path, recursive = TRUE)
+#' }
+#'
 
 MergePDFs <- function(path, pdfs, preserve.files=FALSE, open.file=FALSE) {
 

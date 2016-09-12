@@ -1,3 +1,79 @@
+#' Process Observations
+#'
+#' This function processes measurements from observation sites in a monitoring network.
+#'
+#' @param observations data.frame.
+#'   Observed data records, see \sQuote{Details} section.
+#' @param parameters data.frame.
+#'   Parameter descriptions, see \sQuote{Details} section.
+#' @param detection.limits data.frame.
+#'   Detection limits, see \sQuote{Details} section.
+#' @param date.fmt character.
+#'   Date format used to convert character strings to Date class.
+#'
+#' @details The \code{observations}, \code{parameters}, and \code{detection.limits}
+#'   data tables are composed of character-class components.
+#'
+#'   Required columns in the \code{observations} data table include:
+#'     \code{Site_id}, a unique site identifier;
+#'     \code{Site_name}, a local site name; and
+#'     \code{Date}, the measurement date.
+#'   Measured values are checked for an optional character code in the first digit of each character string value.
+#'   Character codes are identified using the following criteria:
+#'     \emph{<}, below reporting level;
+#'     \emph{E}, estimated value;
+#'     \emph{V}, contaminated; and
+#'     \emph{U}, undetectable.
+#'   Values are stripped of their character code and converted to numeric class.
+#'   A warning is given if the character code is not recognized and its value set to NA.
+#'   Measured values with character codes of \emph{V} and \emph{U} are also set to NA.
+#'
+#'   Required columns in the \code{parameters} data table include:
+#'     \code{Parameter_id}, a unique parameter identifier;
+#'     \code{Parameter_name}, the common parameter name;
+#'     \code{Units}, the units associated with the measured parameter values; and
+#'     \code{sd}, a column name in \code{observations} data table where the parameters standard deviation values are located.
+#'
+#'   A required column in the \code{detection.limits} data table is \code{Date},
+#'   the date when the detection limit was first implemented.
+#'   Detection limit values are located in subsequent columns;
+#'   a unique parameter identifier is specified for each of these column names.
+#'
+#'   A measured value is converted to censored data under the following conditions:
+#'     (1) the measured value is below the reporting level and represented as \emph{left-censored} data; or
+#'     (2) there is a standard deviation and detection limit associated with the measured value,
+#'         therefore, it is represented as \emph{interval-censored} data.
+#'   The upper and lower bounds of interval-censored data are calculated by
+#'   adding and subtracting three standard deviations from the measured value, respectively.
+#'   Interval-censored data with a lower or upper bound less than the detection limit is represented as left-censored data.
+#'   For left-censored data, the upper bound is set to the detection limit when its magnitude is less than the detection limit.
+#'
+#' @return Returns an object of class list with data.frame components corresponding to unique parameter identifiers.
+#'   Each data table has the following components:
+#'   \describe{
+#'     \item{Site_id}{unique site identifier}
+#'     \item{Site_name}{local site name}
+#'     \item{Date}{observation date}
+#'     \item{code}{single-digit character code}
+#'     \item{value}{ measured value}
+#'     \item{sd}{standard deviation of the measured value.}
+#'     \item{dl}{detection limit of the measured value.}
+#'     \item{surv}{observation as censored or uncensored data of \emph{interval} type.}
+#'   }
+#'   Additional attributes associated with the returned data frame include:
+#'     \code{Parameter_id}, unique parameter identifier;
+#'     \code{Parameter_name}, parameter name; and
+#'     \code{Units}, parameter units.
+#'
+#' @author J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+#'
+#' @seealso \code{\link{RunAnalysis}}
+#'
+#' @keywords methods
+#'
+#' @export
+#'
+
 ProcessObs <- function(observations, parameters, detection.limits=NULL,
                        date.fmt="%Y-%m-%d") {
 

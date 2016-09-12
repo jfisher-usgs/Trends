@@ -1,23 +1,29 @@
 Package: Trends
-Version: 1.0.1
-Date: 2016-08-08
 Title: Trend analysis of Monitoring Network Data
-Author: Jason C. Fisher and Linda C. Davis
-Maintainer: Jason C. Fisher <jfisher@usgs.gov>
-Depends: R (>= 3.3.0)
-Imports: survival
-Suggests: sp, rgdal, knitr
-SystemRequirements: PDFtk Server (>= 2.02, optional)
+Version: 1.0.1
+Authors@R: c(person("Jason", "Fisher", email="jfisher@usgs.gov", role=c("aut", "cre")),
+    person("Linda", "Davis", email="ldavis@usgs.gov", role=c("ctb")))
 Description: Identifies trends in data from multiple observation sites. A
-  parametric survival regression model is fit to the observed data, both
-  censored and uncensored.
+    parametric survival regression model is fit to the observed data, both
+    censored and uncensored.
+Depends:
+    R (>= 3.3.0)
+Imports:
+    survival
+Suggests:
+    sp,
+    rgdal,
+    knitr
+SystemRequirements: PDFtk Server (>= 2.02, optional)
 License: CC0
 Copyright: This software is in the public domain because it contains materials
-  that originally came from the United States Geological Survey (USGS), an
-  agency of the United States Department of Interior. For more information, see
-  the official USGS copyright policy at
-  http://www.usgs.gov/visual-id/credit_usgs.html#copyright
+    that originally came from the United States Geological Survey (USGS), an
+    agency of the United States Department of Interior. For more information,
+    see the official USGS copyright policy at http://www.usgs.gov/visual-id/
+    credit_usgs.html#copyright
 URL: https://github.com/jfisher-usgs/Trends
 BugReports: https://github.com/jfisher-usgs/Trends/issues
-ByteCompile: yes
+Encoding: UTF-8
+LazyData: true
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1
