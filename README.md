@@ -4,11 +4,13 @@
 
 This [R](http://www.r-project.org/ "R") package is for identifying trends in data from multiple observation sites in a monitoring network.
 A parametric survival regression model is used to fit the observed data, both censored and uncensored.
-The set of standards used for coding **Trends** is documented in [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml "Google's R Style Guide").
+The set of standards used for coding **Trends** is documented in
+[Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml "Google's R Style Guide").
 
 ## Install
 
-If R is not already installed on your computer, download and install the latest binary distribution from [CRAN](http://cran.r-project.org/ "The Comprehensive R Archive Network").
+If R is not already installed on your computer, download and install the latest binary distribution from
+[CRAN](http://cran.r-project.org/ "The Comprehensive R Archive Network").
 Next, open an R session and install the required packages using the following commands:
 
 ```r
@@ -16,7 +18,8 @@ repos <- c("http://cran.us.r-project.org", "https://jfisher-usgs.github.io/R")
 install.packages("Trends", repos = repos, dependencies = TRUE, type = "both")
 ```
 
-Support for merging PDF files into a new file requires [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"), a cross-platform command-line tool for working with PDFs; download and install.
+Support for merging PDF files into a new file requires [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
+a cross-platform command-line tool for working with PDFs; download and install.
 
 ## Run
 
@@ -34,9 +37,8 @@ help(package = "Trends")
 
 ## Bugs
 
-Please consider reporting bugs and asking questions on the Issues page:
-
-[https://github.com/jfisher-usgs/Trends/issues](https://github.com/jfisher-usgs/Trends/issues)
+Please consider reporting bugs and asking questions on the
+[Issues page](https://github.com/jfisher-usgs/Trends/issues "Issues page")
 
 ## Disclaimer
 
