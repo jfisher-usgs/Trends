@@ -4,7 +4,7 @@
 
 This [R](http://www.r-project.org/ "R") package is for identifying trends in data from multiple observation sites in a monitoring network.
 A parametric survival regression model is used to fit the observed data, both censored and uncensored.
-The set of standards used for coding **Trends** is documented in
+The set of standards used for coding this package is documented in
 [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml "Google's R Style Guide").
 
 ## Install
@@ -38,7 +38,7 @@ help(package = "Trends")
 ## Bugs
 
 Please consider reporting bugs and asking questions on the
-[Issues page](https://github.com/jfisher-usgs/Trends/issues "Issues page")
+[Issues page](https://github.com/jfisher-usgs/Trends/issues "Issues page").
 
 ## Disclaimer
 
