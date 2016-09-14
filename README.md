@@ -14,7 +14,7 @@ If R is not already installed on your computer, download and install the latest 
 Next, open an R session and install the required packages using the following commands:
 
 ```r
-repos <- c("http://cran.us.r-project.org", "https://jfisher-usgs.github.io/R")
+repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
 install.packages("Trends", repos = repos, dependencies = TRUE)
 ```
 

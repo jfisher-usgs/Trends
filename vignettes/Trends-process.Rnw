@@ -48,7 +48,7 @@ ptime <- proc.time()
 If \href{http://www.r-project.org/}{R} (version $\geq$ 3.1) is not already installed on your computer, download and install the latest binary distribution from the Comprehensive R Archive Network (\href{http://cran.r-project.org/}{CRAN}).
 Open an \textbf{R} session and install the required packages with the following commands:
 <<eval=FALSE>>=
-repos <- c("http://cran.us.r-project.org", "https://jfisher-usgs.github.io/R")
+repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
 install.packages("Trends", repos = repos, dependencies = TRUE)
 @
 
