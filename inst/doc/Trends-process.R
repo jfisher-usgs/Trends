@@ -6,7 +6,7 @@ ptime <- proc.time()
 
 ## ----eval=FALSE-------------------------------------------------------------------------
 #  repos <- c("http://cran.us.r-project.org", "https://jfisher-usgs.github.io/R")
-#  install.packages("Trends", repos = repos, dependencies = TRUE, type = "both")
+#  install.packages("Trends", repos = repos, dependencies = TRUE)
 
 ## ---------------------------------------------------------------------------------------
 library(Trends)

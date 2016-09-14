@@ -1,6 +1,4 @@
-Changes in Version 1.0.1
-
-  o  Add data and processing script for 2012-15 hydrologic conditions report.
+Changes in Version 1.1.0
 
   o  Change to in-source documentation using roxygen2 package.
 

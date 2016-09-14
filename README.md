@@ -15,7 +15,7 @@ Next, open an R session and install the required packages using the following co
 
 ```r
 repos <- c("http://cran.us.r-project.org", "https://jfisher-usgs.github.io/R")
-install.packages("Trends", repos = repos, dependencies = TRUE, type = "both")
+install.packages("Trends", repos = repos, dependencies = TRUE)
 ```
 
 Support for merging PDF files into a new file requires [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),

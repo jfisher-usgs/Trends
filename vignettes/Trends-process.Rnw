@@ -49,7 +49,7 @@ If \href{http://www.r-project.org/}{R} (version $\geq$ 3.1) is not already insta
 Open an \textbf{R} session and install the required packages with the following commands:
 <<eval=FALSE>>=
 repos <- c("http://cran.us.r-project.org", "https://jfisher-usgs.github.io/R")
-install.packages("Trends", repos = repos, dependencies = TRUE, type = "both")
+install.packages("Trends", repos = repos, dependencies = TRUE)
 @
 
 Support for merging Portable Document Format (PDF) files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.

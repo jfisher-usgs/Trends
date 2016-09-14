@@ -1,6 +1,6 @@
 Package: Trends
 Title: Trend analysis of Monitoring Network Data
-Version: 1.0.1
+Version: 1.1.0
 Authors@R: c(person("Jason", "Fisher", email="jfisher@usgs.gov", role=c("aut", "cre")),
     person("Linda", "Davis", email="ldavis@usgs.gov", role=c("ctb")))
 Description: Identifies trends in data from multiple observation sites. A
