@@ -123,7 +123,7 @@ read.args <- list(header = TRUE, sep = "\\t", colClasses = "character",
                   comment.char = "", flush = TRUE, stringsAsFactors = FALSE)
 
 # Read input files
-path.in <- system.file("extdata", "SIR2014", package = "Trends")
+path.in <- system.file("extdata", package = "Trends")
 file <- file.path(path.in, "Observations.tsv")
 observations <- do.call(read.table, c(list(file), read.args))
 file <- file.path(path.in, "Parameters.tsv")

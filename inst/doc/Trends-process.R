@@ -12,7 +12,7 @@ ptime <- proc.time()
 library(Trends)
 
 ## ---------------------------------------------------------------------------------------
-list.files(path.in <- system.file("extdata", "SIR2014", package = "Trends"))
+list.files(path.in <- system.file("extdata", package = "Trends"))
 
 ## ---------------------------------------------------------------------------------------
 path.out <- file.path(getwd(), paste0("Trends_", format(Sys.time(), "%Y%m%d%H%M%S")))

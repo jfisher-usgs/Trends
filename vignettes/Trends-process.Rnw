@@ -61,7 +61,7 @@ library(Trends)
 
 Set the full path name to the directory containing input files; list all files in this directory:
 <<>>=
-list.files(path.in <- system.file("extdata", "SIR2014", package = "Trends"))
+list.files(path.in <- system.file("extdata", package = "Trends"))
 @
 
 Set the full path name to the output directory; if it doesn't already exist, create this directory:
