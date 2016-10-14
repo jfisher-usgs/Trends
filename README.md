@@ -2,10 +2,10 @@
 
 [![Travis-CI Build Status](https://travis-ci.org/jfisher-usgs/Trends.svg?branch=master)](https://travis-ci.org/jfisher-usgs/Trends)
 
+## Overview
+
 This [R](http://www.r-project.org/ "R") package is for identifying trends in data from multiple observation sites in a monitoring network.
 A parametric survival regression model is used to fit the observed data, both censored and uncensored.
-The set of standards used for coding this package is documented in
-[Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml "Google's R Style Guide").
 
 ## Install
 
@@ -15,6 +15,7 @@ Next, open an R session and install the required packages using the following co
 
 ```r
 repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
+update.packages(ask = FALSE, repos = repos)
 install.packages("Trends", repos = repos, dependencies = TRUE)
 ```
 
