@@ -19,14 +19,14 @@ update.packages(ask = FALSE, repos = repos)
 install.packages("Trends", repos = repos, dependencies = TRUE)
 ```
 
-Support for merging PDF files into a new file requires [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
-a cross-platform command-line tool for working with PDFs; download and install.
-
 Or use **devtools** to install the development version from GitHub:
 
 ```r
 devtools::install_github("USGS-R/Trends")
 ```
+
+Support for merging PDF files into a new file requires [PDFtk Server](http://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
+a cross-platform command-line tool for working with PDFs; download and install.
 
 ## Run
 
