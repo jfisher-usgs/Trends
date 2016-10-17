@@ -4,22 +4,20 @@
 
 ## Overview
 
-This [R](http://www.r-project.org/ "R") package is for identifying trends in data from multiple observation sites in a monitoring network.
+The [R](http://www.r-project.org/ "R") package **Trends** is for identifying trends in data from multiple observation sites in a monitoring network.
 A parametric survival regression model is used to fit the observed data, both censored and uncensored.
 
 ## Install
 
-If R is not already installed on your computer, download and install the latest binary distribution from
-[CRAN](http://cran.r-project.org/ "The Comprehensive R Archive Network").
-Next, open an R session and install the required packages using the following commands:
+You can install **Trends** from [GitHub](https://jfisher-usgs.github.io/R/) and
+its dependencies from [CRAN](http://cran.r-project.org/) using the following commands:
 
 ```r
 repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
-update.packages(ask = FALSE, repos = repos)
 install.packages("Trends", repos = repos, dependencies = TRUE)
 ```
 
-Or use **devtools** to install the development version from GitHub:
+Or use **devtools** to install the development version
 
 ```r
 devtools::install_github("USGS-R/Trends")
@@ -30,13 +28,13 @@ a cross-platform command-line tool for working with PDFs; download and install.
 
 ## Run
 
-Load **Trends** in the current R session:
+Load **Trends** in the current R session
 
 ```r
 library(Trends)
 ```
 
-See help documentation:
+Access package documentation
 
 ```r
 help(package = "Trends")
