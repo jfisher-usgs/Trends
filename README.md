@@ -9,7 +9,7 @@ A parametric survival regression model is used to fit the observed data, both ce
 
 ## Install
 
-You can install **Trends** from [GitHub](https://jfisher-usgs.github.io/R/) and
+You can install the stable version of **Trends** from [GitHub](https://jfisher-usgs.github.io/R/) and
 its dependencies from [CRAN](http://cran.r-project.org/) using the following commands:
 
 ```r
@@ -17,7 +17,7 @@ repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
 install.packages("Trends", repos = repos, dependencies = TRUE)
 ```
 
-Or use **devtools** to install the development version
+Or use **devtools** to install the development version.
 
 ```r
 devtools::install_github("USGS-R/Trends")
