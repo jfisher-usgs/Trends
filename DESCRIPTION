@@ -1,5 +1,5 @@
 Package: Trends
-Title: Trend analysis of Monitoring Network Data
+Title: Trend Analysis of Monitoring Network Data
 Version: 1.1.0.9000
 Authors@R: c(person("Jason", "Fisher", email="jfisher@usgs.gov", role=c("aut", "cre")),
     person("Linda", "Davis", email="ldavis@usgs.gov", role=c("ctb")))
