@@ -1,5 +1,7 @@
 # Trends 1.1.0.9000
 
+- Edit CITATION file
+
 - Update URL links to HTTP Secure
 
 # Trends 1.1.0

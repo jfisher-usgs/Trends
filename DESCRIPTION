@@ -1,8 +1,8 @@
 Package: Trends
 Title: Trend Analysis of Monitoring Network Data
 Version: 1.1.0.9000
-Authors@R: c(person("Jason", "Fisher", email="jfisher@usgs.gov", role=c("aut", "cre")),
-    person("Linda", "Davis", email="ldavis@usgs.gov", role=c("ctb")))
+Authors@R: c(person(given=c("Jason", "C."), family="Fisher", role=c("aut", "cre"), email="jfisher@usgs.gov"),
+             person(given=c("Linda", "C."), family="Davis", role="ctb", email="ldavis@usgs.gov"))
 Description: Identifies trends in data from multiple observation sites. A
     parametric survival regression model is fit to the observed data, both
     censored and uncensored.
