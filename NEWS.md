@@ -1,4 +1,4 @@
-# Trends 1.1.0.9000
+# Trends 1.1.1
 
 - Edit CITATION file
 
