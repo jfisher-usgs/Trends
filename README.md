@@ -13,7 +13,7 @@ You can install the stable version of **Trends** from [GitHub](https://jfisher-u
 its dependencies from [CRAN](https://cran.r-project.org/) using the following commands:
 
 ```r
-repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
+repos <- c("https://jfisher-usgs.github.io/R", "https://cloud.r-project.org/")
 install.packages("Trends", repos = repos, dependencies = TRUE)
 ```
 
