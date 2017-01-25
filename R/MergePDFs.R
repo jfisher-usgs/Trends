@@ -16,7 +16,7 @@
 #'
 #' @return Returns the name of the merged file.
 #'
-#' @note Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
+#' @note Requires \href{https://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
 #'   a cross-platform command-line tool for working with PDFs.
 #'
 #' @author J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center

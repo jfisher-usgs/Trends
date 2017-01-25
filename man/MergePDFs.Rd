@@ -30,7 +30,7 @@ Names of the individual PDF files are used as bookmarks in the merged file.
   The merged file is placed one directory above the \code{path} folder.
 }
 \note{
-Requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
+Requires \href{https://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
   a cross-platform command-line tool for working with PDFs.
 }
 \examples{

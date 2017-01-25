@@ -1,6 +1,6 @@
 # Trends 1.1.0.9000
 
-- ...
+- Update URL links to HTTP Secure
 
 # Trends 1.1.0
 

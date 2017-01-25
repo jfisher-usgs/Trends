@@ -45,14 +45,16 @@ ptime <- proc.time()
 
 \maketitle
 
-If \href{http://www.r-project.org/}{R} (version $\geq$ 3.1) is not already installed on your computer, download and install the latest binary distribution from the Comprehensive R Archive Network (\href{http://cran.r-project.org/}{CRAN}).
+If \href{https://www.r-project.org/}{R} (version $\geq$ 3.1) is not already installed on your computer,
+download and install the latest binary distribution from the Comprehensive R Archive Network (\href{https://cran.r-project.org/}{CRAN}).
 Open an \textbf{R} session and install the required packages with the following commands:
 <<eval=FALSE>>=
 repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
 install.packages("Trends", repos = repos, dependencies = TRUE)
 @
 
-Support for merging Portable Document Format (PDF) files into a new file requires \href{http://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server}, a cross-platform command-line tool for working with PDFs; download and install this software.
+Support for merging Portable Document Format (PDF) files into a new file requires \href{https://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
+a cross-platform command-line tool for working with PDFs; download and install this software.
 
 Load the \href{https://github.com/jfisher-usgs/Trends}{Trends} package into the current \textbf{R} session:
 <<>>=
