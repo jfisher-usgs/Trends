@@ -5,7 +5,7 @@ options(width=90)
 ptime <- proc.time()
 
 ## ----eval=FALSE-------------------------------------------------------------------------
-#  repos <- c("https://jfisher-usgs.github.io/R", getOption("repos"))
+#  repos <- c("https://jfisher-usgs.github.io/R", "https://cloud.r-project.org/")
 #  install.packages("Trends", repos = repos, dependencies = TRUE)
 
 ## ---------------------------------------------------------------------------------------
