@@ -7,7 +7,7 @@ Description: Identifies trends in data from multiple observation sites. A
     parametric survival regression model is fit to the observed data, both
     censored and uncensored.
 Depends:
-    R (>= 3.3.0)
+    R (>= 3.2.0)
 Imports:
     survival
 Suggests:
