@@ -35,11 +35,10 @@ Required columns in the \code{config} data table include:
   \code{config$Parameter_id} using a comma separator.
   Site and parameter identifiers not found in the \code{processed.obs} list are removed.
 }
-\author{
-J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
-}
 \seealso{
 \code{\link{RunAnalysis}}
 }
+\author{
+J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+}
 \keyword{methods}
-

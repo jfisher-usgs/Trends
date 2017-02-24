@@ -60,11 +60,10 @@ Requires \href{https://www.pdflabs.com/tools/pdftk-server/}{PDFtk Server},
 }
 
 }
-\author{
-J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
-}
 \seealso{
 \code{\link{RunAnalysis}}, \code{\link{system}}
 }
+\author{
+J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+}
 \keyword{utilities}
-

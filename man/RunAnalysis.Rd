@@ -149,11 +149,10 @@ processed.config <- tail(ProcessConfig(config, processed.obs))
 stats <- RunAnalysis(processed.obs, processed.config,
                      sdate = "1987-01-01", edate = "2012-12-31")
 }
-\author{
-J.C. Fisher and L.C. Davis, U.S. Geological Survey, Idaho Water Science Center
-}
 \seealso{
 \code{\link{DrawPlot}}
 }
+\author{
+J.C. Fisher and L.C. Davis, U.S. Geological Survey, Idaho Water Science Center
+}
 \keyword{models}
-

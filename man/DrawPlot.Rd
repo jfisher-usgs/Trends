@@ -62,11 +62,10 @@ model <- survival::survreg(y ~ x, data = d)
 DrawPlot(d, model, plim = c(NA, 0.8), main = "Title", ylab = "Value")
 
 }
-\author{
-J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
-}
 \seealso{
 \code{\link{RunAnalysis}}, \code{\link[survival]{predict.survreg}}
 }
+\author{
+J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+}
 \keyword{hplot}
-

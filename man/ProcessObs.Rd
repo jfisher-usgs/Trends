@@ -79,11 +79,10 @@ The \code{observations}, \code{parameters}, and \code{detection.limits}
   Interval-censored data with a lower or upper bound less than the detection limit is represented as left-censored data.
   For left-censored data, the upper bound is set to the detection limit when its magnitude is less than the detection limit.
 }
-\author{
-J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
-}
 \seealso{
 \code{\link{RunAnalysis}}
 }
+\author{
+J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+}
 \keyword{methods}
-

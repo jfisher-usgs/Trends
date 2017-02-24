@@ -32,11 +32,10 @@ Required columns in the \code{water.levels} data table include:
   \code{LEV_VA}, depth below land surface to the water table.
   The \code{water.levels} data table is composed of character-class components.
 }
-\author{
-J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
-}
 \seealso{
 \code{\link{RunAnalysis}}
 }
+\author{
+J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+}
 \keyword{methods}
-
