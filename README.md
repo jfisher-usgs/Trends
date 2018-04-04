@@ -21,7 +21,7 @@ install.packages("Trends", repos = repos, dependencies = TRUE)
 Or use **devtools** to install the development version.
 
 ```r
-devtools::install_github("USGS-R/Trends")
+devtools::install_github("jfisher-usgs/Trends")
 ```
 
 Support for merging PDF files into a new file requires [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/ "pdftk"),
