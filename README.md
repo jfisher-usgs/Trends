@@ -1,7 +1,6 @@
 # Trends
 
 [![Travis-CI Build Status](https://travis-ci.org/jfisher-usgs/Trends.svg?branch=master)](https://travis-ci.org/jfisher-usgs/Trends)
-[![CC0](https://img.shields.io/badge/license-CC0%201.0-brightgreen.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ## Overview
 
