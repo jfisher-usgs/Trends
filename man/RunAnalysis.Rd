@@ -5,10 +5,10 @@
 \title{Run Trend Analysis}
 \usage{
 RunAnalysis(processed.obs, processed.config, path, id, sdate = NA,
-  edate = NA, control = survreg.control(iter.max = 100), sig.level = 0.05,
-  graphics.type = "", merge.pdfs = TRUE, site.locations = NULL,
-  is.seasonality = FALSE, explanatory.var = NULL, is.residual = FALSE,
-  thin.obs.mo = NULL)
+  edate = NA, control = survreg.control(iter.max = 100),
+  sig.level = 0.05, graphics.type = "", merge.pdfs = TRUE,
+  site.locations = NULL, is.seasonality = FALSE,
+  explanatory.var = NULL, is.residual = FALSE, thin.obs.mo = NULL)
 }
 \arguments{
 \item{processed.obs}{list.

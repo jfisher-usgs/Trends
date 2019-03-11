@@ -7,8 +7,9 @@ PKGSRC  := $(shell basename `pwd`)
 all: docs install check clean
 
 docs:
-	R -q -e 'devtools::document()';\
-	R -q -e 'devtools::clean_dll()';\
+	R -q -e 'pkgload::load_all()';\
+	R -q -e 'roxygen2::roxygenize()';\
+	R -q -e 'pkgbuild::clean_dll()';\
 
 build:
 	cd ..;\
@@ -23,8 +24,7 @@ check:
 	R CMD check --no-build-vignettes --as-cran $(PKGNAME)_$(PKGVERS).tar.gz;\
 
 vignettes:
-	R -q -e 'devtools::build_vignettes()';\
-	R -q -e 'tools::compactPDF(paths='\''inst/doc'\'', gs_quality='\''ebook'\'')';\
+	R -q -e 'inlmisc::BuildVignettes(gs_quality='\''ebook'\'')';\
 
 clean:
 	cd ..;\
